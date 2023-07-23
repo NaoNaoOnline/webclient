@@ -1,6 +1,10 @@
 import Sidebar from './components/Sidebar'
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
+import { HomeIcon } from '@heroicons/react/24/outline'
+import { LockClosedIcon } from '@heroicons/react/24/outline'
+import { StarIcon } from '@heroicons/react/24/outline'
+import { UsersIcon } from '@heroicons/react/24/outline'
 
 export default function Page() {
   return (
@@ -9,21 +13,56 @@ export default function Page() {
       <Sidebar />
 
       <div className="pl-4 pr-4 mt-4 md:ml-64">
-        <div className="pl-4 pr-4 rounded-lg">
-          <div className="flex items-center h-10 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <button className="absolute inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none dark:text-gray-400 dark:hover:bg-gray-700" data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button">
-              {/* <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path clipRule="evenodd" fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-              </svg> */}
-              <Bars3BottomLeftIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-            </button>
+        <div className="pl-4 pr-4 flex grid justify-items-center">
+          <div className="rounded-lg w-full max-w-2xl">
+
+            <ul className="flex flex-row w-full">
+              <li className="flex items-center md:hidden mr-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
+                <button className="p-2" data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button">
+                  <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                </button>
+              </li>
+
+              <li className="w-full">
+                <input className="p-2 w-full border-none rounded-lg bg-gray-200 dark:text-white dark:bg-gray-800" type="text" id="search-navbar" placeholder="Search..." />
+              </li>
+
+              <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
+                <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+                  <LockClosedIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                </button>
+              </li>
+              <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
+                <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+                  <UsersIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                </button>
+              </li>
+              <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
+                <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+                  <StarIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                </button>
+              </li>
+              <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
+                <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+                  <HomeIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                </button>
+              </li>
+            </ul>
+
           </div>
         </div>
       </div>
 
-      <div className="pl-4 pr-4 md:ml-64">
-        <div className="pl-4 pr-4 rounded-lg">
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+      <div className="pl-4 pr-4 mt-4 md:ml-64">
+        <div className="pl-4 pr-4 flex grid justify-items-center">
+          <div className="rounded-lg h-36 w-full max-w-2xl bg-gray-200 dark:text-white dark:bg-gray-800">
+          </div>
+        </div>
+      </div>
+
+      <div className="pl-4 pr-4 mt-4 md:ml-64">
+        <div className="pl-4 pr-4 flex grid justify-items-center">
+          <div className="rounded-lg h-36 w-full max-w-2xl bg-gray-200 dark:text-white dark:bg-gray-800">
           </div>
         </div>
       </div>
