@@ -1,7 +1,6 @@
-import 'flowbite'
 import React from 'react';
 
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { Cog6ToothIcon } from '@heroicons/react/24/outline'
 import { HomeIcon } from '@heroicons/react/24/outline'
