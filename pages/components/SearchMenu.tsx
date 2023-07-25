@@ -24,22 +24,22 @@ export default function SearchMenu() {
             </li>
 
             <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
-              <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+              <button className="p-2" type="button">
                 <LockClosedIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
               </button>
             </li>
             <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
-              <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+              <button className="p-2" type="button">
                 <UsersIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
               </button>
             </li>
             <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
-              <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+              <button className="p-2" type="button">
                 <StarIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
               </button>
             </li>
             <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
-              <button className="p-2" data-drawer-target="todo" data-drawer-toggle="todo" aria-controls="todo" type="button">
+              <button className="p-2" type="button">
                 <HomeIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
               </button>
             </li>
