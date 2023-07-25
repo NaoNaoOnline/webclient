@@ -1,4 +1,5 @@
 import Content from './components/Content'
+import SearchMenu from './components/SearchMenu'
 import Sidebar from './components/Sidebar'
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <main >
 
       <Sidebar />
+      <SearchMenu />
       <Content />
 
     </main >
