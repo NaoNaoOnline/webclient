@@ -11,6 +11,8 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^2.7.0",
     "@heroicons/react": "^2.0.18",
+    "@naonaoonline/apitscode": "github:NaoNaoOnline/apitscode#v0.2.1",
+    "@protobuf-ts/twirp-transport": "^2.9.0",
     "@types/node": "20.4.4",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
