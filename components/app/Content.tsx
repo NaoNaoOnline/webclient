@@ -37,7 +37,9 @@ async function searchLabel(token: string) {
 export default function Content() {
   const { token, isLoading, isError } = Token()
 
-  searchLabel(token)
+  if (token) {
+    searchLabel(token)
+  }
 
   return (
     <>
