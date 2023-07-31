@@ -1,12 +1,10 @@
-import Content from './components/Content'
-import SearchMenu from './components/SearchMenu'
-import Sidebar from './components/Sidebar'
+import Content from '../components/app/Content'
+import SearchMenu from '../components/app/SearchMenu'
 
-export default function Home() {
+export default function Page() {
   return (
     <main >
 
-      <Sidebar />
       <SearchMenu />
       <Content />
 
