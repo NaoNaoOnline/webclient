@@ -6,10 +6,10 @@ const fetcher = (url: string) =>
 
 // Token is a SWR Module maintaining the user's session based short lived OAuth
 // access token.
-export default function Token() {
+export default function Token(): string {
   const { user } = useUser();
 
-  if (!user) return {};
+  if (!user) return "";
 
   const { data, error, isLoading } = useSWR(
     "/api/auth/token",
@@ -19,9 +19,8 @@ export default function Token() {
     },
   )
 
-  return {
-    token: data,
-    isLoading,
-    isError: error
-  }
+  if (isLoading) throw "auth token was still loading"
+  if (error) throw error
+
+  return data;
 };

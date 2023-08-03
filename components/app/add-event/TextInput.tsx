@@ -14,7 +14,11 @@ interface Props {
 export default function (props: Props) {
   return (
     <div className="relative z-0 w-full mb-6 group">
-      <div id={`${props.name}-tooltip`} role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
+      <div
+        id={`${props.name}-tooltip`}
+        role="tooltip"
+        className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900"
+      >
         {props.description}
       </div>
       <label
