@@ -9,17 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^2.7.0",
+    "@auth0/nextjs-auth0": "^3.0.1",
     "@heroicons/react": "^2.0.18",
-    "@naonaoonline/apitscode": "github:NaoNaoOnline/apitscode#v0.2.1",
-    "@protobuf-ts/twirp-transport": "^2.9.0",
-    "@types/node": "20.4.4",
-    "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
+    "@naonaoonline/apitscode": "github:NaoNaoOnline/apitscode#v0.3.1",
+    "@protobuf-ts/twirp-transport": "^2.9.1",
     "autoprefixer": "10.4.14",
-    "eslint": "8.45.0",
+    "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
-    "flowbite": "^1.7.0",
+    "flowbite": "^1.8.1",
     "next": "13.4.12",
     "postcss": "8.4.27",
     "react": "18.2.0",
@@ -30,6 +27,9 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@types/react-datepicker": "^4.15.0"
+    "@types/node": "20.4.5",
+    "@types/react": "18.2.18",
+    "@types/react-datepicker": "^4.15.0",
+    "@types/react-dom": "18.2.7"
   }
 }

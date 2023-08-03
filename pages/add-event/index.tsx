@@ -3,18 +3,19 @@ import { FormEvent } from 'react'
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
-import DatePicker from '../../components/app/add-event/DatePicker'
-import TextInput from '../../components/app/add-event/TextInput'
-import TimePicker from '../../components/app/add-event/TimePicker'
+import DatePicker from '@/components/app/add-event/DatePicker'
+import TextInput from '@/components/app/add-event/TextInput'
+import TimePicker from '@/components/app/add-event/TimePicker'
+
+import { EventCreate } from '@/modules/api/event/create/Create'
+import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Request'
 
 const handleSubmit = async (event: FormEvent) => {
-  event.preventDefault()
+  event.preventDefault();
 
-  const form = event.target as HTMLFormElement
-  const data = new FormData(form);
+  const formData = new FormData(event.target as HTMLFormElement);
 
-  const host = data.get("host-input")
-  console.log(host)
+  EventCreate(await NewEventCreateRequestFromFormData(formData));
 }
 
 export default function Page() {

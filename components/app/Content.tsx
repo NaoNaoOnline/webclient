@@ -1,46 +1,6 @@
 import React from 'react';
 
-import Token from '../../modules/auth/Token';
-
-import { TwirpFetchTransport } from "@protobuf-ts/twirp-transport";
-import { APIClient } from '@naonaoonline/apitscode/src/label/api.client';
-
-const transport = new TwirpFetchTransport({
-  baseUrl: "http://127.0.0.1:7777",
-});
-
-async function searchLabel(token: string) {
-  const cli = new APIClient(transport);
-
-  const call = cli.search(
-    {
-      object: [
-        {
-          intern: {},
-          public: {},
-        },
-      ],
-    },
-    {
-      meta: {
-        authorization: "Bearer " + token,
-      },
-    },
-  );
-
-  const res = await call.response;
-  const sta = await call.status;
-  console.log(res)
-  console.log(sta)
-}
-
 export default function Content() {
-  const { token, isLoading, isError } = Token()
-
-  if (token) {
-    searchLabel(token)
-  }
-
   return (
     <>
       <div className="pl-4 pr-4 mt-4 md:ml-64">
