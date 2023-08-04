@@ -7,6 +7,7 @@ interface Props {
   text: string;
   offset: number;
   description: string;
+  position: string;
 }
 
 function roundToNearestHour(date: Date, offset: number) {
@@ -20,12 +21,19 @@ function roundToNearestHour(date: Date, offset: number) {
 export default function (props: Props) {
   const [startDate, setStartDate] = useState("");
 
+  let position = "left-[-285px]"
+  if (props.position === "right") {
+    position = "left-[105%]"
+  }
+
   return (
-    <div className="relative z-0 w-full mb-6 group">
-      <div id={`${props.name}-tooltip`} role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
-        {props.description}
-      </div>
-      <label htmlFor={`${props.name}-input`} data-tooltip-target={`${props.name}-tooltip`} data-tooltip-placement="right" className="inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-white">{props.text}</label>
+    <div className="relative z-0 w-full mb-6">
+      <label htmlFor={`${props.name}-input`} className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-white">
+        {props.text}
+        <div className={`absolute top-[-85%] ${position} ml-4 z-10 w-[250px] invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900`}>
+          {props.description}
+        </div>
+      </label>
       <DatePicker
         autoComplete="off"
         name={`${props.name}-input`}
