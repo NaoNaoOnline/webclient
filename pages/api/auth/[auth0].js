@@ -13,7 +13,8 @@ const afterCallback = async (req, res, session, state) => {
   const name = session.user.nickname || session.user.given_name || session.user.name;
 
   try {
-    await UserCreate({ atkn: atkn, imag: imag, name: name })
+    const r = await UserCreate({ atkn: atkn, imag: imag, name: name })
+    session.user.uuid = r.user
     return session;
   } catch (err) {
     res.status(err.status || 500).end(err.message);
@@ -34,5 +35,5 @@ export default handleAuth({
     } catch (err) {
       res.status(err.status || 500).end(err.message);
     }
-  }
+  },
 });

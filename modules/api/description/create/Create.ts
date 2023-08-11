@@ -1,12 +1,12 @@
-import API from '@/modules/api/user/API';
-import { UserCreateRequest } from '@/modules/api/user/create/Request';
+import API from '@/modules/api/description/API';
+import { DescriptionCreateRequest } from '@/modules/api/description/create/Request';
 
 interface Response {
   crtd: string;
-  user: string;
+  desc: string;
 }
 
-export async function UserCreate(req: UserCreateRequest): Promise<Response> {
+export async function DescriptionCreate(req: DescriptionCreateRequest): Promise<Response> {
   try {
     const call = API.create(
       {
@@ -14,8 +14,9 @@ export async function UserCreate(req: UserCreateRequest): Promise<Response> {
           {
             intern: {},
             public: {
-              imag: req.imag,
-              name: req.name,
+              evnt: req.evnt,
+              text: req.text,
+              vote: "",
             },
           },
         ],
@@ -35,7 +36,7 @@ export async function UserCreate(req: UserCreateRequest): Promise<Response> {
 
     return {
       crtd: res.object[0].intern?.crtd || "",
-      user: res.object[0].intern?.user || "",
+      desc: res.object[0].intern?.desc || "",
     };
   } catch (error) {
     throw error;
