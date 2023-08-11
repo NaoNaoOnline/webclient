@@ -1,13 +1,12 @@
 import API from '@/modules/api/event/API';
 import { EventCreateRequest } from '@/modules/api/event/create/Request';
-import Token from '@/modules/auth/Token';
 
 interface Response {
   crtd: string;
   evnt: string;
 }
 
-export async function EventCreate(request: EventCreateRequest): Promise<Response> {
+export async function EventCreate(req: EventCreateRequest): Promise<Response> {
   try {
     const call = API.create(
       {
@@ -15,19 +14,18 @@ export async function EventCreate(request: EventCreateRequest): Promise<Response
           {
             intern: {},
             public: {
-              dura: request.dura,
-              host: request.host,
-              labl: request.labl,
-              link: request.link,
-              time: request.time,
-              user: request.user,
+              cate: req.cate,
+              dura: req.dura,
+              host: req.host,
+              link: req.link,
+              time: req.time,
             },
           },
         ],
       },
       {
         meta: {
-          authorization: "Bearer " + Token(),
+          authorization: "Bearer " + req.atkn,
         },
       },
     );

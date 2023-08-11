@@ -1,27 +1,60 @@
 import "flowbite";
-import { FormEvent } from 'react'
+import React, { useState, useEffect, FormEvent } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 
+import LoginToast from '@/components/app/LoginToast'
 import DatePicker from '@/components/app/add-event/DatePicker'
 import TextInput from '@/components/app/add-event/TextInput'
 import TimePicker from '@/components/app/add-event/TimePicker'
 
 import { EventCreate } from '@/modules/api/event/create/Create'
 import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Request'
+import { DescriptionCreate } from '@/modules/api/description/create/Create'
+import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
+import { LabelCreate } from '@/modules/api/label/create/Create'
+import { CateLabelCreateRequest, HostLabelCreateRequest } from '@/modules/api/label/create/Request'
+import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 
-const handleSubmit = async (event: FormEvent) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.target as HTMLFormElement);
-
-  EventCreate(await NewEventCreateRequestFromFormData(formData));
-}
+import Token from '@/modules/auth/Token';
 
 export default function Page() {
+  const [completed, setCompleted] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
+
   const { user, isLoading } = useUser();
+  const atk = Token();
+
+  const handleSubmit = async (evn: FormEvent) => {
+    evn.preventDefault();
+    setSubmitted(true);
+
+    const frm = new FormData(evn.target as HTMLFormElement);
+
+    try {
+      const cat = await LabelCreate(CateLabelCreateRequest(atk, frm.get("category-input")?.toString() || ""));
+      setCompleted(25);
+      await new Promise(r => setTimeout(r, 600));
+      const hos = await LabelCreate(HostLabelCreateRequest(atk, frm.get("host-input")?.toString() || ""));
+      setCompleted(50);
+      await new Promise(r => setTimeout(r, 200));
+      const res = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, cat.map((x: LabelCreateResponse) => x.labl).join(','), hos[0].labl));
+      setCompleted(75);
+      await new Promise(r => setTimeout(r, 400));
+      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atk, res.evnt));
+      setCompleted(100);
+      await new Promise(r => setTimeout(r, 200));
+    } catch (err) {
+    }
+  }
+
+  useEffect(() => {
+    if (completed >= 100) {
+      setCompleted(0);
+      setSubmitted(false);
+    }
+  }, [completed]);
 
   return (
     <>
@@ -59,6 +92,7 @@ export default function Page() {
                     type="text"
                     description="the host label for who is organizing this event"
                     placeholder="Flashbots"
+                    pattern="^[A-Za-z0-9\s]+$"
                   />
                   <TextInput
                     name="category"
@@ -66,6 +100,7 @@ export default function Page() {
                     type="text"
                     description="the category labels for topics this event is about"
                     placeholder="Crypto, DeFi, MEV"
+                    pattern="^([A-Za-z0-9\s]+(?:\s*,\s*[A-Za-z0-9\s]+)*)$"
                   />
                   <TextInput
                     name="link"
@@ -106,18 +141,22 @@ export default function Page() {
                     position="left"
                   />
                 </div>
-                <button type="submit" className="text-white bg-blue-700 mb-6 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+
+                <button type="submit" disabled={submitted} className="text-white bg-blue-700 mb-6 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+
+                {submitted && (
+                  <div className="mb-6 w-full rounded-full h-2.5 bg-gray-200 dark:bg-gray-800">
+                    <div className={`bg-blue-600 h-2.5 rounded-full w-[${completed}%] transition-width duration-1000 ease-in-out`}></div>
+                  </div>
+                )}
               </form>
             )}
             {!isLoading && !user && (
-              <div id="toast-top-left" className="flex items-center w-full max-w-xs p-4 space-x-4 bg-gray-200 dark:text-white dark:bg-gray-800 rounded-lg space-x" role="alert">
-                <ExclamationCircleIcon className="w-10 h-10 dark:text-white" />
-                <div className="pl-4 text-sm font-normal">You need to be logged in if you want to add a new event.</div>
-              </div>
+              <LoginToast />
             )}
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
