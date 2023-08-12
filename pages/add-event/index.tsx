@@ -4,8 +4,10 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
-import LoginToast from '@/components/app/LoginToast'
 import DatePicker from '@/components/app/add-event/DatePicker'
+import ErrorToast from '@/components/app/add-event/ErrorToast'
+import LoginToast from '@/components/app/add-event/LoginToast'
+import SubmitToast from '@/components/app/add-event/SubmitToast'
 import TextInput from '@/components/app/add-event/TextInput'
 import TimePicker from '@/components/app/add-event/TimePicker'
 
@@ -21,6 +23,7 @@ import Token from '@/modules/auth/Token';
 
 export default function Page() {
   const [completed, setCompleted] = useState(0);
+  const [failed, setFailed] = useState<Error | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const { user, isLoading } = useUser();
@@ -46,15 +49,17 @@ export default function Page() {
       setCompleted(100);
       await new Promise(r => setTimeout(r, 200));
     } catch (err) {
+      if (err instanceof Error) {
+        setFailed(err);
+      } else {
+        setFailed(new Error("Oh snap, the beavers were at it again! An unknown error occurred."));
+      }
     }
-  }
+  };
 
-  useEffect(() => {
-    if (completed >= 100) {
-      setCompleted(0);
-      setSubmitted(false);
-    }
-  }, [completed]);
+  const submitToastCallback = () => {
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -142,12 +147,14 @@ export default function Page() {
                   />
                 </div>
 
-                <button type="submit" disabled={submitted} className="text-white bg-blue-700 mb-6 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                <button type="submit" disabled={submitted && !failed} className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 
                 {submitted && (
-                  <div className="mb-6 w-full rounded-full h-2.5 bg-gray-200 dark:bg-gray-800">
-                    <div className={`bg-blue-600 h-2.5 rounded-full w-[${completed}%] transition-width duration-1000 ease-in-out`}></div>
-                  </div>
+                  <SubmitToast callback={submitToastCallback} completed={completed} failed={failed} />
+                )}
+
+                {failed && (
+                  <ErrorToast error={failed} />
                 )}
               </form>
             )}
