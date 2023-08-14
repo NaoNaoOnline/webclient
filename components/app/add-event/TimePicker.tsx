@@ -10,16 +10,19 @@ interface Props {
   position: string;
 }
 
-function roundToNearestHour(date: Date, offset: number) {
-  const minutes = 60;
-  const ms = 1000 * 60 * minutes;
-  const round = new Date(Math.ceil((date.getTime() + offset) / ms) * ms);
+function roundToNearestHourDate(dat: Date, off: number): Date {
+  const min = 60;
+  const mil = 1000 * 60 * min;
 
-  return round.toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
+  return new Date(Math.ceil((dat.getTime() + off) / mil) * mil);
+}
+
+function roundToNearestHourString(dat: Date, off: number): string {
+  return roundToNearestHourDate(dat, off).toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
 }
 
 export default function (props: Props) {
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(roundToNearestHourDate(new Date(), props.offset));
 
   let position = "left-[-285px]"
   if (props.position === "right") {
@@ -39,10 +42,10 @@ export default function (props: Props) {
         name={`${props.name}-input`}
         id={`${props.name}-input`}
         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        placeholderText={roundToNearestHour(new Date(), props.offset)}
+        placeholderText={roundToNearestHourString(new Date(), props.offset)}
         wrapperClassName="w-full"
-        selected={startDate === "" ? null : new Date(startDate)}
-        onChange={(date: Date) => setStartDate(date == null ? "" : date.toString())}
+        selected={startDate}
+        onChange={(dat: Date) => setStartDate(dat)}
         showTimeSelect
         showTimeSelectOnly
         timeIntervals={15}

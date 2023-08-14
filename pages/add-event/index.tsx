@@ -7,7 +7,8 @@ import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 import DatePicker from '@/components/app/add-event/DatePicker'
 import ErrorToast from '@/components/app/add-event/ErrorToast'
 import LoginToast from '@/components/app/add-event/LoginToast'
-import SubmitToast from '@/components/app/add-event/SubmitToast'
+import ProgressToast from '@/components/app/add-event/ProgressToast'
+import SuccessToast from '@/components/app/add-event/SuccessToast'
 import TextInput from '@/components/app/add-event/TextInput'
 import TimePicker from '@/components/app/add-event/TimePicker'
 
@@ -16,7 +17,7 @@ import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Re
 import { DescriptionCreate } from '@/modules/api/description/create/Create'
 import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
 import { LabelCreate } from '@/modules/api/label/create/Create'
-import { CateLabelCreateRequest, HostLabelCreateRequest } from '@/modules/api/label/create/Request'
+import { LabelCreateRequest } from '@/modules/api/label/create/Request'
 import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 
 import Token from '@/modules/auth/Token';
@@ -36,13 +37,13 @@ export default function Page() {
     const frm = new FormData(evn.target as HTMLFormElement);
 
     try {
-      const cat = await LabelCreate(CateLabelCreateRequest(atk, frm.get("category-input")?.toString() || ""));
+      const cat = await LabelCreate(LabelCreateRequest(atk, "cate", frm.get("category-input")?.toString() || ""));
       setCompleted(25);
       await new Promise(r => setTimeout(r, 600));
-      const hos = await LabelCreate(HostLabelCreateRequest(atk, frm.get("host-input")?.toString() || ""));
+      const hos = await LabelCreate(LabelCreateRequest(atk, "host", frm.get("host-input")?.toString() || ""));
       setCompleted(50);
       await new Promise(r => setTimeout(r, 200));
-      const res = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, cat.map((x: LabelCreateResponse) => x.labl).join(','), hos[0].labl));
+      const res = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, cat.map((x: LabelCreateResponse) => x.labl).join(','), hos.map((x: LabelCreateResponse) => x.labl).join(',')));
       setCompleted(75);
       await new Promise(r => setTimeout(r, 400));
       const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atk, res.evnt));
@@ -95,9 +96,9 @@ export default function Page() {
                     name="host"
                     text="Host"
                     type="text"
-                    description="the host label for who is organizing this event"
+                    description="the host labels for who is organizing this event"
                     placeholder="Flashbots"
-                    pattern="^[A-Za-z0-9\s]+$"
+                    pattern="^([A-Za-z0-9\s]+(?:\s*,\s*[A-Za-z0-9\s]+)*)$"
                   />
                   <TextInput
                     name="category"
@@ -150,11 +151,15 @@ export default function Page() {
                 <button type="submit" disabled={submitted && !failed} className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 
                 {submitted && (
-                  <SubmitToast callback={submitToastCallback} completed={completed} failed={failed} />
+                  <ProgressToast callback={submitToastCallback} completed={completed} failed={failed} />
                 )}
 
                 {failed && (
                   <ErrorToast error={failed} />
+                )}
+
+                {completed >= 100 && (
+                  <SuccessToast />
                 )}
               </form>
             )}
