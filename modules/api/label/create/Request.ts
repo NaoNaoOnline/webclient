@@ -7,21 +7,13 @@ export interface LabelCreateRequest {
   twit?: string;
 }
 
-export function HostLabelCreateRequest(atk: string, hos: string): LabelCreateRequest[] {
-  return [{
-    atkn: atk,
-    kind: "host",
-    name: hos,
-  }];
-}
-
-export function CateLabelCreateRequest(atk: string, cat: string): LabelCreateRequest[] {
+export function LabelCreateRequest(atk: string, kin: string, cat: string): LabelCreateRequest[] {
   const req: LabelCreateRequest[] = [];
 
   for (const element of cat.split(',')) {
     req.push({
       atkn: atk,
-      kind: "cate",
+      kind: kin,
       name: element.trim(),
     });
   }

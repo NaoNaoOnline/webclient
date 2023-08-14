@@ -9,7 +9,7 @@ interface Props {
   failed: Error | null;
 }
 
-export default function SubmitToast(props: Props) {
+export default function ProgressToast(props: Props) {
   const [duration, setDuration] = React.useState(31536000000); // 1 year
 
   const onOpenChange = (open: boolean) => {
