@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function (props: Props) {
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(defDat());
 
   return (
     <div className="relative z-0 w-full mb-6">
@@ -24,14 +24,21 @@ export default function (props: Props) {
         name={`${props.name}-input`}
         id={`${props.name}-input`}
         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-        placeholderText={new Date().toLocaleDateString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' })}
+        placeholderText={defDat().toLocaleDateString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' })}
         wrapperClassName="w-full"
         selected={startDate}
-        minDate={new Date()}
+        minDate={defDat()}
         onChange={(date: Date) => setStartDate(date)}
         dateFormat="dd.MM.yy"
         required
       />
     </div >
   );
+};
+
+// defDat returns the current date plus one hour. The default date to calculate
+// with when creating events should be further in the future in order to account
+// for the transition between days.
+function defDat(): Date {
+  return new Date(new Date().getTime() + 60 * 60 * 1000)
 };

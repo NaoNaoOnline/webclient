@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function ErrorToast(props: Props) {
+  console.log("ErrorToast.tsx", props.error);
   return (
     <>
       <Toast.Root

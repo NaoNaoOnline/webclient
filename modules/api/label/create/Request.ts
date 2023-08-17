@@ -7,14 +7,14 @@ export interface LabelCreateRequest {
   twit?: string;
 }
 
-export function LabelCreateRequest(atk: string, kin: string, cat: string): LabelCreateRequest[] {
+export function LabelCreateRequest(atk: string, kin: string, lab: string[]): LabelCreateRequest[] {
   const req: LabelCreateRequest[] = [];
 
-  for (const element of cat.split(',')) {
+  for (const x of lab) {
     req.push({
       atkn: atk,
       kind: kin,
-      name: element.trim(),
+      name: x.trim(),
     });
   }
 

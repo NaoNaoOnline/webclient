@@ -19,8 +19,10 @@ import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/descripti
 import { LabelCreate } from '@/modules/api/label/create/Create'
 import { LabelCreateRequest } from '@/modules/api/label/create/Request'
 import { LabelCreateResponse } from "@/modules/api/label/create/Response";
+import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
-import Token from '@/modules/auth/Token';
+import CacheApiLabel from '@/modules/cache/api/Label';
+import CacheAuthToken from '@/modules/cache/auth/Token';
 
 export default function Page() {
   const [completed, setCompleted] = useState(0);
@@ -28,7 +30,9 @@ export default function Page() {
   const [submitted, setSubmitted] = useState(false);
 
   const { user, isLoading } = useUser();
-  const atk = Token();
+
+  const atk: string = CacheAuthToken(user ? true : false);
+  const clo: LabelSearchResponse[] = CacheApiLabel(user ? true : false, atk);
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
@@ -37,18 +41,46 @@ export default function Page() {
     const frm = new FormData(evn.target as HTMLFormElement);
 
     try {
-      const cat = await LabelCreate(LabelCreateRequest(atk, "cate", frm.get("category-input")?.toString() || ""));
-      setCompleted(25);
-      await new Promise(r => setTimeout(r, 600));
-      const hos = await LabelCreate(LabelCreateRequest(atk, "host", frm.get("host-input")?.toString() || ""));
-      setCompleted(50);
-      await new Promise(r => setTimeout(r, 200));
-      const res = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, cat.map((x: LabelCreateResponse) => x.labl).join(','), hos.map((x: LabelCreateResponse) => x.labl).join(',')));
+      // Get clean string lists for the user category input and user host input.
+      const uci = (frm.get("category-input")?.toString() || "").split(",").map(x => x.trim());
+      const uhi = (frm.get("host-input")?.toString() || "").split(",").map(x => x.trim());
+
+      // Get the list of desired category names and desired host names that
+      // still have to be created.
+      const dcn = unqLab(uci, clo);
+      const dhn = unqLab(uhi, clo);
+
+      // Create the category labels in the backend, if any.
+      let nci: string[] = [];
+      if (dcn.length > 0) {
+        const res = await LabelCreate(LabelCreateRequest(atk, "cate", dcn));
+        nci = res.map((x: LabelCreateResponse) => x.labl);
+      }
+
+      // Create the host labels in the backend, if any.
+      let nhi: string[] = [];
+      if (dhn.length > 0) {
+        const res = await LabelCreate(LabelCreateRequest(atk, "host", dhn));
+        nhi = res.map((x: LabelCreateResponse) => x.labl);
+      }
+
+      // Get the cached category ids and cached host ids for the user input that
+      // did already exist in the backend. 
+      const cci = clo.filter(x => uci.includes(x.name)).map(x => x.labl);
+      const chi = clo.filter(x => uhi.includes(x.name)).map(x => x.labl);
+
+      // Create the event resource in the backend, now that we ensured our label
+      // ids.
+      const eve = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, [...nci, ...cci], [...nhi, ...chi]));
       setCompleted(75);
+
       await new Promise(r => setTimeout(r, 400));
-      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atk, res.evnt));
+
+      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atk, eve.evnt));
       setCompleted(100);
+
       await new Promise(r => setTimeout(r, 200));
+
     } catch (err) {
       if (err instanceof Error) {
         setFailed(err);
@@ -171,4 +203,16 @@ export default function Page() {
       </div >
     </>
   )
+}
+
+// unqLab returns the list of label names that do not already exist according to
+// the given LabelSearchResponse.
+function unqLab(des: string[], lis: LabelSearchResponse[]): string[] {
+  // Extract the current labels from the lis array.
+  const cur = lis.map(x => x.name);
+
+  // Filter out labels that already exist.
+  const unq = des.filter(x => !cur.includes(x));
+
+  return unq;
 }
