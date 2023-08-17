@@ -7,7 +7,7 @@ export interface EventCreateRequest {
   time: string;
 }
 
-export function NewEventCreateRequestFromFormData(frm: FormData, atk: string, cat: string, hos: string): EventCreateRequest {
+export function NewEventCreateRequestFromFormData(frm: FormData, atk: string, cat: string[], hos: string[]): EventCreateRequest {
   const lin = frm.get("link-input")?.toString() || "";
   const dat = frm.get("date-input")?.toString() || "";
   const sta = frm.get("start-input")?.toString() || "";
@@ -19,9 +19,9 @@ export function NewEventCreateRequestFromFormData(frm: FormData, atk: string, ca
 
   return {
     atkn: atk,
-    cate: cat,
+    cate: cat.join(','),
     dura: newDura(sta, end),
-    host: hos,
+    host: hos.join(','),
     link: newLink(lin),
     time: newTime(dat, sta),
   };
