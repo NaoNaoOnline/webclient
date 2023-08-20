@@ -10,7 +10,7 @@ export default function SearchMenu() {
   return (
     <div className="pl-4 pr-4 mt-4 md:ml-64">
       <div className="pl-4 pr-4 flex grid justify-items-center">
-        <div className="rounded-lg w-full max-w-2xl">
+        <div className="rounded-lg w-full max-w-xl">
 
           <ul className="flex flex-row w-full">
             <li className="flex items-center md:hidden mr-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">

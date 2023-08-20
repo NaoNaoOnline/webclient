@@ -1,16 +1,16 @@
 import "flowbite";
-import React, { useState, useEffect, FormEvent } from 'react'
+import React, { useState, FormEvent } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
-import DatePicker from '@/components/app/add-event/DatePicker'
-import ErrorToast from '@/components/app/add-event/ErrorToast'
-import LoginToast from '@/components/app/add-event/LoginToast'
-import ProgressToast from '@/components/app/add-event/ProgressToast'
-import SuccessToast from '@/components/app/add-event/SuccessToast'
-import TextInput from '@/components/app/add-event/TextInput'
-import TimePicker from '@/components/app/add-event/TimePicker'
+import DatePicker from '@/components/app/event/add/DatePicker'
+import ErrorToast from '@/components/app/event/add/ErrorToast'
+import LoginToast from '@/components/app/event/add/LoginToast'
+import ProgressToast from '@/components/app/event/add/ProgressToast'
+import SuccessToast from '@/components/app/event/add/SuccessToast'
+import TextInput from '@/components/app/event/add/TextInput'
+import TimePicker from '@/components/app/event/add/TimePicker'
 
 import { EventCreate } from '@/modules/api/event/create/Create'
 import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Request'
@@ -98,7 +98,7 @@ export default function Page() {
     <>
       <div className="pl-4 pr-4 mt-4 md:ml-64">
         <div className="pl-4 pr-4 flex grid justify-items-center">
-          <div className="rounded-lg w-full max-w-2xl">
+          <div className="rounded-lg w-full max-w-xl">
 
             <ul className="flex flex-row w-full">
               <li className="flex items-center md:hidden mr-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
@@ -117,7 +117,7 @@ export default function Page() {
 
       <div className="pl-4 pr-4 mt-4 md:ml-64">
         <div className="pl-4 pr-4 flex grid justify-items-center">
-          <div className="w-full max-w-2xl dark:text-white">
+          <div className="w-full max-w-xl dark:text-white">
             {isLoading && (
               <></>
             )}
