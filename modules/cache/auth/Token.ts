@@ -8,13 +8,15 @@ const fetcher = async (url: string): Promise<string> => {
 };
 
 // CacheAuthToken is a SWR Module maintaining the user's session based short
-// lived OAuth access token.
+// lived OAuth access token. Since access tokens ought to change very
+// frequently, data is automatically refreshed every minute. The SWR hook can be
+// deactivated if act is false.
 export default function CacheAuthToken(act: boolean): string {
   const { data, error } = useSWR(
     act ? "/api/auth/token" : null, // nodejs server url
     fetcher,
     {
-      refreshInterval: 60000, // every minute
+      refreshInterval: 60 * 1000, // every minute
     },
   )
 
