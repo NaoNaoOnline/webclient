@@ -8,7 +8,7 @@ import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { UserIcon } from '@heroicons/react/24/outline'
 
-import Description from '@/components/app/Description'
+import Description from '@/components/app/event/Description'
 
 function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
   e.stopPropagation();

@@ -8,13 +8,13 @@ import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 
 interface RatingPickerProps {
   ratings: RatingSearchResponse[];
-  onClick: (name: string) => void;
+  onClick: (name: RatingSearchResponse) => void;
   columns: number;
 }
 
 export default function RatingPicker(props: RatingPickerProps) {
   // Group emojis into rows with the specified number of columns.
-  const row = [];
+  const row: RatingSearchResponse[][] = [];
   for (let i = 0; i < props.ratings.length; i += props.columns) {
     row.push(props.ratings.slice(i, i + props.columns));
   }
@@ -22,8 +22,8 @@ export default function RatingPicker(props: RatingPickerProps) {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button className="py-3 absolute right-0 group outline-none" type="button">
-          <FaceSmileIcon className="w-5 h-5 mx-2 text-gray-500 transition duration-75 group-hover:text-gray-900" />
+        <button className="py-3 outline-none group" type="button">
+          <FaceSmileIcon className="w-5 h-5 mx-2 text-gray-400 transition duration-75 group-hover:text-gray-900" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -36,7 +36,7 @@ export default function RatingPicker(props: RatingPickerProps) {
             <ul key={i} className="flex flex-row gap-2.5">
               {r.map((c, j) => (
                 <li key={j} className="flex rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 items-center">
-                  <button id={c.name} onClick={() => props.onClick(c.name)} className="p-2" type="button">
+                  <button id={c.name} onClick={() => props.onClick(c)} className="p-2" type="button">
                     <div className="w-5 h-5">{c.html}</div>
                   </button>
                 </li>
