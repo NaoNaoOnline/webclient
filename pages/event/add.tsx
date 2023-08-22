@@ -25,14 +25,15 @@ import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 
 export default function Page() {
+  const { user, isLoading } = useUser();
+
   const [completed, setCompleted] = useState(0);
+  const [evnt, setEvnt] = useState<string>("");
   const [failed, setFailed] = useState<Error | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  const { user, isLoading } = useUser();
-
-  const atk: string = CacheAuthToken(user ? true : false);
-  const clo: LabelSearchResponse[] = CacheApiLabel(user ? true : false, atk);
+  const cat: string = CacheAuthToken(user ? true : false);
+  const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
@@ -47,36 +48,37 @@ export default function Page() {
 
       // Get the list of desired category names and desired host names that
       // still have to be created.
-      const dcn = unqLab(uci, clo);
-      const dhn = unqLab(uhi, clo);
+      const dcn = unqLab(uci, cal);
+      const dhn = unqLab(uhi, cal);
 
       // Create the category labels in the backend, if any.
       let nci: string[] = [];
       if (dcn.length > 0) {
-        const res = await LabelCreate(LabelCreateRequest(atk, "cate", dcn));
+        const res = await LabelCreate(LabelCreateRequest(cat, "cate", dcn));
         nci = res.map((x: LabelCreateResponse) => x.labl);
       }
 
       // Create the host labels in the backend, if any.
       let nhi: string[] = [];
       if (dhn.length > 0) {
-        const res = await LabelCreate(LabelCreateRequest(atk, "host", dhn));
+        const res = await LabelCreate(LabelCreateRequest(cat, "host", dhn));
         nhi = res.map((x: LabelCreateResponse) => x.labl);
       }
 
       // Get the cached category ids and cached host ids for the user input that
       // did already exist in the backend. 
-      const cci = clo.filter(x => uci.includes(x.name)).map(x => x.labl);
-      const chi = clo.filter(x => uhi.includes(x.name)).map(x => x.labl);
+      const cci = cal.filter(x => uci.includes(x.name)).map(x => x.labl);
+      const chi = cal.filter(x => uhi.includes(x.name)).map(x => x.labl);
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const eve = await EventCreate(NewEventCreateRequestFromFormData(frm, atk, [...nci, ...cci], [...nhi, ...chi]));
+      const eve = await EventCreate(NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi]));
+      setEvnt(eve.evnt);
       setCompleted(75);
 
       await new Promise(r => setTimeout(r, 400));
 
-      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atk, eve.evnt));
+      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, eve.evnt));
       setCompleted(100);
 
       await new Promise(r => setTimeout(r, 200));
@@ -91,7 +93,7 @@ export default function Page() {
   };
 
   const submitToastCallback = () => {
-    window.location.href = "/";
+    window.location.href = "/event/" + evnt;
   };
 
   return (

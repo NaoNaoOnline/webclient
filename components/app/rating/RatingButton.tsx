@@ -32,7 +32,11 @@ export default function RatingButton(props: RatingButtonProps) {
 
   return (
     <li>
-      <button id={props.name} onClick={onClck} className="flex flex-row p-2 py-3 group" type="button">
+      <button
+        onClick={onClck}
+        className="flex flex-row p-2 py-3 group"
+        type="button"
+      >
         <div className="w-5 h-5">{props.html}</div>
         <div className={`text-xs ${clck ? 'text-gray-900' : 'text-gray-400'} group-hover:text-gray-900`}>{amnt}</div>
       </button>
