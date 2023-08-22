@@ -11,11 +11,13 @@ import CacheAuthToken from '@/modules/cache/auth/Token';
 
 import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 
-function onLinkClick(x: MouseEvent<HTMLAnchorElement>) {
-  x.stopPropagation();
+function onLinkClick(eve: MouseEvent<HTMLAnchorElement>) {
+  eve.stopPropagation();
 }
 
-export default function Description() {
+interface Props { }
+
+export default function Description(props: Props) {
   const { user, isLoading } = useUser();
   const [list, setList] = useState<RatingSearchResponse[]>([]); // TODO init with description reactions
 
@@ -48,11 +50,10 @@ export default function Description() {
     setList([...list]);
   };
 
+
   return (
-    <div className="border-t-solid border-t border-gray-200">
-
+    <li className="bg-gray-50 first:border-none border-t-solid border-t border-gray-200">
       <div className="flex justify-between">
-
         <div className="flex-shrink-0 flex flex-row">
           <a href="/user/xh3b4sd" onClick={onLinkClick} className="flex items-center p-2 dark:text-white">
             <UserIcon className="w-7 h-7 p-1 text-white bg-blue-600 rounded-full transition duration-75" />
@@ -75,6 +76,6 @@ export default function Description() {
         This is a good event description with enough space for text. And maybe
         even more.
       </p>
-    </div>
+    </li>
   );
 };

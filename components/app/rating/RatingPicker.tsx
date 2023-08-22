@@ -36,7 +36,11 @@ export default function RatingPicker(props: RatingPickerProps) {
             <ul key={i} className="flex flex-row gap-2.5">
               {r.map((c, j) => (
                 <li key={j} className="flex rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 items-center">
-                  <button id={c.name} onClick={() => props.onClick(c)} className="p-2" type="button">
+                  <button
+                    onClick={() => props.onClick(c)}
+                    className="p-2"
+                    type="button"
+                  >
                     <div className="w-5 h-5">{c.html}</div>
                   </button>
                 </li>
