@@ -23,12 +23,12 @@ export default function RatingPicker(props: RatingPickerProps) {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button className="py-3 outline-none group" type="button">
-          <FaceSmileIcon className="w-5 h-5 mx-2 text-gray-400 transition duration-75 group-hover:text-gray-900" />
+          <FaceSmileIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="rounded p-5 w-fill bg-white shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] focus:shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2),0_0_0_2px_theme(colors.violet7)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
+          className="rounded p-5 w-fill bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
           sideOffset={5}
         >
 
@@ -48,7 +48,6 @@ export default function RatingPicker(props: RatingPickerProps) {
             </ul>
           ))}
 
-          <Popover.Arrow className="fill-white" />
         </Popover.Content>
       </Popover.Portal >
     </Popover.Root >
