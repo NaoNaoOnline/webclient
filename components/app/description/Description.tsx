@@ -52,14 +52,22 @@ export default function Description(props: Props) {
 
 
   return (
-    <li className="bg-gray-50 first:border-none border-t-solid border-t border-gray-200">
+    <div className="bg-gray-50 first:border-none border-t-solid border-t border-gray-200">
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
-          <a href="/user/xh3b4sd" onClick={onLinkClick} className="flex items-center p-2 dark:text-white">
-            <UserIcon className="w-7 h-7 p-1 text-white bg-blue-600 rounded-full transition duration-75" />
+          <a
+            href="/user/xh3b4sd"
+            onClick={onLinkClick}
+            className="flex items-center p-2"
+          >
+            <UserIcon className="w-7 h-7 p-1 text-white bg-blue-600 rounded-full" />
           </a>
-          <a href="/user/xh3b4sd" onClick={onLinkClick} className="flex items-center px-2 py-3 text-gray-900">
-            <span className="text-sm font-medium whitespace-nowrap hover:underline">xh3b4sd</span>
+          <a
+            href="/user/xh3b4sd"
+            onClick={onLinkClick}
+            className="flex items-center px-2 py-3 text-gray-900 text-sm font-medium whitespace-nowrap hover:underline"
+          >
+            xh3b4sd
           </a>
         </div>
 
@@ -76,6 +84,6 @@ export default function Description(props: Props) {
         This is a good event description with enough space for text. And maybe
         even more.
       </p>
-    </li>
+    </div>
   );
 };
