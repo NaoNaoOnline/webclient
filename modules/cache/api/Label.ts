@@ -21,6 +21,7 @@ export default function CacheApiLabel(act: boolean, atk: string): LabelSearchRes
     fetcher(atk),
     {
       refreshInterval: 60 * 60 * 1000, // every hour
+      revalidateOnFocus: false,
     },
   )
 

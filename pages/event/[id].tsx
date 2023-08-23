@@ -3,12 +3,13 @@ import React, { useEffect, useState, MouseEvent } from 'react';
 import { useRouter } from 'next/router'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { UserIcon } from '@heroicons/react/24/outline'
 
-import Description from '@/components/app/event/Description'
+import Description from '@/components/app/description/Description'
 import ErrorToast from '@/components/app/event/add/ErrorToast'
 
 import { EventSearch } from '@/modules/api/event/search/Search'
@@ -27,6 +28,7 @@ function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
 }
 
 export default function Page() {
+  console.log("render")
   const router = useRouter()
   const { user, isLoading } = useUser();
 
@@ -38,8 +40,15 @@ export default function Page() {
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
 
+  console.log("cat", cat)
+  console.log("cal", cal)
+
   useEffect(() => {
-    if (!isLoading && user && cat && cal) {
+    if (evnt) return;
+
+    console.log("useEffect")
+    if (!isLoading && user && cal && cat) {
+      console.log("fetchData")
       const fetchData = async function (): Promise<void> {
         try {
           const [res] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
@@ -53,7 +62,7 @@ export default function Page() {
 
       fetchData();
     }
-  }, [user, isLoading, cat, cal]);
+  }, [user, isLoading, cal]);
 
   return (
     <>
@@ -115,17 +124,17 @@ export default function Page() {
                 </div>
 
                 {!open && (
-                  <ul className="shadow-gray-400 shadow-[0_0_2px]">
+                  <div className="shadow-gray-400 shadow-[0_0_2px]">
                     <Description />
-                  </ul>
+                  </div>
                 )}
 
                 {open && (
-                  <ul className="shadow-gray-400 shadow-[0_0_2px]">
+                  <div className="shadow-gray-400 shadow-[0_0_2px]">
                     <Description />
                     <Description />
                     <Description />
-                  </ul>
+                  </div>
                 )}
 
                 <div
@@ -136,7 +145,7 @@ export default function Page() {
 
                     {cal && (
                       evnt?.cate(cal).map((x, i) => (
-                        <a href={`/cate/${x}`} onClick={onLinkClick} className="flex items-center p-2 text-sm font-medium text-sky-500 hover:underline">
+                        <a key={i} href={`/cate/${x}`} onClick={onLinkClick} className="flex items-center p-2 text-sm font-medium text-sky-500 cursor-pointer hover:underline">
                           #{x}
                         </a>
                       ))
@@ -144,9 +153,43 @@ export default function Page() {
 
                   </div>
 
-                  <button onClick={onBttnClick} className="py-3 text-gray-400 hover:text-gray-900 cursor-pointer">
-                    <EllipsisHorizontalIcon className="w-5 h-5 mx-2" />
-                  </button>
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger asChild>
+                      <button onClick={onBttnClick} className="py-3 text-gray-400 hover:text-gray-900 cursor-pointer">
+                        <EllipsisHorizontalIcon className="w-5 h-5 mx-2" />
+                      </button>
+                    </DropdownMenu.Trigger>
+
+                    <DropdownMenu.Portal>
+                      <DropdownMenu.Content
+                        className="min-w-[220px] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+                        loop
+                      >
+
+                        <DropdownMenu.Item className="text-gray-400 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-200 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 cursor-pointer">
+                          Add Description
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item className="text-gray-400 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-200 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 cursor-pointer">
+                          Update Description
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Separator className="h-[1px] bg-gray-200 m-[5px]" />
+
+                        <DropdownMenu.Item disabled className="text-gray-400 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-200 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 cursor-pointer">
+                          Update Event
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item className="text-gray-400 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-200 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 cursor-pointer">
+                          Report Event
+                        </DropdownMenu.Item>
+                        <DropdownMenu.Item className="text-red-600 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-200 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-red-600 cursor-pointer">
+                          Delete Event
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Arrow className="fill-white" />
+
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Portal>
+                  </DropdownMenu.Root>
                 </div>
               </>
             )}
