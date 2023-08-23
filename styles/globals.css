@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 .dark {
+  /* bg-gray-700 */
   background-color: rgb(55 65 81);
 }
 
