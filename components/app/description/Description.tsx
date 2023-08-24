@@ -58,17 +58,23 @@ export default function Description(props: Props) {
           <a
             href="/user/xh3b4sd"
             onClick={onLinkClick}
-            className="flex items-center p-2"
+            className="flex items-center pl-2"
           >
             <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
           </a>
           <a
             href="/user/xh3b4sd"
             onClick={onLinkClick}
-            className="flex items-center px-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+            className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >
             xh3b4sd
           </a>
+          <label className="relative inline-block flex items-center bg-blue-100 mx-2 my-3 px-[3px] font-medium text-blue-600 text-xs rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-500 cursor-pointer group">
+            EC
+            <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
+              Event Creator
+            </div>
+          </label>
         </div>
 
         <div className="flex-grow relative overflow-x-auto">

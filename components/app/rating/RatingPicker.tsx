@@ -1,8 +1,8 @@
 import React from 'react';
 
-import * as Popover from '@radix-ui/react-popover';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import { FaceSmileIcon } from '@heroicons/react/24/outline'
+import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
 import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 
@@ -20,36 +20,56 @@ export default function RatingPicker(props: RatingPickerProps) {
   }
 
   return (
-    <Popover.Root>
-      <Popover.Trigger asChild>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
         <button className="py-3 outline-none group" type="button">
-          <FaceSmileIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
+          <EllipsisHorizontalIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
         </button>
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
-          className="rounded p-5 w-fill bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade"
-          sideOffset={5}
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+          loop
         >
 
+
           {row.map((r, i) => (
-            <ul key={i} className="flex flex-row gap-2.5">
+            <DropdownMenu.Group key={i} className="flex flex-row gap-2.5">
               {r.map((c, j) => (
-                <li key={j} className="flex rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 items-center">
-                  <button
-                    onClick={() => props.onClick(c)}
-                    className="p-2"
-                    type="button"
-                  >
-                    <div className="w-5 h-5">{c.html}</div>
-                  </button>
-                </li>
+                <DropdownMenu.Item
+                  key={j}
+                  onClick={() => props.onClick(c)}
+                  onSelect={(e) => e.preventDefault()}
+                  className="flex w-9 h-9 text-lg text-gray-900 dark:text-gray-50 rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer"
+                >
+                  {c.html}
+                </DropdownMenu.Item>
               ))}
-            </ul>
+            </DropdownMenu.Group>
           ))}
 
-        </Popover.Content>
-      </Popover.Portal >
-    </Popover.Root >
+          <DropdownMenu.Separator className="h-[1px] bg-gray-200 dark:bg-gray-800 my-[5px]" />
+
+          <DropdownMenu.Item className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer">
+            Follow User
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Separator className="h-[1px] bg-gray-200 dark:bg-gray-800 my-[5px]" />
+
+          <DropdownMenu.Item disabled className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer">
+            Update Description
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer">
+            Report Description
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="text-red-600 dark:text-red-600 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-red-600 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-red-600 cursor-pointer">
+            Delete Description
+          </DropdownMenu.Item>
+
+
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 };

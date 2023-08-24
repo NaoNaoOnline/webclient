@@ -37,7 +37,7 @@ export default function RatingButton(props: RatingButtonProps) {
         className="flex flex-row p-2 py-3 group"
         type="button"
       >
-        <div className="w-5 h-5">{props.html}</div>
+        <div className="w-5 h-5 text-lg">{props.html}</div>
         <div className={`text-xs ${clck ? 'text-gray-900 dark:text-gray-50' : 'text-gray-400'} group-hover:text-gray-900 dark:group-hover:text-gray-50`}>{amnt}</div>
       </button>
     </li>
