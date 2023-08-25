@@ -1,11 +1,7 @@
 import React, { useState, MouseEvent } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 import RatingBar from '@/components/app/rating/RatingBar'
 import RatingPicker from '@/components/app/rating/RatingPicker'
-
-import CacheApiRating from '@/modules/cache/api/Rating';
-import CacheAuthToken from '@/modules/cache/auth/Token';
 
 import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
@@ -16,23 +12,20 @@ function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
 }
 
 interface Props {
-  evnt: EventSearchObject;
   desc: DescriptionSearchResponse;
+  evnt: EventSearchObject;
+  rtng: RatingSearchResponse[];
 }
 
 export default function Description(props: Props) {
-  const { user, isLoading } = useUser();
-  const [rtng, setList] = useState<RatingSearchResponse[]>([]); // TODO init with description reactions
-
-  const atk: string = CacheAuthToken(user ? true : false);
-  const cro: RatingSearchResponse[] = CacheApiRating(user ? true : false, atk);
+  const [rtng, setRtng] = useState<RatingSearchResponse[]>([]); // TODO init with description reactions
 
   const onBttnClick = (amnt: number, name: string) => {
     // Remove the reaction that the user clicked again if it now has a zero
     // count. The cleaned up list is injected into the rating components and the
     // list of valid reactions is rendered again.
     if (amnt === 0) {
-      setList(rtng.filter((x) => x.name !== name));
+      setRtng(rtng.filter((x) => x.name !== name));
     }
   };
 
@@ -50,7 +43,7 @@ export default function Description(props: Props) {
       rtng.push(x);
     }
 
-    setList([...rtng]);
+    setRtng([...rtng]);
   };
 
   return (
@@ -86,7 +79,7 @@ export default function Description(props: Props) {
         </div>
 
         <div>
-          <RatingPicker ratings={cro} onClick={onPckrClick} columns={6} />
+          <RatingPicker rtng={props.rtng} clck={onPckrClick} clmn={6} />
         </div>
       </div>
 

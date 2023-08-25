@@ -13,9 +13,11 @@ import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 import CacheApiLabel from '@/modules/cache/api/Label';
+import CacheApiRating from '@/modules/cache/api/Rating';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
+import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 export default function Page() {
@@ -24,28 +26,34 @@ export default function Page() {
 
   const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject | null>(null);
+  const [erro, setErro] = useState<Error | null>(null);
   const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
-  const [erro, setErro] = useState<Error | null>(null);
+  const [rtng, setRtng] = useState<RatingSearchResponse[] | null>(null);
 
   const cat: string = CacheAuthToken(user ? true : false);
-  const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
 
+  const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
   if (user && cal && cal.length !== 0 && (!labl || labl.length === 0)) {
     setLabl(cal);
+  }
+
+  const car: RatingSearchResponse[] = CacheApiRating(user ? true : false, cat);
+  if (user && car && car.length !== 0 && (!rtng || rtng.length === 0)) {
+    setRtng(car);
   }
 
   useEffect(() => {
     if (evnt && desc) return;
 
-    if (!isLoading && user && labl && cat) {
+    if (!isLoading && user && labl && rtng) {
       const fetchData = async function (): Promise<void> {
         try {
-          const [evn] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
+          const evn = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
           const des = await DescriptionSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
           const usr = await UserSearch(des.map(x => ({ atkn: cat, user: x.user || "" })));
 
-          setEvnt(new EventSearchObject(evn));
+          setEvnt(new EventSearchObject(evn[0]));
           setDesc(des.map(x => {
             const u = usr.find(y => y.user === x.user);
             if (u) {
@@ -68,7 +76,7 @@ export default function Page() {
 
       fetchData();
     }
-  }, [user, isLoading, labl]);
+  }, [user, isLoading, labl, rtng]);
 
   return (
     <>
@@ -97,8 +105,8 @@ export default function Page() {
             {ldng && (
               <></>
             )}
-            {!ldng && evnt && desc && labl && (
-              <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} />
+            {!ldng && evnt && desc && labl && rtng && (
+              <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} rtng={rtng} />
             )}
             {erro && (
               <ErrorToast error={erro} />

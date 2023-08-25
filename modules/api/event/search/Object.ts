@@ -61,4 +61,15 @@ export class EventSearchObject {
   time(): number {
     return Number(this.res.time);
   }
+
+  //
+  // custom
+  //
+
+  // actv expresses whether this event is currently ongoing based on
+  // this.res.time and this.res.dura.
+  actv(): boolean {
+    const now = Math.floor(Date.now() / 1000);
+    return now >= this.time() && now <= this.dura();
+  }
 }

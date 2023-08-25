@@ -7,16 +7,16 @@ import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 
 interface RatingPickerProps {
-  ratings: RatingSearchResponse[];
-  onClick: (name: RatingSearchResponse) => void;
-  columns: number;
+  clck: (name: RatingSearchResponse) => void;
+  clmn: number;
+  rtng: RatingSearchResponse[];
 }
 
 export default function RatingPicker(props: RatingPickerProps) {
   // Group emojis into rows with the specified number of columns.
   const row: RatingSearchResponse[][] = [];
-  for (let i = 0; i < props.ratings.length; i += props.columns) {
-    row.push(props.ratings.slice(i, i + props.columns));
+  for (let i = 0; i < props.rtng.length; i += props.clmn) {
+    row.push(props.rtng.slice(i, i + props.clmn));
   }
 
   return (
@@ -32,14 +32,12 @@ export default function RatingPicker(props: RatingPickerProps) {
           className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           loop
         >
-
-
           {row.map((r, i) => (
             <DropdownMenu.Group key={i} className="flex flex-row gap-2.5">
               {r.map((c, j) => (
                 <DropdownMenu.Item
                   key={j}
-                  onClick={() => props.onClick(c)}
+                  onClick={() => props.clck(c)}
                   onSelect={(e) => e.preventDefault()}
                   className="flex w-9 h-9 text-lg text-gray-900 dark:text-gray-50 rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer"
                 >
@@ -66,7 +64,6 @@ export default function RatingPicker(props: RatingPickerProps) {
           <DropdownMenu.Item className="text-red-600 dark:text-red-600 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-red-600 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-red-600 cursor-pointer">
             Delete Description
           </DropdownMenu.Item>
-
 
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
