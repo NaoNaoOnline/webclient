@@ -45,7 +45,12 @@ function newTime(dat: string, sta: string): string {
   const [day, mon, yea] = dat.split('.').map(Number);
   const [hou, min] = sta.split(':').map(Number);
 
-  const uni = new Date(yea + 2000, mon - 1, day, hou, min).getTime() / 1000;
+  const bas = new Date(yea + 2000, mon - 1, day, hou, min);
 
-  return Math.floor(uni).toString();
+  bas.setMinutes(bas.getMinutes() - bas.getTimezoneOffset());
+
+  const utc = new Date(bas.getUTCFullYear(), bas.getUTCMonth(), bas.getUTCDate(), bas.getUTCHours(), bas.getUTCMinutes());
+
+  return Math.floor(utc.getTime() / 1000).toString();
 }
+

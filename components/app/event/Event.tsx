@@ -37,6 +37,49 @@ export default function Event(props: Props) {
   const [form, setForm] = useState<boolean>(false);
   const [xpnd, setXpnd] = useState<boolean>(false);
 
+  const doneFunc = (des: string) => {
+    props.desc.push({
+      // local
+      imag: user?.picture || "",
+      name: user?.nickname || user?.name || "",
+      // intern
+      crtd: "",
+      desc: "",
+      user: user?.uuid || "",
+      // public
+      evnt: props.evnt.evnt(),
+      rtng: {},
+      text: des,
+    });
+  };
+
+  const linkText = (tim: number): string => {
+    const now = Math.floor(Date.now() / 1000);
+    const dif = tim - now;
+
+    const min = 60;
+    const hou = 60 * min;
+    const day = 24 * hou;
+    const wee = 7 * day;
+    const mon = 30 * day;
+
+    if (dif <= 0) {
+      return "join now now";
+    } else if (dif <= hou) {
+      return "coming up next";
+    } else if (dif <= day) {
+      return "later today";
+    } else if (dif <= 2 * day) {
+      return "tomorrow";
+    } else if (dif <= wee) {
+      return "next week";
+    } else if (dif <= mon) {
+      return "next month";
+    } else {
+      return "in the future";
+    }
+  }
+
   props.desc.sort((a: DescriptionSearchResponse, b: DescriptionSearchResponse) => {
     // Sort descriptions by cumulative rating amount in descending order at
     // first.
@@ -58,22 +101,6 @@ export default function Event(props: Props) {
       return xti - yti;
     }
   });
-
-  const doneFunc = (des: string) => {
-    props.desc.push({
-      // local
-      imag: user?.picture || "",
-      name: user?.nickname || user?.name || "",
-      // intern
-      crtd: "",
-      desc: "",
-      user: user?.uuid || "",
-      // public
-      evnt: props.evnt.evnt(),
-      rtng: {},
-      text: des,
-    });
-  };
 
   return (
     <>
@@ -100,18 +127,24 @@ export default function Event(props: Props) {
             )}
           </div>
 
-          <a href={`/event/${props.evnt.evnt()}`} onClick={onLinkClick} className="flex items-center p-2 whitespace-nowrap text-md font-medium text-green-400 hover:underline">
-            join now now
+          <a
+            href={props.evnt.time() <= Math.floor(Date.now() / 1000) ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
+            onClick={onLinkClick}
+            target={props.evnt.time() <= Math.floor(Date.now() / 1000) ? "_blank" : "_self"}
+            className={`flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline ${props.evnt.time() <= Math.floor(Date.now() / 1000) ? "text-green-400" : "text-gray-400"}`}
+          >
+            {linkText(props.evnt.time())}
           </a>
+
           <button
-            className="py-3 outline-none group"
+            className={`py-3 outline-none group ${props.desc.length > 1 ? "" : "cursor-default"}`}
             type="button"
-            onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-              eve.stopPropagation();
-              setXpnd(!xpnd);
+            onClick={(evn: MouseEvent<HTMLButtonElement>) => {
+              evn.stopPropagation();
+              if (props.desc.length > 1) setXpnd(!xpnd);
             }}
           >
-            <ChevronDownIcon className={`w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd ? "rotate-180" : ""}`} />
+            <ChevronDownIcon className={`w-5 h-5 mx-2 ${props.desc.length > 1 ? "text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" : "text-gray-200 dark:text-gray-600 cursor-default"}  ${xpnd ? "rotate-180" : ""}`} />
           </button>
         </div>
       </div>

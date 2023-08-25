@@ -11,8 +11,8 @@ import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 
-function onLinkClick(eve: MouseEvent<HTMLAnchorElement>) {
-  eve.stopPropagation();
+function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
+  evn.stopPropagation();
 }
 
 interface Props {
