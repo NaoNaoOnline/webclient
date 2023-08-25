@@ -40,10 +40,9 @@ export class EventSearchObject {
     return lab.map(x => x.name);
   }
 
-  // dura returns the end date time between this.res.time and this.res.dura,
-  // which are strings of the number of unix seconds respectively.
-  dura(): Date {
-    return new Date(Number(this.res.time) + Number(this.res.dura) * 1000);
+  // dura returns the unix seconds of this event's end date time.
+  dura(): number {
+    return Number(this.res.time) + Number(this.res.dura);
   }
 
   // cate returns host label names based on this.res.host, which is a comma
@@ -58,9 +57,8 @@ export class EventSearchObject {
     return this.res.link;
   }
 
-  // time returns the start date of this.res.time, which is a string of unix
-  // seconds.
-  time(): Date {
-    return new Date(Number(this.res.time) * 1000);
+  // time returns the unix seconds of this event's start date time.
+  time(): number {
+    return Number(this.res.time);
   }
 }

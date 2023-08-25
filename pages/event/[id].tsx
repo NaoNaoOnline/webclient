@@ -16,6 +16,7 @@ import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
+import { UserSearch } from "@/modules/api/user/search/Search";
 
 export default function Page() {
   const router = useRouter()
@@ -40,16 +41,23 @@ export default function Page() {
     if (!isLoading && user && labl && cat) {
       const fetchData = async function (): Promise<void> {
         try {
-          const [eve] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
-          setEvnt(new EventSearchObject(eve));
+          const [evn] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
           const des = await DescriptionSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
+          const usr = await UserSearch(des.map(x => ({ atkn: cat, user: x.user || "" })));
 
-          // TODO search for users and add user names and profiles pictures
-          // dynamically.
-          setDesc(des.map((description) => ({
-            ...description,
-            name: "xh3b4sd",
-          })));
+          setEvnt(new EventSearchObject(evn));
+          setDesc(des.map(x => {
+            const u = usr.find(y => y.user === x.user);
+            if (u) {
+              return {
+                ...x,
+                imag: u.imag,
+                name: u.name,
+              };
+            } else {
+              return x;
+            }
+          }));
 
           setLdng(false);
         } catch (err) {

@@ -77,13 +77,13 @@ export default function Page() {
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const eve = await EventCreate(NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi]));
-      setEvnt(eve.evnt);
+      const evn = await EventCreate(NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi]));
+      setEvnt(evn.evnt);
       setCompleted(75);
 
       await new Promise(r => setTimeout(r, 400));
 
-      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, eve.evnt));
+      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, evn.evnt));
       setCompleted(100);
 
       await new Promise(r => setTimeout(r, 200));
