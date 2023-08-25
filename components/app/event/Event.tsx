@@ -11,9 +11,10 @@ import { UserIcon } from '@heroicons/react/24/outline'
 import Form from '@/components/app/description/Form'
 import Description from '@/components/app/description/Description'
 
+import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
 import { SearchO_Object_Public_Rtng } from '@naonaoonline/apitscode/src/description/search';
 
 function onItemClick(e: MouseEvent<HTMLDivElement>) {
@@ -29,6 +30,7 @@ interface Props {
   evnt: EventSearchObject;
   desc: DescriptionSearchResponse[];
   labl: LabelSearchResponse[];
+  rtng: RatingSearchResponse[];
 }
 
 export default function Event(props: Props) {
@@ -36,6 +38,18 @@ export default function Event(props: Props) {
 
   const [form, setForm] = useState<boolean>(false);
   const [xpnd, setXpnd] = useState<boolean>(false);
+
+  const dateTime = (uni: number): string => {
+    const dat = new Date(uni * 1000);
+
+    const day = String(dat.getDate()).padStart(2, '0');
+    const mon = String(dat.getMonth() + 1).padStart(2, '0');
+    const yea = String(dat.getFullYear()).slice(-2);
+    const hou = String(dat.getHours()).padStart(2, '0');
+    const min = String(dat.getMinutes()).padStart(2, '0');
+
+    return `${day}.${mon}.${yea} ${hou}:${min}`;
+  };
 
   const doneFunc = (des: string) => {
     props.desc.push({
@@ -109,13 +123,15 @@ export default function Event(props: Props) {
         className="relative rounded-t-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-hidden cursor-pointer"
       >
         <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">
-          <a
-            href="/user/xh3b4sd"
-            onClick={onLinkClick}
-            className="flex items-center pl-2"
-          >
-            <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
-          </a>
+          {props.labl && (
+            <a
+              href={`/host/${props.evnt?.host(props.labl)[0]}`}
+              onClick={onLinkClick}
+              className="flex items-center pl-2"
+            >
+              <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
+            </a>
+          )}
 
           <div className="flex flex-row w-full">
             {props.labl && (
@@ -128,12 +144,17 @@ export default function Event(props: Props) {
           </div>
 
           <a
-            href={props.evnt.time() <= Math.floor(Date.now() / 1000) ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
+            href={props.evnt.actv() ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
             onClick={onLinkClick}
-            target={props.evnt.time() <= Math.floor(Date.now() / 1000) ? "_blank" : "_self"}
-            className={`flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline ${props.evnt.time() <= Math.floor(Date.now() / 1000) ? "text-green-400" : "text-gray-400"}`}
+            target={props.evnt.actv() ? "_blank" : "_self"}
+            className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv() ? "text-green-400" : "text-gray-400"}`}
           >
-            {linkText(props.evnt.time())}
+            <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
+              {dateTime(props.evnt.time())}
+              {` - `}
+              {dateTime(props.evnt.dura())}
+            </div>
+            {props.evnt.actv() ? linkText(props.evnt.time()) : "already happened"}
           </a>
 
           <button
@@ -151,12 +172,12 @@ export default function Event(props: Props) {
 
       <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
         {!xpnd && (
-          <Description desc={props.desc[0]} evnt={props.evnt} />
+          <Description desc={props.desc[0]} evnt={props.evnt} rtng={props.rtng} />
         )}
         {xpnd && (
           <>
             {props.desc.map((x, i) => (
-              <Description key={i} desc={x} evnt={props.evnt} />
+              <Description key={i} desc={x} evnt={props.evnt} rtng={props.rtng} />
             ))}
           </>
         )}
