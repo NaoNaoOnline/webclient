@@ -5,12 +5,13 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
 import DatePicker from '@/components/app/event/add/DatePicker'
+import TextInput from '@/components/app/event/add/TextInput'
+import TimePicker from '@/components/app/event/add/TimePicker'
+
 import ErrorToast from '@/components/app/event/add/ErrorToast'
 import LoginToast from '@/components/app/event/add/LoginToast'
 import ProgressToast from '@/components/app/event/add/ProgressToast'
 import SuccessToast from '@/components/app/event/add/SuccessToast'
-import TextInput from '@/components/app/event/add/TextInput'
-import TimePicker from '@/components/app/event/add/TimePicker'
 
 import { EventCreate } from '@/modules/api/event/create/Create'
 import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Request'
@@ -56,6 +57,8 @@ export default function Page() {
       if (dcn.length > 0) {
         const res = await LabelCreate(LabelCreateRequest(cat, "cate", dcn));
         nci = res.map((x: LabelCreateResponse) => x.labl);
+        setCompleted(25);
+        await new Promise(r => setTimeout(r, 200));
       }
 
       // Create the host labels in the backend, if any.
@@ -63,6 +66,8 @@ export default function Page() {
       if (dhn.length > 0) {
         const res = await LabelCreate(LabelCreateRequest(cat, "host", dhn));
         nhi = res.map((x: LabelCreateResponse) => x.labl);
+        setCompleted(50);
+        await new Promise(r => setTimeout(r, 200));
       }
 
       // Get the cached category ids and cached host ids for the user input that
@@ -157,7 +162,8 @@ export default function Page() {
                     description="the short one-liner for what this event is about"
                     placeholder="dicussing how EIP-4844 will change L2 economics forever"
                     minLength={20}
-                    maxLength={80}
+                    maxLength={120}
+                    pattern={`^([A-Za-z0-9\\s,.\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\-'"!$%&#]+)*)$`}
                   />
                 </div>
                 <div className="grid gap-6 grid-cols-3">

@@ -3,14 +3,9 @@ import React, { useEffect, useState, MouseEvent } from 'react';
 import { useRouter } from 'next/router'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 import Event from '@/components/app/event/Event'
-import Description from '@/components/app/description/Description'
 import ErrorToast from '@/components/app/event/add/ErrorToast'
 
 import { EventSearch } from '@/modules/api/event/search/Search'
@@ -19,37 +14,43 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
-
-function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
-  e.stopPropagation();
-}
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import { DescriptionSearch } from "@/modules/api/description/search/Search";
 
 export default function Page() {
-  console.log("render")
   const router = useRouter()
   const { user, isLoading } = useUser();
 
+  const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject | null>(null);
+  const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
-  const [open, setOpen] = useState<boolean>(false);
   const [erro, setErro] = useState<Error | null>(null);
 
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
 
-  console.log("cat", cat)
-  console.log("cal", cal)
+  if (user && cal && cal.length !== 0 && (!labl || labl.length === 0)) {
+    setLabl(cal);
+  }
 
   useEffect(() => {
-    if (evnt) return;
+    if (evnt && desc) return;
 
-    console.log("useEffect")
-    if (!isLoading && user && cal && cat) {
-      console.log("fetchData")
+    if (!isLoading && user && labl && cat) {
       const fetchData = async function (): Promise<void> {
         try {
-          const [res] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
-          setEvnt(new EventSearchObject(res));
+          const [eve] = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
+          setEvnt(new EventSearchObject(eve));
+          const des = await DescriptionSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
+
+          // TODO search for users and add user names and profiles pictures
+          // dynamically.
+          setDesc(des.map((description) => ({
+            ...description,
+            name: "xh3b4sd",
+          })));
+
           setLdng(false);
         } catch (err) {
           setErro(err as Error);
@@ -59,7 +60,7 @@ export default function Page() {
 
       fetchData();
     }
-  }, [user, isLoading, cal]);
+  }, [user, isLoading, labl]);
 
   return (
     <>
@@ -88,8 +89,8 @@ export default function Page() {
             {ldng && (
               <></>
             )}
-            {!ldng && evnt && (
-              <Event evnt={evnt} labl={cal} />
+            {!ldng && evnt && desc && labl && (
+              <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} />
             )}
             {erro && (
               <ErrorToast error={erro} />
