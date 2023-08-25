@@ -1,6 +1,8 @@
 export interface RatingSearchResponse {
-  amnt: number; // local field for aggregating user reactions
-  clck: boolean; // local field for tracking user reactions
+  // local
+  amnt: number; // used for aggregating user reactions
+  clck: boolean; // used for tracking user reactions
+  // public
   html: string;
   name: string;
 }

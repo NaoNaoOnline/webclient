@@ -18,11 +18,12 @@ export class EventSearchObject {
     return new Date(Number(this.res.crtd) * 1000);
   }
 
+  // evnt returns the object ID of this event.
   evnt(): string {
     return this.res.evnt;
   }
 
-  // TODO resolve user name.
+  // user returns the object ID of the user that created this event.
   user(): string {
     return this.res.user;
   }

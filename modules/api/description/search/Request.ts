@@ -1,4 +1,4 @@
-export interface EventSearchRequest {
+export interface DescriptionSearchRequest {
   // local
   atkn: string;
   // intern

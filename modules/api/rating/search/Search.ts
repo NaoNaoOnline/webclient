@@ -22,6 +22,10 @@ export async function RatingSearch(req: RatingSearchRequest): Promise<RatingSear
     const res = await call.response;
 
     return res.object.map((x) => ({
+      // local
+      amnt: 0,
+      clck: false,
+      // public
       html: x.public?.html || "",
       name: x.public?.name || "",
     }));
