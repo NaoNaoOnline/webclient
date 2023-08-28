@@ -1,12 +1,8 @@
 import API from '@/modules/api/user/API';
 import { UserCreateRequest } from '@/modules/api/user/create/Request';
+import { UserCreateResponse } from '@/modules/api/user/create/Response';
 
-interface Response {
-  crtd: string;
-  user: string;
-}
-
-export async function UserCreate(req: UserCreateRequest): Promise<Response> {
+export async function UserCreate(req: UserCreateRequest): Promise<UserCreateResponse> {
   try {
     const call = API.create(
       {
@@ -34,6 +30,7 @@ export async function UserCreate(req: UserCreateRequest): Promise<Response> {
     const res = await call.response;
 
     return {
+      // intern
       crtd: res.object[0].intern?.crtd || "",
       user: res.object[0].intern?.user || "",
     };

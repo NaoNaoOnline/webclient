@@ -8,9 +8,10 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       {
         object: req.map((r) => ({
           intern: {
+          },
+          public: {
             evnt: r.evnt,
           },
-          public: {},
         })),
       },
       {
@@ -36,7 +37,6 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       user: x.intern?.user || "",
       // public
       evnt: x.public?.evnt || "",
-      rtng: x.public?.rtng || {},
       text: x.public?.text || "",
     }));
   } catch (error) {

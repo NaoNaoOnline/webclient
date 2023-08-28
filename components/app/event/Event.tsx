@@ -14,8 +14,8 @@ import Description from '@/components/app/description/Description'
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
-import { SearchO_Object_Public_Rtng } from '@naonaoonline/apitscode/src/description/search';
+import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 function onItemClick(e: MouseEvent<HTMLDivElement>) {
   e.stopPropagation();
@@ -30,7 +30,8 @@ interface Props {
   evnt: EventSearchObject;
   desc: DescriptionSearchResponse[];
   labl: LabelSearchResponse[];
-  rtng: RatingSearchResponse[];
+  rctn: ReactionSearchResponse[];
+  vote: VoteSearchResponse[];
 }
 
 export default function Event(props: Props) {
@@ -62,7 +63,6 @@ export default function Event(props: Props) {
       user: user?.uuid || "",
       // public
       evnt: props.evnt.evnt(),
-      rtng: {},
       text: des,
     });
   };
@@ -94,27 +94,35 @@ export default function Event(props: Props) {
     }
   }
 
-  props.desc.sort((a: DescriptionSearchResponse, b: DescriptionSearchResponse) => {
-    // Sort descriptions by cumulative rating amount in descending order at
-    // first.
-    {
-      const xam = Object.values(a.rtng).reduce((tot: number, obj: SearchO_Object_Public_Rtng) => tot + obj.amnt, 0);
-      const yam = Object.values(b.rtng).reduce((tot: number, obj: SearchO_Object_Public_Rtng) => tot + obj.amnt, 0);
+  {
+    // Create a lookup table to store the vote counts for each description.
+    const des: Record<string, number> = {};
 
+    props.vote.forEach((x: VoteSearchResponse) => {
+      if (des[x.desc] === undefined) {
+        des[x.desc] = 0;
+      }
+
+      des[x.desc]++;
+    });
+
+    props.desc.sort((x: DescriptionSearchResponse, y: DescriptionSearchResponse) => {
+      const xam = des[x.desc] || 0;
+      const yam = des[y.desc] || 0;
+
+      // Sort descriptions by cumulative vote count in descending order at first.
       if (yam !== xam) {
         return yam - xam;
       }
-    }
 
-    // Sort descriptions by creation time in ascending order as secondary
-    // measure.
-    {
-      const xti = parseInt(a.crtd, 10);
-      const yti = parseInt(b.crtd, 10);
+      // Sort descriptions by creation time in ascending order as secondary
+      // measure.
+      const xti = parseInt(x.crtd, 10);
+      const yti = parseInt(y.crtd, 10);
 
       return xti - yti;
-    }
-  });
+    });
+  }
 
   return (
     <>
@@ -172,12 +180,25 @@ export default function Event(props: Props) {
 
       <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
         {!xpnd && (
-          <Description desc={props.desc[0]} evnt={props.evnt} rtng={props.rtng} />
+          <Description
+            atkn={props.atkn}
+            desc={props.desc[0]}
+            evnt={props.evnt}
+            rctn={props.rctn}
+            vote={props.vote.filter((v) => v.desc === props.desc[0].desc)}
+          />
         )}
         {xpnd && (
           <>
             {props.desc.map((x, i) => (
-              <Description key={i} desc={x} evnt={props.evnt} rtng={props.rtng} />
+              <Description
+                key={i}
+                atkn={props.atkn}
+                desc={x}
+                evnt={props.evnt}
+                rctn={props.rctn}
+                vote={props.vote.filter((v) => v.desc === x.desc)}
+              />
             ))}
           </>
         )}
@@ -191,7 +212,6 @@ export default function Event(props: Props) {
         className="flex flex-1 rounded-b-md dark:bg-gray-700 items-center justify-between bg-white shadow-gray-400 dark:shadow-black shadow-[0_0_2px] outline-none cursor-pointer"
       >
         <div className="flex flex-row w-full">
-
           {props.labl && (
             props.evnt?.cate(props.labl).map((x, i) => (
               <a key={i} href={`/cate/${x}`} onClick={onLinkClick} className="flex items-center pl-2 py-2 text-sm font-medium text-sky-500 hover:underline">
@@ -199,7 +219,6 @@ export default function Event(props: Props) {
               </a>
             ))
           )}
-
         </div>
 
         <DropdownMenu.Root>

@@ -1,10 +1,9 @@
 export interface LabelCreateRequest {
+  // local
   atkn: string;
-  desc?: string;
-  disc?: string;
+  // public
   kind: string;
   name: string;
-  twit?: string;
 }
 
 export function LabelCreateRequest(atk: string, kin: string, lab: string[]): LabelCreateRequest[] {

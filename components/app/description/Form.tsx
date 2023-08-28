@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { DescriptionCreate } from '@/modules/api/description/create/Create'
@@ -72,7 +72,8 @@ export default function Form(props: Props) {
             name="description-input"
             minLength={20}
             maxLength={120}
-            pattern={`^([A-Za-z0-9\\s,.\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\-'"!$%&#]+)*)$`}
+            pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
+            title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
             className="flex-1 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder="dicussing how EIP-4844 will change L2 economics forever"
             required

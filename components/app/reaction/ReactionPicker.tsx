@@ -4,19 +4,19 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
 
-import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
+import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 
-interface RatingPickerProps {
-  clck: (name: RatingSearchResponse) => void;
+interface ReactionPickerProps {
   clmn: number;
-  rtng: RatingSearchResponse[];
+  padd: (name: ReactionSearchResponse) => void;
+  rctn: ReactionSearchResponse[];
 }
 
-export default function RatingPicker(props: RatingPickerProps) {
+export default function ReactionPicker(props: ReactionPickerProps) {
   // Group emojis into rows with the specified number of columns.
-  const row: RatingSearchResponse[][] = [];
-  for (let i = 0; i < props.rtng.length; i += props.clmn) {
-    row.push(props.rtng.slice(i, i + props.clmn));
+  const row: ReactionSearchResponse[][] = [];
+  for (let i = 0; i < props.rctn.length; i += props.clmn) {
+    row.push(props.rctn.slice(i, i + props.clmn));
   }
 
   return (
@@ -37,7 +37,7 @@ export default function RatingPicker(props: RatingPickerProps) {
               {r.map((c, j) => (
                 <DropdownMenu.Item
                   key={j}
-                  onClick={() => props.clck(c)}
+                  onClick={() => props.padd(c)}
                   onSelect={(e) => e.preventDefault()}
                   className="flex w-9 h-9 text-lg text-gray-900 dark:text-gray-50 rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer"
                 >

@@ -1,8 +1,8 @@
-import API from '@/modules/api/rating/API';
-import { RatingSearchRequest } from '@/modules/api/rating/search/Request';
-import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
+import API from '@/modules/api/reaction/API';
+import { ReactionSearchRequest } from '@/modules/api/reaction/search/Request';
+import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 
-export async function RatingSearch(req: RatingSearchRequest): Promise<RatingSearchResponse[]> {
+export async function ReactionSearch(req: ReactionSearchRequest): Promise<ReactionSearchResponse[]> {
   try {
     const call = API.search(
       {
@@ -25,6 +25,8 @@ export async function RatingSearch(req: RatingSearchRequest): Promise<RatingSear
       // local
       amnt: 0,
       clck: false,
+      // intern
+      rctn: x.intern?.rctn || "",
       // public
       html: x.public?.html || "",
       name: x.public?.name || "",
