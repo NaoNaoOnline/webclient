@@ -6,11 +6,10 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
   try {
     const call = API.search(
       {
-        object: req.map((r) => ({
-          intern: {
-          },
+        object: req.map((x) => ({
+          intern: {},
           public: {
-            desc: r.desc,
+            desc: x.desc,
           },
         })),
       },

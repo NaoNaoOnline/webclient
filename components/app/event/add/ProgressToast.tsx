@@ -5,8 +5,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface Props {
   callback: () => void;
-  completed: number;
-  failed: Error | null;
+  cmpl: number;
+  erro: Error | null;
 }
 
 export default function ProgressToast(props: Props) {
@@ -19,10 +19,10 @@ export default function ProgressToast(props: Props) {
   };
 
   React.useEffect(() => {
-    if (props.completed >= 100 || props.failed) {
+    if (props.cmpl >= 100 || props.erro) {
       setDuration(3000); // 3 seconds
     }
-  }, [props.completed]);
+  }, [props.cmpl]);
 
   return (
     <>
@@ -36,7 +36,7 @@ export default function ProgressToast(props: Props) {
         </Toast.Title>
         <Toast.Description className="[grid-area:_description]">
           <div className="mt-4 w-full rounded-full h-2 bg-gray-200">
-            <div style={{ width: `${props.completed}%` }} className={`bg-blue-600 h-2 rounded-full transition-width duration-1000 ease-in-out`}></div>
+            <div style={{ width: `${props.cmpl}%` }} className={`bg-blue-600 h-2 rounded-full transition-width duration-1000 ease-in-out`}></div>
           </div>
         </Toast.Description>
         <Toast.Close className="[grid-area:_action] text-gray-500 hover:text-gray-900" aria-label="Close">

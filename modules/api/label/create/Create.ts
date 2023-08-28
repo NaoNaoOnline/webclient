@@ -6,13 +6,13 @@ export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreat
   try {
     const call = API.create(
       {
-        object: req.map((r) => ({
+        object: req.map((x) => ({
           intern: {},
           public: {
             desc: "",
             disc: "",
-            kind: r.kind,
-            name: r.name,
+            kind: x.kind,
+            name: x.name,
             twit: "",
           },
         })),
@@ -31,6 +31,7 @@ export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreat
     const res = await call.response;
 
     return res.object.map((x) => ({
+      // intern
       crtd: x.intern?.crtd || "",
       labl: x.intern?.labl || "",
     }));

@@ -6,11 +6,11 @@ export async function VoteCreate(req: VoteCreateRequest[]): Promise<VoteCreateRe
   try {
     const call = API.create(
       {
-        object: req.map((r) => ({
+        object: req.map((x) => ({
           intern: {},
           public: {
-            desc: r.desc || "",
-            rctn: r.rctn || "",
+            desc: x.desc,
+            rctn: x.rctn,
           },
         })),
       },

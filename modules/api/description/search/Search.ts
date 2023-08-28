@@ -6,11 +6,10 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
   try {
     const call = API.search(
       {
-        object: req.map((r) => ({
-          intern: {
-          },
+        object: req.map((x) => ({
+          intern: {},
           public: {
-            evnt: r.evnt,
+            evnt: x.evnt,
           },
         })),
       },

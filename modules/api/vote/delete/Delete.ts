@@ -6,9 +6,9 @@ export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteRe
   try {
     const call = API.delete(
       {
-        object: req.map((r) => ({
+        object: req.map((x) => ({
           intern: {
-            vote: r.vote || "",
+            vote: x.vote || "",
           },
           public: {},
         })),
