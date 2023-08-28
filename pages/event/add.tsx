@@ -137,7 +137,8 @@ export default function Page() {
                     type="text"
                     description="the host labels for who is organizing this event"
                     placeholder="Flashbots"
-                    pattern="^([A-Za-z0-9\s]+(?:\s*,\s*[A-Za-z0-9\s]+)*)$"
+                    pattern="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
+                    title="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
                   />
                   <TextInput
                     name="category"
@@ -145,7 +146,8 @@ export default function Page() {
                     type="text"
                     description="the category labels for topics this event is about"
                     placeholder="Crypto, DeFi, MEV"
-                    pattern="^([A-Za-z0-9\s]+(?:\s*,\s*[A-Za-z0-9\s]+)*)$"
+                    pattern="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
+                    title="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"
                   />
                   <TextInput
                     name="link"
@@ -163,7 +165,8 @@ export default function Page() {
                     placeholder="dicussing how EIP-4844 will change L2 economics forever"
                     minLength={20}
                     maxLength={120}
-                    pattern={`^([A-Za-z0-9\\s,.\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\-'"!$%&#]+)*)$`}
+                    pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
+                    title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                   />
                 </div>
                 <div className="grid gap-6 grid-cols-3">

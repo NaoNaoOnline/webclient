@@ -1,19 +1,16 @@
-import API from '@/modules/api/label/API';
-import { LabelCreateRequest } from '@/modules/api/label/create/Request';
-import { LabelCreateResponse } from '@/modules/api/label/create/Response';
+import API from '@/modules/api/vote/API';
+import { VoteCreateRequest } from '@/modules/api/vote/create/Request';
+import { VoteCreateResponse } from '@/modules/api/vote/create/Response';
 
-export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreateResponse[]> {
+export async function VoteCreate(req: VoteCreateRequest[]): Promise<VoteCreateResponse[]> {
   try {
     const call = API.create(
       {
         object: req.map((r) => ({
           intern: {},
           public: {
-            desc: "",
-            disc: "",
-            kind: r.kind,
-            name: r.name,
-            twit: "",
+            desc: r.desc || "",
+            rctn: r.rctn || "",
           },
         })),
       },
@@ -31,8 +28,9 @@ export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreat
     const res = await call.response;
 
     return res.object.map((x) => ({
+      // intern
       crtd: x.intern?.crtd || "",
-      labl: x.intern?.labl || "",
+      vote: x.intern?.vote || "",
     }));
   } catch (error) {
     throw error;

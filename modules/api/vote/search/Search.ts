@@ -1,8 +1,8 @@
-import API from '@/modules/api/label/API';
-import { LabelSearchRequest } from '@/modules/api/label/search/Request';
-import { LabelSearchResponse } from '@/modules/api/label/search/Response';
+import API from '@/modules/api/vote/API';
+import { VoteSearchRequest } from '@/modules/api/vote/search/Request';
+import { VoteSearchResponse } from '@/modules/api/vote/search/Response';
 
-export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearchResponse[]> {
+export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchResponse[]> {
   try {
     const call = API.search(
       {
@@ -10,8 +10,7 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
           intern: {
           },
           public: {
-            kind: r.kind,
-            labl: r.labl,
+            desc: r.desc,
           },
         })),
       },
@@ -30,9 +29,12 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
 
     return res.object.map((x) => ({
       // intern
-      labl: x.intern?.labl || "",
+      crtd: x.intern?.crtd || "",
+      user: x.intern?.user || "",
+      vote: x.intern?.vote || "",
       // public
-      name: x.public?.name || "",
+      desc: x.public?.desc || "",
+      rctn: x.public?.rctn || "",
     }));
   } catch (error) {
     throw error;

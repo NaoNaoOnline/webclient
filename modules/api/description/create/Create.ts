@@ -16,7 +16,6 @@ export async function DescriptionCreate(req: DescriptionCreateRequest): Promise<
             public: {
               evnt: req.evnt,
               text: req.text,
-              vote: "",
             },
           },
         ],

@@ -1,5 +1,5 @@
 import "flowbite";
-import React, { useEffect, useState, MouseEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
@@ -13,23 +13,26 @@ import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 import CacheApiLabel from '@/modules/cache/api/Label';
-import CacheApiRating from '@/modules/cache/api/Rating';
+import CacheApiReaction from '@/modules/cache/api/Reaction';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
-import { RatingSearchResponse } from '@/modules/api/rating/search/Response';
+import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 import { UserSearch } from "@/modules/api/user/search/Search";
+import { VoteSearch } from "@/modules/api/vote/search/Search";
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export default function Page() {
   const router = useRouter()
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
 
   const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject | null>(null);
   const [erro, setErro] = useState<Error | null>(null);
   const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
-  const [rtng, setRtng] = useState<RatingSearchResponse[] | null>(null);
+  const [rctn, setRctn] = useState<ReactionSearchResponse[] | null>(null);
+  const [vote, setVote] = useState<VoteSearchResponse[] | null>(null);
 
   const cat: string = CacheAuthToken(user ? true : false);
 
@@ -38,20 +41,21 @@ export default function Page() {
     setLabl(cal);
   }
 
-  const car: RatingSearchResponse[] = CacheApiRating(user ? true : false, cat);
-  if (user && car && car.length !== 0 && (!rtng || rtng.length === 0)) {
-    setRtng(car);
+  const car: ReactionSearchResponse[] = CacheApiReaction(user ? true : false, cat);
+  if (user && car && car.length !== 0 && (!rctn || rctn.length === 0)) {
+    setRctn(car);
   }
 
   useEffect(() => {
     if (evnt && desc) return;
 
-    if (!isLoading && user && labl && rtng) {
+    if (user && labl && rctn) {
       const fetchData = async function (): Promise<void> {
         try {
           const evn = await EventSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
           const des = await DescriptionSearch([{ atkn: cat, evnt: router.query.id?.toString() || "" }]);
-          const usr = await UserSearch(des.map(x => ({ atkn: cat, user: x.user || "" })));
+          const vot = await VoteSearch(des.map(x => ({ atkn: cat, desc: x.desc || "" })));
+          const usr = await UserSearch(uniq(des).map(x => ({ atkn: cat, user: x || "" })));
 
           setEvnt(new EventSearchObject(evn[0]));
           setDesc(des.map(x => {
@@ -66,6 +70,7 @@ export default function Page() {
               return x;
             }
           }));
+          setVote(vot);
 
           setLdng(false);
         } catch (err) {
@@ -76,7 +81,7 @@ export default function Page() {
 
       fetchData();
     }
-  }, [user, isLoading, labl, rtng]);
+  }, [user, labl, rctn]);
 
   return (
     <>
@@ -105,8 +110,8 @@ export default function Page() {
             {ldng && (
               <></>
             )}
-            {!ldng && evnt && desc && labl && rtng && (
-              <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} rtng={rtng} />
+            {!ldng && evnt && desc && labl && rctn && vote && (
+              <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} rctn={rctn} vote={vote} />
             )}
             {erro && (
               <ErrorToast error={erro} />
@@ -117,3 +122,18 @@ export default function Page() {
     </>
   );
 };
+
+function uniq(des: DescriptionSearchResponse[]): string[] {
+  const lis: string[] = [];
+  const set = new Set();
+
+  des.forEach((x) => {
+    if (!set.has(x.user)) {
+      set.add(x.user);
+      lis.push(x.user);
+    }
+  });
+
+  return lis;
+}
+
