@@ -6,9 +6,9 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
   try {
     const call = API.search(
       {
-        object: req.map((r) => ({
+        object: req.map((x) => ({
           intern: {
-            user: r.user,
+            user: x.user,
           },
           public: {},
         })),

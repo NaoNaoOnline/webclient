@@ -1,13 +1,10 @@
-import "flowbite";
-import React, { useState, MouseEvent } from 'react';
+import React, { useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import ErrorToast from '@/components/app/event/add/ErrorToast'
 
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { UserIcon } from '@heroicons/react/24/outline'
-
+import Footer from '@/components/app/event/Footer'
+import Header from '@/components/app/event/Header'
 import Form from '@/components/app/description/Form'
 import Description from '@/components/app/description/Description'
 
@@ -15,15 +12,11 @@ import { DescriptionSearchResponse } from '@/modules/api/description/search/Resp
 import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
+import { VoteCreate } from '@/modules/api/vote/create/Create';
+import { VoteDelete } from '@/modules/api/vote/delete/Delete';
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
-
-function onItemClick(e: MouseEvent<HTMLDivElement>) {
-  e.stopPropagation();
-}
-
-function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
-  e.stopPropagation();
-}
+import { VoteCreateResponse } from '@/modules/api/vote/create/Response';
+import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
 
 interface Props {
   atkn: string;
@@ -37,68 +30,155 @@ interface Props {
 export default function Event(props: Props) {
   const { user } = useUser();
 
+  const [erro, setErro] = useState<Error | null>(null);
   const [form, setForm] = useState<boolean>(false);
+  const [srtd, setSrtd] = useState<boolean>(false);
+  const [vote, setVote] = useState<VoteSearchResponse[]>(props.vote);
   const [xpnd, setXpnd] = useState<boolean>(false);
 
-  const dateTime = (uni: number): string => {
-    const dat = new Date(uni * 1000);
-
-    const day = String(dat.getDate()).padStart(2, '0');
-    const mon = String(dat.getMonth() + 1).padStart(2, '0');
-    const yea = String(dat.getFullYear()).slice(-2);
-    const hou = String(dat.getHours()).padStart(2, '0');
-    const min = String(dat.getMinutes()).padStart(2, '0');
-
-    return `${day}.${mon}.${yea} ${hou}:${min}`;
-  };
-
-  const doneFunc = (des: string) => {
+  const doneFunc = (des: DescriptionSearchResponse | null) => {
     props.desc.push({
       // local
       imag: user?.picture || "",
       name: user?.nickname || user?.name || "",
       // intern
-      crtd: "",
-      desc: "",
+      crtd: des?.crtd || "",
+      desc: des?.desc || "",
       user: user?.uuid || "",
       // public
       evnt: props.evnt.evnt(),
-      text: des,
+      text: des?.text || "",
     });
   };
 
-  const linkText = (tim: number): string => {
-    const now = Math.floor(Date.now() / 1000);
-    const dif = tim - now;
-
-    const min = 60;
-    const hou = 60 * min;
-    const day = 24 * hou;
-    const wee = 7 * day;
-    const mon = 30 * day;
-
-    if (dif <= 0) {
-      return "join now now";
-    } else if (dif <= hou) {
-      return "coming up next";
-    } else if (dif <= day) {
-      return "later today";
-    } else if (dif <= 2 * day) {
-      return "tomorrow";
-    } else if (dif <= wee) {
-      return "next week";
-    } else if (dif <= mon) {
-      return "next month";
-    } else {
-      return "in the future";
+  const voteCreate = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteCreateResponse | undefined> {
+    try {
+      const [vot] = await VoteCreate([{ atkn: props.atkn, desc: des.desc, rctn: rct.rctn }]);
+      return vot;
+    } catch (err) {
+      setErro(err as Error);
     }
-  }
+  };
 
-  {
+  const voteDelete = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteDeleteResponse | undefined> {
+    try {
+      const vid = vote.find(x => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.uuid || ""))?.vote || "";
+
+      if (!vid) return undefined;
+
+      const [vot] = await VoteDelete([{ atkn: props.atkn, vote: vid }]);
+      return vot;
+    } catch (err) {
+      setErro(err as Error);
+    }
+  };
+
+  // badd is called as "on button add" callback, which is the event invoked when
+  // the user clicks on a reaction icon in the reaction button component.
+  const badd = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
+    // If the user clicked on the reaction already, the button is not allowed to
+    // have any effect anymore.
+    if (rct.clck) return
+
+    vote.push({
+      // intern
+      crtd: "tmp",
+      user: user?.uuid || "",
+      vote: "tmp",
+      // public
+      desc: des.desc,
+      rctn: rct.rctn,
+    })
+
+    setVote([...vote])
+
+    voteCreate(des, rct).then(
+      (vot: VoteCreateResponse | undefined) => {
+        setVote([...vote.map((v) => {
+          if (v.crtd === "tmp" && v.desc == des.desc && v.user == (user?.uuid || "") && v.vote === "tmp") {
+            return {
+              // intern
+              crtd: vot?.crtd || "",
+              user: v.user,
+              vote: vot?.vote || "",
+              // public
+              desc: v.desc,
+              rctn: v.rctn,
+            };
+          } else {
+            return v;
+          }
+        })]);
+      },
+      (rsn: any) => {
+        setVote([...vote.filter((v) => !(v.crtd === "tmp" && v.desc == des.desc && v.user == (user?.uuid || "") && v.vote === "tmp"))]);
+      },
+    );
+  };
+
+  // brem is called as "on button remove" callback, which is the event invoked when
+  // the user clicks on a reaction icon in the reaction button component.
+  const brem = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
+    // If the user did not click on the reaction already, the button is not
+    // allowed to have any effect at all.
+    if (!rct.clck) return;
+
+    setVote([...vote.filter((x) => !(x.desc === des.desc && x.rctn === rct.rctn && x.user == (user?.uuid || "")) && x.crtd != "tmp" && x.vote != "tmp")]);
+
+    voteDelete(des, rct);
+  };
+
+  // padd is called as "on picker add" callback, which is the event invoked when
+  // the user clicks on a reaction icon in the reaction picker component.
+  const padd = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
+    // If the user clicked on the reaction already, the picker is not allowed to
+    // have any effect anymore.
+    if (rct.clck) return;
+
+    vote.push({
+      // intern
+      crtd: "tmp",
+      user: user?.uuid || "",
+      vote: "tmp",
+      // public
+      desc: des.desc,
+      rctn: rct.rctn,
+    })
+
+    setVote([...vote])
+
+    voteCreate(des, rct).then(
+      (vot: VoteCreateResponse | undefined) => {
+        setVote([...vote.map((v) => {
+          if (v.crtd === "tmp" && v.desc == des.desc && v.user == (user?.uuid || "") && v.vote === "tmp") {
+            return {
+              // intern
+              crtd: vot?.crtd || "",
+              user: v.user,
+              vote: vot?.vote || "",
+              // public
+              desc: v.desc,
+              rctn: v.rctn,
+            };
+          } else {
+            return v;
+          }
+        })]);
+      },
+      (rsn: any) => {
+        setVote([...vote.filter((v) => !(v.crtd === "tmp" && v.desc == des.desc && v.user == (user?.uuid || "") && v.vote === "tmp"))]);
+      },
+    );
+  };
+
+  if (!srtd) {
+    // Only sort descriptions initially on page load.
+    setSrtd(true);
+
     // Create a lookup table to store the vote counts for each description.
     const des: Record<string, number> = {};
 
-    props.vote.forEach((x: VoteSearchResponse) => {
+    vote.forEach((x: VoteSearchResponse) => {
       if (des[x.desc] === undefined) {
         des[x.desc] = 0;
       }
@@ -126,66 +206,22 @@ export default function Event(props: Props) {
 
   return (
     <>
-      <div
-        onClick={() => window.location.href = "/event/" + props.evnt.evnt()}
-        className="relative rounded-t-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-hidden cursor-pointer"
-      >
-        <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">
-          {props.labl && (
-            <a
-              href={`/host/${props.evnt?.host(props.labl)[0]}`}
-              onClick={onLinkClick}
-              className="flex items-center pl-2"
-            >
-              <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
-            </a>
-          )}
-
-          <div className="flex flex-row w-full">
-            {props.labl && (
-              props.evnt?.host(props.labl).map((x, i) => (
-                <a key={i} href={`/host/${x}`} onClick={onLinkClick} className="flex items-center pl-2 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline">
-                  {x}
-                </a>
-              ))
-            )}
-          </div>
-
-          <a
-            href={props.evnt.actv() ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
-            onClick={onLinkClick}
-            target={props.evnt.actv() ? "_blank" : "_self"}
-            className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv() ? "text-green-400" : "text-gray-400"}`}
-          >
-            <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
-              {dateTime(props.evnt.time())}
-              {` - `}
-              {dateTime(props.evnt.dura())}
-            </div>
-            {props.evnt.actv() ? linkText(props.evnt.time()) : "already happened"}
-          </a>
-
-          <button
-            className={`py-3 outline-none group ${props.desc.length > 1 ? "" : "cursor-default"}`}
-            type="button"
-            onClick={(evn: MouseEvent<HTMLButtonElement>) => {
-              evn.stopPropagation();
-              if (props.desc.length > 1) setXpnd(!xpnd);
-            }}
-          >
-            <ChevronDownIcon className={`w-5 h-5 mx-2 ${props.desc.length > 1 ? "text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" : "text-gray-200 dark:text-gray-600 cursor-default"}  ${xpnd ? "rotate-180" : ""}`} />
-          </button>
-        </div>
-      </div>
+      <Header
+        desc={props.desc}
+        evnt={props.evnt}
+        labl={props.labl}
+        xpnd={() => setXpnd(!xpnd)}
+      />
 
       <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
         {!xpnd && (
           <Description
-            atkn={props.atkn}
+            badd={badd}
+            brem={brem}
             desc={props.desc[0]}
             evnt={props.evnt}
-            rctn={props.rctn}
-            vote={props.vote.filter((v) => v.desc === props.desc[0].desc)}
+            padd={padd}
+            rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((v) => v.desc === props.desc[0].desc))}
           />
         )}
         {xpnd && (
@@ -193,71 +229,67 @@ export default function Event(props: Props) {
             {props.desc.map((x, i) => (
               <Description
                 key={i}
-                atkn={props.atkn}
+                badd={badd}
+                brem={brem}
                 desc={x}
                 evnt={props.evnt}
-                rctn={props.rctn}
-                vote={props.vote.filter((v) => v.desc === x.desc)}
+                padd={padd}
+                rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((v) => v.desc === x.desc))}
               />
             ))}
           </>
         )}
         {form && (
-          <Form atkn={props.atkn} cncl={() => setForm(false)} done={doneFunc} evnt={props.evnt.evnt()} />
+          <Form
+            atkn={props.atkn}
+            cncl={() => setForm(false)}
+            done={doneFunc}
+            evnt={props.evnt.evnt()}
+          />
         )}
       </div>
 
-      <div
-        onClick={() => window.location.href = "/event/" + props.evnt.evnt()}
-        className="flex flex-1 rounded-b-md dark:bg-gray-700 items-center justify-between bg-white shadow-gray-400 dark:shadow-black shadow-[0_0_2px] outline-none cursor-pointer"
-      >
-        <div className="flex flex-row w-full">
-          {props.labl && (
-            props.evnt?.cate(props.labl).map((x, i) => (
-              <a key={i} href={`/cate/${x}`} onClick={onLinkClick} className="flex items-center pl-2 py-2 text-sm font-medium text-sky-500 hover:underline">
-                #{x}
-              </a>
-            ))
-          )}
-        </div>
+      <Footer
+        addd={() => setForm(true)}
+        evnt={props.evnt}
+        labl={props.labl}
+      />
 
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <button className="py-3 outline-none group" type="button">
-              <EllipsisHorizontalIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
-            </button>
-          </DropdownMenu.Trigger>
-
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              onClick={onItemClick}
-              className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
-              loop
-            >
-
-              <DropdownMenu.Item
-                onSelect={() => setForm(true)}
-                className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer"
-              >
-                Add Description
-              </DropdownMenu.Item>
-
-              <DropdownMenu.Separator className="h-[1px] bg-gray-200 dark:bg-gray-800 my-[5px]" />
-
-              <DropdownMenu.Item disabled className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer">
-                Update Event
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer">
-                Report Event
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="text-red-600 dark:text-red-600 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-red-600 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-red-600 cursor-pointer">
-                Delete Event
-              </DropdownMenu.Item>
-
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-      </div>
+      {erro && (
+        <ErrorToast error={erro} />
+      )}
     </>
   );
 };
+
+function fltr(usr: string, rct: ReactionSearchResponse[], vot: VoteSearchResponse[]): ReactionSearchResponse[] {
+  const cou: Record<string, number> = {};
+  const clc: Record<string, boolean> = {};
+
+  vot.forEach((x: VoteSearchResponse) => {
+    if (cou[x.rctn] === undefined) {
+      cou[x.rctn] = 0;
+    }
+    cou[x.rctn]++;
+
+    if (x.user === usr) {
+      clc[x.rctn] = true;
+    }
+  });
+
+  // Create a new array to store the modified reactions for each description
+  // component without causing side effects when looping over all of them.
+  const lis: ReactionSearchResponse[] = [];
+
+  rct.forEach((x: ReactionSearchResponse) => {
+    const y = { ...x };
+
+    y.amnt = cou[x.rctn] || 0;
+    y.clck = clc[x.rctn] || false;
+
+    lis.push(y);
+  });
+
+  return lis;
+}
+

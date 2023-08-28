@@ -6,12 +6,11 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
   try {
     const call = API.search(
       {
-        object: req.map((r) => ({
-          intern: {
-          },
+        object: req.map((x) => ({
+          intern: {},
           public: {
-            kind: r.kind,
-            labl: r.labl,
+            kind: x.kind,
+            labl: x.labl,
           },
         })),
       },

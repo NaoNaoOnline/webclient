@@ -6,9 +6,9 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
   try {
     const call = API.search(
       {
-        object: req.map((r) => ({
+        object: req.map((x) => ({
           intern: {
-            evnt: r.evnt,
+            evnt: x.evnt,
           },
           public: {
             cate: "",
