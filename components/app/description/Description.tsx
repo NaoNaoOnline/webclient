@@ -12,11 +12,10 @@ function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
 }
 
 interface Props {
-  badd: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
-  brem: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
+  radd: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
+  rrem: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
   desc: DescriptionSearchResponse;
   evnt: EventSearchObject;
-  padd: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
   rctn: ReactionSearchResponse[];
 }
 
@@ -51,8 +50,8 @@ export default function Description(props: Props) {
 
         <div className="flex-grow relative overflow-x-auto">
           <ReactionBar
-            badd={(rctn: ReactionSearchResponse) => props.badd(props.desc, rctn)}
-            brem={(rctn: ReactionSearchResponse) => props.brem(props.desc, rctn)}
+            radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
+            rrem={(rctn: ReactionSearchResponse) => props.rrem(props.desc, rctn)}
             rctn={props.rctn}
           />
         </div>
@@ -61,7 +60,7 @@ export default function Description(props: Props) {
           <ReactionPicker
             rctn={props.rctn}
             clmn={6}
-            padd={(rctn: ReactionSearchResponse) => props.padd(props.desc, rctn)}
+            radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
           />
         </div>
       </div>

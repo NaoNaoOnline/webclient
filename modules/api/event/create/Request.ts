@@ -1,5 +1,7 @@
 export interface EventCreateRequest {
+  // local
   atkn: string;
+  // public
   cate: string;
   dura: string;
   host: string;
@@ -7,7 +9,7 @@ export interface EventCreateRequest {
   time: string;
 }
 
-export function NewEventCreateRequestFromFormData(frm: FormData, atk: string, cat: string[], hos: string[]): EventCreateRequest {
+export function NewEventCreateRequest(frm: FormData, atk: string, cat: string[], hos: string[]): EventCreateRequest {
   const lin = frm.get("link-input")?.toString() || "";
   const dat = frm.get("date-input")?.toString() || "";
   const sta = frm.get("start-input")?.toString() || "";

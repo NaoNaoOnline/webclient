@@ -4,7 +4,7 @@ import { LabelSearchResponse } from '@/modules/api/label/search/Response';
 
 export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearchResponse[]> {
   try {
-    const call = API.search(
+    const call = await API.search(
       {
         object: req.map((x) => ({
           intern: {},
@@ -21,19 +21,13 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return call.response.object.map((x) => ({
       // intern
       labl: x.intern?.labl || "",
       // public
       name: x.public?.name || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

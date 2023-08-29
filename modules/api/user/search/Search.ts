@@ -4,7 +4,7 @@ import { UserSearchResponse } from '@/modules/api/user/search/Response';
 
 export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchResponse[]> {
   try {
-    const call = API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {
@@ -20,13 +20,7 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       user: x.intern?.user || "",
@@ -34,7 +28,7 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
       imag: x.public?.imag || "",
       name: x.public?.name || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

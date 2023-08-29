@@ -4,7 +4,7 @@ import { EventSearchResponse } from '@/modules/api/event/search/Response';
 
 export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearchResponse[]> {
   try {
-    const call = API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {
@@ -23,13 +23,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       evnt: x.intern?.evnt || "",
@@ -41,7 +35,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
       link: x.public?.link || "",
       time: x.public?.time || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

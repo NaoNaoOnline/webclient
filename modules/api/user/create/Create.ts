@@ -2,39 +2,31 @@ import API from '@/modules/api/user/API';
 import { UserCreateRequest } from '@/modules/api/user/create/Request';
 import { UserCreateResponse } from '@/modules/api/user/create/Response';
 
-export async function UserCreate(req: UserCreateRequest): Promise<UserCreateResponse> {
+export async function UserCreate(req: UserCreateRequest[]): Promise<UserCreateResponse[]> {
   try {
-    const call = API.create(
+    const cal = await API.create(
       {
-        object: [
-          {
-            intern: {},
-            public: {
-              imag: req.imag,
-              name: req.name,
-            },
+        object: req.map((x) => ({
+          intern: {},
+          public: {
+            imag: x.imag,
+            name: x.name,
           },
-        ],
+        })),
       },
       {
         meta: {
-          authorization: "Bearer " + req.atkn,
+          authorization: "Bearer " + req[0].atkn,
         },
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return {
+    return cal.response.object.map((x) => ({
       // intern
-      crtd: res.object[0].intern?.crtd || "",
-      user: res.object[0].intern?.user || "",
-    };
-  } catch (error) {
-    throw error;
+      crtd: x.intern?.crtd || "",
+      user: x.intern?.user || "",
+    }));
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

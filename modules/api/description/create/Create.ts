@@ -4,7 +4,7 @@ import { DescriptionCreateResponse } from '@/modules/api/description/create/Resp
 
 export async function DescriptionCreate(req: DescriptionCreateRequest[]): Promise<DescriptionCreateResponse[]> {
   try {
-    const call = API.create(
+    const cal = await API.create(
       {
         object: req.map((x) => ({
           intern: {},
@@ -21,18 +21,12 @@ export async function DescriptionCreate(req: DescriptionCreateRequest[]): Promis
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       desc: x.intern?.desc || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

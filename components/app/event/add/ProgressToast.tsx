@@ -3,10 +3,12 @@ import * as Toast from '@radix-ui/react-toast';
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
+import Errors from '@/modules/errors/Errors';
+
 interface Props {
   callback: () => void;
   cmpl: number;
-  erro: Error | null;
+  erro: Errors | null;
 }
 
 export default function ProgressToast(props: Props) {

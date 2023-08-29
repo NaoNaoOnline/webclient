@@ -4,11 +4,11 @@ import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
 
 export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteResponse[]> {
   try {
-    const call = API.delete(
+    const cal = await API.delete(
       {
         object: req.map((x) => ({
           intern: {
-            vote: x.vote || "",
+            vote: x.vote,
           },
           public: {},
         })),
@@ -20,17 +20,11 @@ export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteRe
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       stts: x.intern?.stts || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

@@ -1,10 +1,12 @@
 export interface LabelSearchRequest {
+  // local
   atkn: string;
+  // public
   kind: string;
   labl: string;
 }
 
-export function LabelSearchRequest(atk: string, cat: string, hos: string): LabelSearchRequest[] {
+export function NewLabelSearchRequest(atk: string, cat: string, hos: string): LabelSearchRequest[] {
   const req: LabelSearchRequest[] = [];
 
   if (cat !== "") {

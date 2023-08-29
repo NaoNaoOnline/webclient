@@ -1,46 +1,35 @@
 import API from '@/modules/api/event/API';
 import { EventCreateRequest } from '@/modules/api/event/create/Request';
+import { EventCreateResponse } from '@/modules/api/event/create/Response';
 
-interface Response {
-  crtd: string;
-  evnt: string;
-}
-
-export async function EventCreate(req: EventCreateRequest): Promise<Response> {
+export async function EventCreate(req: EventCreateRequest[]): Promise<EventCreateResponse[]> {
   try {
-    const call = API.create(
+    const cal = await API.create(
       {
-        object: [
-          {
-            intern: {},
-            public: {
-              cate: req.cate,
-              dura: req.dura,
-              host: req.host,
-              link: req.link,
-              time: req.time,
-            },
+        object: req.map((x) => ({
+          intern: {},
+          public: {
+            cate: x.cate,
+            dura: x.dura,
+            host: x.host,
+            link: x.link,
+            time: x.time,
           },
-        ],
+        })),
       },
       {
         meta: {
-          authorization: "Bearer " + req.atkn,
+          authorization: "Bearer " + req[0].atkn,
         },
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return {
-      crtd: res.object[0].intern?.crtd || "",
-      evnt: res.object[0].intern?.evnt || "",
-    };
-  } catch (error) {
-    throw error;
+    return cal.response.object.map((x) => ({
+      // intern
+      crtd: x.intern?.crtd || "",
+      evnt: x.intern?.evnt || "",
+    }));
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

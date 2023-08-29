@@ -1,12 +1,12 @@
 import useSWR from "swr"
 
 import { LabelSearch } from '@/modules/api/label/search/Search'
-import { LabelSearchRequest } from '@/modules/api/label/search/Request'
+import { NewLabelSearchRequest } from '@/modules/api/label/search/Request'
 import { LabelSearchResponse } from '@/modules/api/label/search/Response'
 
 const fetcher = (atk: string) => {
   return async (): Promise<LabelSearchResponse[]> => {
-    return await LabelSearch(LabelSearchRequest(atk, "cate", "host"));
+    return await LabelSearch(NewLabelSearchRequest(atk, "cate", "host"));
   };
 };
 

@@ -3,17 +3,17 @@ import React from 'react';
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 
 interface ReactionButtonProps {
-  badd: (rctn: ReactionSearchResponse) => void;
-  brem: (rctn: ReactionSearchResponse) => void;
+  radd: (rctn: ReactionSearchResponse) => void;
+  rrem: (rctn: ReactionSearchResponse) => void;
   rctn: ReactionSearchResponse;
 }
 
 export default function ReactionButton(props: ReactionButtonProps) {
   const onClck = () => {
     if (props.rctn.clck) {
-      props.brem(props.rctn)
+      props.rrem(props.rctn)
     } else {
-      props.badd(props.rctn)
+      props.radd(props.rctn)
     }
   };
 

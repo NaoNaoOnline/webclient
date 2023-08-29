@@ -4,7 +4,7 @@ import { DescriptionSearchResponse } from '@/modules/api/description/search/Resp
 
 export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promise<DescriptionSearchResponse[]> {
   try {
-    const call = API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {},
@@ -20,13 +20,7 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // local
       imag: "",
       name: "",
@@ -38,7 +32,7 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       evnt: x.public?.evnt || "",
       text: x.public?.text || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

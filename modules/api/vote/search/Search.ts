@@ -4,7 +4,7 @@ import { VoteSearchResponse } from '@/modules/api/vote/search/Response';
 
 export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchResponse[]> {
   try {
-    const call = API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {},
@@ -20,13 +20,7 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
       },
     );
 
-    const sta = await call.status;
-
-    if (sta.code !== "OK") throw "call status was not ok";
-
-    const res = await call.response;
-
-    return res.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       user: x.intern?.user || "",
@@ -35,7 +29,7 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
       desc: x.public?.desc || "",
       rctn: x.public?.rctn || "",
     }));
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    return Promise.reject(err);
   }
 }

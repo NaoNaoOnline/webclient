@@ -8,7 +8,7 @@ import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 
 interface ReactionPickerProps {
   clmn: number;
-  padd: (name: ReactionSearchResponse) => void;
+  radd: (name: ReactionSearchResponse) => void;
   rctn: ReactionSearchResponse[];
 }
 
@@ -32,16 +32,16 @@ export default function ReactionPicker(props: ReactionPickerProps) {
           className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           loop
         >
-          {row.map((r, i) => (
+          {row.map((x, i) => (
             <DropdownMenu.Group key={i} className="flex flex-row gap-2.5">
-              {r.map((c, j) => (
+              {x.map((y, j) => (
                 <DropdownMenu.Item
                   key={j}
-                  onClick={() => props.padd(c)}
+                  onClick={() => props.radd(y)}
                   onSelect={(e) => e.preventDefault()}
                   className="flex w-9 h-9 text-lg text-gray-900 dark:text-gray-50 rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer"
                 >
-                  {c.html}
+                  {y.html}
                 </DropdownMenu.Item>
               ))}
             </DropdownMenu.Group>
