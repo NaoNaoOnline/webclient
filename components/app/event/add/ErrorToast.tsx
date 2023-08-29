@@ -3,12 +3,17 @@ import * as Toast from '@radix-ui/react-toast';
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
+import Errors from '@/modules/errors/Errors';
+
 interface Props {
-  error: Error;
+  erro: Errors | null;
 }
 
 export default function ErrorToast(props: Props) {
-  console.log("ErrorToast.tsx", props.error);
+  if (!props.erro) return <></>;
+
+  console.error(props.erro.tech);
+
   return (
     <>
       <Toast.Root
@@ -20,7 +25,7 @@ export default function ErrorToast(props: Props) {
           Error
         </Toast.Title>
         <Toast.Description className="[grid-area:_description] dark:text-black">
-          {props.error.message}
+          {props.erro.user}
         </Toast.Description>
         <Toast.Close className="[grid-area:_action] text-gray-500 hover:text-gray-900" aria-label="Close">
           <span aria-hidden>

@@ -22,13 +22,15 @@ import { UserSearch } from "@/modules/api/user/search/Search";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
+import Errors from '@/modules/errors/Errors';
+
 export default function Page() {
   const router = useRouter()
   const { user } = useUser();
 
   const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject | null>(null);
-  const [erro, setErro] = useState<Error | null>(null);
+  const [erro, setErro] = useState<Errors | null>(null);
   const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
   const [rctn, setRctn] = useState<ReactionSearchResponse[] | null>(null);
@@ -74,7 +76,7 @@ export default function Page() {
 
           setLdng(false);
         } catch (err) {
-          setErro(err as Error);
+          setErro(new Errors("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
           setLdng(false);
         }
       };
@@ -114,7 +116,7 @@ export default function Page() {
               <Event atkn={cat} evnt={evnt} desc={desc} labl={labl} rctn={rctn} vote={vote} />
             )}
             {erro && (
-              <ErrorToast error={erro} />
+              <ErrorToast erro={erro} />
             )}
           </div>
         </div>

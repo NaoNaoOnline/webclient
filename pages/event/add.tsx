@@ -25,12 +25,14 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 
+import Errors from '@/modules/errors/Errors';
+
 export default function Page() {
   const { user, isLoading } = useUser();
 
   const [completed, setCompleted] = useState(0);
   const [evnt, setEvnt] = useState<string>("");
-  const [failed, setFailed] = useState<Error | null>(null);
+  const [erro, setErro] = useState<Errors | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const cat: string = CacheAuthToken(user ? true : false);
@@ -77,7 +79,7 @@ export default function Page() {
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const evn = await EventCreate(NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi]));
+      const [evn] = await EventCreate([NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi])]);
       setEvnt(evn.evnt);
       setCompleted(75);
 
@@ -89,11 +91,7 @@ export default function Page() {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      if (err instanceof Error) {
-        setFailed(err);
-      } else {
-        setFailed(new Error("Oh snap, the beavers were at it again! An unknown error occurred."));
-      }
+      setErro(new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error));
     }
   };
 
@@ -191,14 +189,14 @@ export default function Page() {
                   />
                 </div>
 
-                <button type="submit" disabled={submitted && !failed} className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                <button type="submit" disabled={submitted && !erro} className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
 
                 {submitted && (
-                  <ProgressToast callback={submitToastCallback} completed={completed} failed={failed} />
+                  <ProgressToast callback={submitToastCallback} cmpl={completed} erro={erro} />
                 )}
 
-                {failed && (
-                  <ErrorToast error={failed} />
+                {erro && (
+                  <ErrorToast erro={erro} />
                 )}
 
                 {completed >= 100 && (
