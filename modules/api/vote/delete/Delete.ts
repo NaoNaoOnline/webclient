@@ -4,7 +4,7 @@ import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
 
 export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteResponse[]> {
   try {
-    const call = await API.delete(
+    const cal = await API.delete(
       {
         object: req.map((x) => ({
           intern: {
@@ -20,7 +20,7 @@ export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteRe
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       stts: x.intern?.stts || "",
     }));

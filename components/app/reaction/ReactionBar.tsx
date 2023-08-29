@@ -13,8 +13,8 @@ interface ReactionBarProps {
 export default function ReactionBar(props: ReactionBarProps) {
   return (
     <ul className="flex flex-row absolute right-0">
-      {props.rctn.filter((c) => c.amnt !== 0).map((c) => (
-        <ReactionButton key={c.rctn} radd={props.radd} rrem={props.rrem} rctn={c} />
+      {props.rctn.filter((x) => x.amnt !== 0).map((y) => (
+        <ReactionButton key={y.rctn} radd={props.radd} rrem={props.rrem} rctn={y} />
       ))}
     </ul>
   );

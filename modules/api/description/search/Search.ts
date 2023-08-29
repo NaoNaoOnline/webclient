@@ -4,7 +4,7 @@ import { DescriptionSearchResponse } from '@/modules/api/description/search/Resp
 
 export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promise<DescriptionSearchResponse[]> {
   try {
-    const call = await API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {},
@@ -20,7 +20,7 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // local
       imag: "",
       name: "",

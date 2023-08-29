@@ -4,7 +4,7 @@ import { LabelCreateResponse } from '@/modules/api/label/create/Response';
 
 export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreateResponse[]> {
   try {
-    const call = await API.create(
+    const cal = await API.create(
       {
         object: req.map((x) => ({
           intern: {},
@@ -24,7 +24,7 @@ export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreat
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       labl: x.intern?.labl || "",

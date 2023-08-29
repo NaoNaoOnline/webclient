@@ -4,7 +4,7 @@ import { VoteSearchResponse } from '@/modules/api/vote/search/Response';
 
 export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchResponse[]> {
   try {
-    const call = await API.search(
+    const cal = await API.search(
       {
         object: req.map((x) => ({
           intern: {},
@@ -20,7 +20,7 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       user: x.intern?.user || "",

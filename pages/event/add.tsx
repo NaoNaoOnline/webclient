@@ -14,7 +14,7 @@ import ProgressToast from '@/components/app/event/add/ProgressToast'
 import SuccessToast from '@/components/app/event/add/SuccessToast'
 
 import { EventCreate } from '@/modules/api/event/create/Create'
-import { NewEventCreateRequestFromFormData } from '@/modules/api/event/create/Request'
+import { NewEventCreateRequest } from '@/modules/api/event/create/Request'
 import { DescriptionCreate } from '@/modules/api/description/create/Create'
 import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
 import { LabelCreate } from '@/modules/api/label/create/Create'
@@ -79,7 +79,7 @@ export default function Page() {
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const [evn] = await EventCreate([NewEventCreateRequestFromFormData(frm, cat, [...nci, ...cci], [...nhi, ...chi])]);
+      const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, [...nci, ...cci], [...nhi, ...chi])]);
       setEvnt(evn.evnt);
       setCompleted(75);
 

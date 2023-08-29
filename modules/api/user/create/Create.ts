@@ -4,7 +4,7 @@ import { UserCreateResponse } from '@/modules/api/user/create/Response';
 
 export async function UserCreate(req: UserCreateRequest[]): Promise<UserCreateResponse[]> {
   try {
-    const call = await API.create(
+    const cal = await API.create(
       {
         object: req.map((x) => ({
           intern: {},
@@ -21,7 +21,7 @@ export async function UserCreate(req: UserCreateRequest[]): Promise<UserCreateRe
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       user: x.intern?.user || "",

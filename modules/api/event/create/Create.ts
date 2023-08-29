@@ -4,7 +4,7 @@ import { EventCreateResponse } from '@/modules/api/event/create/Response';
 
 export async function EventCreate(req: EventCreateRequest[]): Promise<EventCreateResponse[]> {
   try {
-    const call = await API.create(
+    const cal = await API.create(
       {
         object: req.map((x) => ({
           intern: {},
@@ -24,7 +24,7 @@ export async function EventCreate(req: EventCreateRequest[]): Promise<EventCreat
       },
     );
 
-    return call.response.object.map((x) => ({
+    return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
       evnt: x.intern?.evnt || "",
