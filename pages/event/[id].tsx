@@ -6,7 +6,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
 import Event from '@/components/app/event/Event'
-import ErrorToast from '@/components/app/event/add/ErrorToast'
+import ErrorToast from '@/components/app/toast/ErrorToast'
 
 import { EventSearch } from '@/modules/api/event/search/Search'
 import { EventSearchObject } from "@/modules/api/event/search/Object";

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import ErrorToast from '@/components/app/event/add/ErrorToast'
+import ErrorToast from '@/components/app/toast/ErrorToast'
 
 import Footer from '@/components/app/event/Footer'
 import Header from '@/components/app/event/Header'

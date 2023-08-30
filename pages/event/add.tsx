@@ -1,5 +1,5 @@
 import "flowbite";
-import React, { useState, FormEvent } from 'react'
+import React, { useState, FormEvent, KeyboardEvent } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
@@ -8,10 +8,10 @@ import DatePicker from '@/components/app/event/add/DatePicker'
 import TextInput from '@/components/app/event/add/TextInput'
 import TimePicker from '@/components/app/event/add/TimePicker'
 
-import ErrorToast from '@/components/app/event/add/ErrorToast'
-import LoginToast from '@/components/app/event/add/LoginToast'
-import ProgressToast from '@/components/app/event/add/ProgressToast'
-import SuccessToast from '@/components/app/event/add/SuccessToast'
+import ErrorToast from '@/components/app/toast/ErrorToast'
+import LoginToast from '@/components/app/toast/LoginToast'
+import ProgressToast from '@/components/app/toast/ProgressToast'
+import SuccessToast from '@/components/app/toast/SuccessToast'
 
 import { EventCreate } from '@/modules/api/event/create/Create'
 import { NewEventCreateRequest } from '@/modules/api/event/create/Request'
@@ -30,17 +30,19 @@ import Errors from '@/modules/errors/Errors';
 export default function Page() {
   const { user, isLoading } = useUser();
 
-  const [completed, setCompleted] = useState(0);
+  const [cmpl, setCmpl] = useState<number>(0);
+  const [cncl, setCncl] = useState<boolean>(false);
   const [evnt, setEvnt] = useState<string>("");
-  const [erro, setErro] = useState<Errors | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [erro, setErro] = useState<Errors[]>([]);
+  const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
-    setSubmitted(true);
+    setCncl(false);
+    setSbmt((old: boolean[]) => [...old, true]);
 
     const frm = new FormData(evn.target as HTMLFormElement);
 
@@ -59,7 +61,16 @@ export default function Page() {
       if (dcn.length > 0) {
         const res = await LabelCreate(LabelCreateRequest(cat, "cate", dcn));
         nci = res.map((x: LabelCreateResponse) => x.labl);
-        setCompleted(25);
+
+        // Add the created category labels to the local copy of cashed API
+        // labels, so in case of an error during event creation, any label that
+        // got created before the event creation failed is not causing problems
+        // if the user submits the form again.
+        for (let i = 0; i < res.length; i++) {
+          cal.push({ labl: nci[i], name: dcn[i] });
+        }
+
+        setCmpl(25);
         await new Promise(r => setTimeout(r, 200));
       }
 
@@ -68,7 +79,16 @@ export default function Page() {
       if (dhn.length > 0) {
         const res = await LabelCreate(LabelCreateRequest(cat, "host", dhn));
         nhi = res.map((x: LabelCreateResponse) => x.labl);
-        setCompleted(50);
+
+        // Add the created host labels to the local copy of cashed API
+        // labels, so in case of an error during event creation, any label that
+        // got created before the event creation failed is not causing problems
+        // if the user submits the form again.
+        for (let i = 0; i < res.length; i++) {
+          cal.push({ labl: nhi[i], name: dhn[i] });
+        }
+
+        setCmpl(50);
         await new Promise(r => setTimeout(r, 200));
       }
 
@@ -81,22 +101,19 @@ export default function Page() {
       // ids.
       const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, [...nci, ...cci], [...nhi, ...chi])]);
       setEvnt(evn.evnt);
-      setCompleted(75);
+      setCmpl(75);
 
       await new Promise(r => setTimeout(r, 400));
 
       const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, evn.evnt));
-      setCompleted(100);
+      setCmpl(100);
 
       await new Promise(r => setTimeout(r, 200));
-
     } catch (err) {
-      setErro(new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error));
+      setCmpl(0);
+      setCncl(true);
+      setErro((old: Errors[]) => [...old, new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error)]);
     }
-  };
-
-  const submitToastCallback = () => {
-    window.location.href = "/event/" + evnt;
   };
 
   return (
@@ -189,23 +206,42 @@ export default function Page() {
                   />
                 </div>
 
-                <button type="submit" disabled={submitted && !erro} className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                <button
+                  type="submit"
+                  disabled={sbmt && !erro}
+                  className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
+                >
+                  Submit
+                </button>
 
-                {submitted && (
-                  <ProgressToast callback={submitToastCallback} cmpl={completed} erro={erro} />
-                )}
+                {sbmt.map((x, i) => (
+                  <ProgressToast
+                    key={i}
+                    cmpl={cmpl}
+                    cncl={cncl}
+                    done={() => {
+                      window.location.href = "/event/" + evnt;
+                    }}
+                    titl="Adding New Event"
+                  />
+                ))}
 
-                {erro && (
-                  <ErrorToast erro={erro} />
-                )}
+                {erro.map((x, i) => (
+                  <ErrorToast key={i} erro={x} />
+                ))}
 
-                {completed >= 100 && (
-                  <SuccessToast />
+                {cmpl >= 100 && (
+                  <SuccessToast
+                    titl="Hooray, event addedd milady!"
+                  />
                 )}
               </form>
             )}
             {!isLoading && !user && (
-              <LoginToast />
+              <LoginToast
+                titl="You need to be logged in if you want to add a new event."
+              />
             )}
           </div>
         </div>

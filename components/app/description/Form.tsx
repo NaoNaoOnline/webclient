@@ -1,13 +1,13 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useEffect, useRef, useState, FormEvent, KeyboardEvent } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import { DescriptionCreate } from '@/modules/api/description/create/Create'
 import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
 
-import ErrorToast from '@/components/app/event/add/ErrorToast'
-import LoginToast from '@/components/app/event/add/LoginToast'
-import ProgressToast from '@/components/app/event/add/ProgressToast'
-import SuccessToast from '@/components/app/event/add/SuccessToast'
+import ErrorToast from '@/components/app/toast/ErrorToast'
+import LoginToast from '@/components/app/toast/LoginToast'
+import ProgressToast from '@/components/app/toast/ProgressToast'
+import SuccessToast from '@/components/app/toast/SuccessToast'
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 
 import Errors from '@/modules/errors/Errors';
@@ -20,16 +20,20 @@ interface Props {
 }
 
 export default function Form(props: Props) {
+  const inpt = useRef<HTMLInputElement | null>(null);
+
   const { user, isLoading } = useUser();
 
   const [cmpl, setCmpl] = useState<number>(0);
+  const [cncl, setCncl] = useState<boolean>(false);
   const [desc, setDesc] = useState<DescriptionSearchResponse | null>(null);
-  const [erro, setErro] = useState<Errors | null>(null);
-  const [sbmt, setSbmt] = useState<boolean>(false);
+  const [erro, setErro] = useState<Errors[]>([]);
+  const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
-    setSbmt(true);
+    setCncl(false);
+    setSbmt((old: boolean[]) => [...old, true]);
 
     const frm = new FormData(evn.target as HTMLFormElement);
 
@@ -58,14 +62,26 @@ export default function Form(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro(new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error));
+      setCmpl(0);
+      setCncl(true);
+      setErro((old: Errors[]) => [...old, new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error)]);
     }
   };
 
-  const submitToastCallback = () => {
-    props.cncl();
-    props.done(desc);
-  };
+  useEffect(() => {
+    // The goal here is to auto-focus on the input text field, which we
+    // conditionally render below. The user clicks a button to add a new
+    // description to an event and should then be able to write right away as
+    // soon as the input text field is rendered. Using the timeout of some
+    // milliseconds was the only way this behaviour could be achieved reliably
+    // for the user. If somebody knows a better way of doing this, please create
+    // a pull request.
+    setTimeout(() => {
+      if (inpt.current) {
+        inpt.current.focus();
+      }
+    }, 100);
+  }, []);
 
   return (
     <>
@@ -84,6 +100,7 @@ export default function Form(props: Props) {
             title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
             className="flex-1 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder="dicussing how EIP-4844 will change L2 economics forever"
+            ref={inpt}
             required
           />
 
@@ -91,34 +108,51 @@ export default function Form(props: Props) {
             <button
               type="submit"
               disabled={sbmt && !erro}
-              className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+              className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+              onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
+            >
               Submit
             </button>
 
             <button
               onClick={props.cncl}
               type="button"
-              className="flex-1 w-full md:w-auto ml-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+              className="flex-1 w-full md:w-auto ml-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+              onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
+            >
               Cancel
             </button>
           </div>
 
-          {sbmt && (
-            <ProgressToast callback={submitToastCallback} cmpl={cmpl} erro={erro} />
-          )}
+          {sbmt.map((x, i) => (
+            <ProgressToast
+              key={i}
+              cmpl={cmpl}
+              cncl={cncl}
+              done={() => {
+                props.cncl();
+                if (desc) props.done(desc);
+              }}
+              titl="Adding New Description"
+            />
+          ))}
 
-          {erro && (
-            <ErrorToast erro={erro} />
-          )}
+          {erro.map((x, i) => (
+            <ErrorToast key={i} erro={x} />
+          ))}
 
           {cmpl >= 100 && (
-            <SuccessToast />
+            <SuccessToast
+              titl="Huzzah, description addedd my lord!"
+            />
           )}
         </form>
       )}
       {!isLoading && !user && (
-        <LoginToast />
+        <LoginToast
+          titl="You need to be logged in if you want to add a new description."
+        />
       )}
     </>
   );
-};
+}

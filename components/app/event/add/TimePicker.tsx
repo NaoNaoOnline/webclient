@@ -10,18 +10,7 @@ interface Props {
   position: string;
 }
 
-function roundToNearestHourDate(dat: Date, off: number): Date {
-  const min = 60;
-  const mil = 1000 * 60 * min;
-
-  return new Date(Math.ceil((dat.getTime() + off) / mil) * mil);
-}
-
-function roundToNearestHourString(dat: Date, off: number): string {
-  return roundToNearestHourDate(dat, off).toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
-}
-
-export default function (props: Props) {
+export default function TimePicker(props: Props) {
   const [startDate, setStartDate] = useState(roundToNearestHourDate(new Date(), props.offset));
 
   let position = "left-[-285px]"
@@ -57,3 +46,14 @@ export default function (props: Props) {
     </div >
   );
 };
+
+function roundToNearestHourDate(dat: Date, off: number): Date {
+  const min = 60;
+  const mil = 1000 * 60 * min;
+
+  return new Date(Math.ceil((dat.getTime() + off) / mil) * mil);
+}
+
+function roundToNearestHourString(dat: Date, off: number): string {
+  return roundToNearestHourDate(dat, off).toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
+}
