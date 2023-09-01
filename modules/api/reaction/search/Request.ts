@@ -1,4 +1,1 @@
-export interface ReactionSearchRequest {
-  // local
-  atkn: string;
-}
+export interface ReactionSearchRequest { }

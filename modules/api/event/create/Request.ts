@@ -29,6 +29,14 @@ export function NewEventCreateRequest(frm: FormData, atk: string, cat: string[],
   };
 }
 
+// newDura takes the start and end time of an event in 24 hour format like shown
+// below and returns the amount of seconds the new event is expected to last.
+// The returned duration might be negative, causing the RPC API to return an
+// error response.
+//
+//     @inp[0] the event start time, e.g. 15:00
+//     @inp[1] the event end time, e.g. 16:00
+//
 function newDura(sta: string, end: string): string {
   const [sth, stm] = sta.split(':').map(Number);
   const [enh, enm] = end.split(':').map(Number);
@@ -36,7 +44,7 @@ function newDura(sta: string, end: string): string {
   const sts = sth * 3600 + stm * 60;
   const ens = enh * 3600 + enm * 60;
 
-  return Math.abs(ens - sts).toString();
+  return (ens - sts).toString();
 }
 
 function newLink(lin: string): string {

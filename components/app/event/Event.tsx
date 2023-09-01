@@ -1,276 +1,257 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-
+import Content from '@/components/app/event/Content'
 import Footer from '@/components/app/event/Footer'
 import Header from '@/components/app/event/Header'
-import Form from '@/components/app/description/Form'
-import Description from '@/components/app/description/Description'
 
+import ErrorToast from '@/components/app/toast/ErrorToast'
+import LoginToast from '@/components/app/toast/LoginToast'
+
+import CacheApiLabel from '@/modules/cache/api/Label';
+import CacheApiReaction from '@/modules/cache/api/Reaction';
+
+import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import { EventSearch } from '@/modules/api/event/search/Search'
 import { EventSearchObject } from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
-import { VoteCreate } from '@/modules/api/vote/create/Create';
-import { VoteDelete } from '@/modules/api/vote/delete/Delete';
+import { UserSearch } from "@/modules/api/user/search/Search";
+import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
-import { VoteCreateResponse } from '@/modules/api/vote/create/Response';
-import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
 
 import Errors from '@/modules/errors/Errors';
 
 interface Props {
   atkn: string;
-  evnt: EventSearchObject;
-  desc: DescriptionSearchResponse[];
-  labl: LabelSearchResponse[];
-  rctn: ReactionSearchResponse[];
-  vote: VoteSearchResponse[];
+  evnt?: string[];
+}
+
+interface ToggleState {
+  [evnt: string]: boolean;
 }
 
 export default function Event(props: Props) {
   const { user } = useUser();
 
-  const [erro, setErro] = useState<Errors[]>([]);
-  const [form, setForm] = useState<boolean>(false);
-  const [srtd, setSrtd] = useState<boolean>(false);
-  const [vote, setVote] = useState<VoteSearchResponse[]>(props.vote);
-  const [xpnd, setXpnd] = useState<boolean>(false);
+  const [auth, setAuth] = useState<boolean[]>([]);
+  const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
+  const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
+  const [erro, setErro] = useState<Errors | null>(null);
+  const [form, setForm] = useState<ToggleState>({});
+  const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
+  const [ldng, setLdng] = useState<boolean>(true);
+  const [rctn, setRctn] = useState<ReactionSearchResponse[] | null>(null);
+  const [vote, setVote] = useState<VoteSearchResponse[] | null>(null);
+  const [xpnd, setXpnd] = useState<ToggleState>({});
 
-  const doneFunc = (des: DescriptionSearchResponse | null) => {
-    props.desc.push({
-      // local
-      imag: user?.picture || "",
-      name: user?.nickname || user?.name || "",
-      // intern
-      crtd: des?.crtd || "",
-      desc: des?.desc || "",
-      user: user?.uuid || "",
-      // public
-      evnt: props.evnt.evnt(),
-      text: des?.text || "",
-    });
-  };
+  const clng = useRef(false);
 
-  const voteCreate = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteCreateResponse> {
-    try {
-      const [vot] = await VoteCreate([{ atkn: props.atkn, desc: des.desc, rctn: rct.rctn }]);
-      return vot;
-    } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Darn it, the beavers don't want you to push that button right now!", err as Error)]);
-      return Promise.reject(err);
-    }
-  };
-
-  const voteDelete = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteDeleteResponse> {
-    try {
-      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.uuid || ""))?.vote || "";
-      const [vot] = await VoteDelete([{ atkn: props.atkn, vote: vid }]);
-      return vot;
-    } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Oh no, the beavers don't want you to take it back like that!", err as Error)]);
-      return Promise.reject(err);
-    }
-  };
-
-  // radd is called as "on button add" callback, which is the event invoked when
-  // the user clicks on a reaction icon in the reaction button component.
-  //
-  // radd is called as "on picker add" callback, which is the event invoked when
-  // the user clicks on a reaction icon in the reaction picker component.
-  const radd = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
-    // If the user clicked on the reaction already, the button is not allowed to
-    // have any effect anymore.
-    if (rct.clck) return;
-
-    const tmp: VoteSearchResponse = {
-      // intern
-      crtd: "tmp",
-      user: user?.uuid || "",
-      vote: "tmp",
-      // public
-      desc: des.desc,
-      rctn: rct.rctn,
-    };
-
-    // For an optimistic UI approach we add a new temporary vote object right
-    // away in order for the user to get instant feedback on adding their
-    // reaction. Below the temporary copy will be filled with actual resource
-    // data once the backend processed our request.
-    vote.push(tmp)
-    setVote([...vote])
-
-    voteCreate(des, rct).then(
-      // onfulfilled receives the actual resource data and replaces the tmp
-      // placeholders in the user's local copy.
-      (vot: VoteCreateResponse) => {
-        setVote([...vote.map((x: VoteSearchResponse) => {
-          if (x === tmp) {
-            return {
-              // intern
-              crtd: vot.crtd, // replace "tmp"
-              user: x.user,
-              vote: vot.vote, // replace "tmp"
-              // public
-              desc: x.desc,
-              rctn: x.rctn,
-            };
-          } else {
-            return x;
-          }
-        })]);
-      },
-      // onrejected removes the temporary vote object from the user's local copy
-      // since the backend could not process our request successfully.
-      (rsn: any) => {
-        setVote([...vote.filter((x: VoteSearchResponse) => x !== tmp)]);
-      },
-    );
-  };
-
-  // rrem is called as "on button remove" callback, which is the event invoked when
-  // the user clicks on a reaction icon in the reaction button component.
-  const rrem = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
-    // If the user did not click on the reaction already, the button is not
-    // allowed to have any effect at all.
-    if (!rct.clck) return;
-
-    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.uuid || ""));
-
-    // For an optimistic UI approach we remove the vote object right away in
-    // order for the user to get instant feedback on removing their reaction.
-    // Below the removed copy will be added back into the local state again if
-    // the backend failed to process our request successfully.
-    const lis: VoteSearchResponse[] = vote.filter((x: VoteSearchResponse) => x !== rem);
-    setVote([...lis]);
-
-    voteDelete(des, rct).catch(() => {
-      // catch adds the removed vote object back into the user's local copy
-      // since the backend could not process our request successfully.
-      if (rem) {
-        setVote([...lis, rem]);
-      }
-    });
-  };
-
-  if (!srtd) {
-    // Only sort descriptions initially on page load.
-    setSrtd(true);
-
-    // Create a lookup table to store the vote counts for each description.
-    const des: Record<string, number> = {};
-
-    vote.forEach((x: VoteSearchResponse) => {
-      if (des[x.desc] === undefined) {
-        des[x.desc] = 0;
-      }
-
-      des[x.desc]++;
-    });
-
-    props.desc.sort((x: DescriptionSearchResponse, y: DescriptionSearchResponse) => {
-      const xam = des[x.desc] || 0;
-      const yam = des[y.desc] || 0;
-
-      // Sort descriptions by cumulative vote count in descending order at first.
-      if (yam !== xam) {
-        return yam - xam;
-      }
-
-      // Sort descriptions by creation time in ascending order as secondary
-      // measure.
-      const xti = parseInt(x.crtd, 10);
-      const yti = parseInt(y.crtd, 10);
-
-      return xti - yti;
-    });
+  const cal: LabelSearchResponse[] = CacheApiLabel();
+  if (cal && cal.length !== 0 && (!labl || labl.length === 0)) {
+    setLabl(cal);
   }
+
+  const car: ReactionSearchResponse[] = CacheApiReaction();
+  if (car && car.length !== 0 && (!rctn || rctn.length === 0)) {
+    setRctn(car);
+  }
+
+  const addDesc = (des: DescriptionSearchResponse) => {
+    if (desc) {
+      desc.push({
+        // local
+        imag: user?.picture || "",
+        name: user?.nickname || user?.name || "",
+        // intern
+        crtd: des.crtd,
+        desc: des.desc,
+        user: user?.uuid || "",
+        // public
+        evnt: des.evnt,
+        text: des.text,
+      });
+    }
+  };
+
+  const getData = async function (): Promise<void> {
+    try {
+      const evn = await EventSearch(!props.evnt ? [] : props.evnt.map(x => ({ evnt: x })));
+
+      if (evn.length === 0) {
+        setLdng(false);
+        return;
+      }
+
+      const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
+      const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
+      const usr = await UserSearch(uniq(des).map(x => ({ user: x })));
+
+      setEvnt(evn.map(x => new EventSearchObject(x)));
+      setDesc(des.map(x => {
+        const u = usr.find(y => y.user === x.user);
+        if (u) {
+          return {
+            ...x,
+            imag: u.imag,
+            name: u.name,
+          };
+        } else {
+          return x;
+        }
+      }));
+      setVote(vot);
+
+      setLdng(false);
+    } catch (err) {
+      setErro(new Errors("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
+      setLdng(false);
+    }
+  };
+
+  const tglForm = (evnt: string) => {
+    setForm((old) => ({
+      ...old,
+      [evnt]: !old[evnt] || false,
+    }));
+  };
+
+  const tglXpnd = (evnt: string) => {
+    setXpnd((old) => ({
+      ...old,
+      [evnt]: !old[evnt] || false,
+    }));
+  };
+
+  useEffect(() => {
+    if (!clng.current) {
+      clng.current = true;
+      getData();
+    }
+  }, []);
 
   return (
     <>
-      <Header
-        desc={props.desc}
-        evnt={props.evnt}
-        labl={props.labl}
-        xpnd={() => setXpnd(!xpnd)}
-      />
-
-      <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
-        {!xpnd && (
-          <Description
-            radd={radd}
-            rrem={rrem}
-            desc={props.desc[0]}
-            evnt={props.evnt}
-            rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((x) => x.desc === props.desc[0].desc))}
-          />
-        )}
-        {xpnd && (
-          <>
-            {props.desc.map((x, i) => (
-              <Description
-                key={i}
-                radd={radd}
-                rrem={rrem}
-                desc={x}
-                evnt={props.evnt}
-                rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((y) => y.desc === x.desc))}
+      {ldng && (
+        <></>
+      )}
+      {!ldng && !evnt && (
+        <>
+          <div className="flex mt-4 w-full text-4xl justify-center">
+            <span>🤨</span>
+          </div>
+          <div className="flex mt-4 w-full text-2xl justify-center">
+            <span className="text-gray-500 dark:text-gray-400">There are no events. Beavers ate them all!</span>
+          </div>
+        </>
+      )}
+      {!ldng && evnt && desc && labl && rctn && vote && (
+        <ul>
+          {sort(evnt).map((x, i) => (
+            <li key={i}>
+              <Header
+                desc={fltr(x, [...desc], vote)}
+                evnt={x}
+                labl={labl}
+                xpnd={() => tglXpnd(x.evnt())}
               />
-            ))}
-          </>
-        )}
-        {form && (
-          <Form
-            atkn={props.atkn}
-            cncl={() => setForm(false)}
-            done={doneFunc}
-            evnt={props.evnt.evnt()}
-          />
-        )}
-      </div>
 
-      <Footer
-        addd={() => setForm(true)}
-        evnt={props.evnt}
-        labl={props.labl}
-      />
+              <Content
+                addd={addDesc}
+                atkn={props.atkn}
+                cncl={() => tglForm(x.evnt())}
+                desc={fltr(x, [...desc], vote)}
+                evnt={x}
+                form={form[x.evnt()]}
+                labl={labl}
+                rctn={rctn}
+                vote={vote}
+                xpnd={xpnd[x.evnt()]}
+              />
 
-      {erro.map((x, i) => (
-        <ErrorToast key={i} erro={x} />
+              <Footer
+                addd={() => {
+                  if (props.atkn == "") {
+                    setAuth((old: boolean[]) => [...old, true]);
+                  } else {
+                    tglForm(x.evnt());
+                  }
+                }}
+                evnt={x}
+                labl={labl}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+      {erro && (
+        <ErrorToast erro={erro} />
+      )}
+      {auth.map((x, i) => (
+        <LoginToast
+          key={i}
+          titl="The beavers need you to login if you want to add a new description."
+        />
       ))}
     </>
   );
 };
 
-function fltr(usr: string, rct: ReactionSearchResponse[], vot: VoteSearchResponse[]): ReactionSearchResponse[] {
+function fltr(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: VoteSearchResponse[]): DescriptionSearchResponse[] {
+  // Create a lookup table to store the vote counts for each description.
   const cou: Record<string, number> = {};
-  const clc: Record<string, boolean> = {};
 
   vot.forEach((x: VoteSearchResponse) => {
-    if (cou[x.rctn] === undefined) {
-      cou[x.rctn] = 0;
+    if (cou[x.desc] === undefined) {
+      cou[x.desc] = 0;
     }
-    cou[x.rctn]++;
 
-    if (x.user === usr) {
-      clc[x.rctn] = true;
-    }
+    cou[x.desc]++;
   });
 
-  // Create a new array to store the modified reactions for each description
-  // component without causing side effects when looping over all of them.
-  const lis: ReactionSearchResponse[] = [];
+  des.sort((x: DescriptionSearchResponse, y: DescriptionSearchResponse) => {
+    const xam = cou[x.desc] || 0;
+    const yam = cou[y.desc] || 0;
 
-  rct.forEach((x: ReactionSearchResponse) => {
-    const y = { ...x };
+    // Sort descriptions by cumulative vote count in descending order at first.
+    if (yam !== xam) {
+      return yam - xam;
+    }
 
-    y.amnt = cou[x.rctn] || 0;
-    y.clck = clc[x.rctn] || false;
+    // Sort descriptions by creation time in ascending order as secondary
+    // measure.
+    const xti = parseInt(x.crtd, 10);
+    const yti = parseInt(y.crtd, 10);
 
-    lis.push(y);
+    return xti - yti;
+  });
+
+  return des.filter((y: DescriptionSearchResponse) => y.evnt === evn.evnt())
+}
+
+
+function sort(evn: EventSearchObject[]): EventSearchObject[] {
+  // Filter out events that have already happened.
+  const now = Math.floor(Date.now() / 1000);
+  evn = evn.filter((x) => x.time() > now);
+
+  // Sort the events based on their time, in ascending order.
+  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time() - y.time());
+
+  return evn;
+}
+
+function uniq(des: DescriptionSearchResponse[]): string[] {
+  const lis: string[] = [];
+  const set = new Set();
+
+  des.forEach((x) => {
+    if (!set.has(x.user)) {
+      set.add(x.user);
+      lis.push(x.user);
+    }
   });
 
   return lis;
 }
-

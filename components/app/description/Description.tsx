@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 
 import ReactionBar from '@/components/app/reaction/ReactionBar'
 import ReactionPicker from '@/components/app/reaction/ReactionPicker'

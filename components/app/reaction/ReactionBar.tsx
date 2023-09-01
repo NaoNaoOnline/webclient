@@ -1,5 +1,3 @@
-import React from 'react';
-
 import ReactionButton from '@/components/app/reaction/ReactionButton'
 
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';

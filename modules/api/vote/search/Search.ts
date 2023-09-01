@@ -13,11 +13,6 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
           },
         })),
       },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
-      },
     );
 
     return cal.response.object.map((x) => ({

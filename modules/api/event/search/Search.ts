@@ -6,7 +6,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
   try {
     const cal = await API.search(
       {
-        object: req.map((x) => ({
+        object: req.length === 0 ? [] : req.map((x) => ({
           intern: {
             evnt: x.evnt,
           },
@@ -15,11 +15,6 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
             host: "",
           },
         })),
-      },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
       },
     );
 

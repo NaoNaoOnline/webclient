@@ -4,9 +4,9 @@ import { LabelSearch } from '@/modules/api/label/search/Search'
 import { NewLabelSearchRequest } from '@/modules/api/label/search/Request'
 import { LabelSearchResponse } from '@/modules/api/label/search/Response'
 
-const fetcher = (atk: string) => {
+const fetcher = () => {
   return async (): Promise<LabelSearchResponse[]> => {
-    return await LabelSearch(NewLabelSearchRequest(atk, "cate", "host"));
+    return await LabelSearch(NewLabelSearchRequest("cate", "host"));
   };
 };
 
@@ -15,10 +15,10 @@ const fetcher = (atk: string) => {
 // hour. The SWR hook can be deactivated if act is false. If act is true, a
 // valid access token must be provided with atk for making the RPC work
 // triggered by the custom fetcher.
-export default function CacheApiLabel(act: boolean, atk: string): LabelSearchResponse[] {
+export default function CacheApiLabel(): LabelSearchResponse[] {
   const { data, error } = useSWR(
-    act && atk ? "cache/api.Label" : null, // static cache key
-    fetcher(atk),
+    "cache/api.Label", // static cache key
+    fetcher(),
     {
       refreshInterval: 60 * 60 * 1000, // every hour
       revalidateOnFocus: false,

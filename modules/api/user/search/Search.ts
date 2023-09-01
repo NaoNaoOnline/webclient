@@ -13,11 +13,6 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
           public: {},
         })),
       },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
-      },
     );
 
     return cal.response.object.map((x) => ({
