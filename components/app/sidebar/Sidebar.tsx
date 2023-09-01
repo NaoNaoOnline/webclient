@@ -21,19 +21,10 @@ export default function Sidebar() {
   const [auth, setAuth] = useState<boolean[]>([]);
 
   function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
-    // Check if the user is authenticated
     if (!user) {
       setAuth((old: boolean[]) => [...old, true]);
       evn.preventDefault();
-
-      // Display a toast or any other notification method here
-      // You can set a state or use a toast library to show a message
-      // Example with a state to show a message:
-      // setShowToast(true);
     }
-
-    // Redirect to the link, or handle the link click action
-    // window.location.href = '/event/add'; // Uncomment to navigate
   };
 
   return (
