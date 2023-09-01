@@ -13,11 +13,6 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
           },
         })),
       },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
-      },
     );
 
     return cal.response.object.map((x) => ({

@@ -7,17 +7,13 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
     const call = await API.search(
       {
         object: req.map((x) => ({
-          intern: {},
-          public: {
-            kind: x.kind,
+          intern: {
             labl: x.labl,
           },
+          public: {
+            kind: x.kind,
+          },
         })),
-      },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
       },
     );
 

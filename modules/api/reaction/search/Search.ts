@@ -8,11 +8,6 @@ export async function ReactionSearch(req: ReactionSearchRequest[]): Promise<Reac
       {
         object: [],
       },
-      {
-        meta: {
-          authorization: "Bearer " + req[0].atkn,
-        },
-      },
     );
 
     return cal.response.object.map((x) => ({

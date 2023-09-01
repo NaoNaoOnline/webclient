@@ -1,7 +1,7 @@
-import React, { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
 
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import { UserIcon } from '@heroicons/react/24/outline'
+// import { UserIcon } from '@heroicons/react/24/outline'
 
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
@@ -33,7 +33,7 @@ export default function Event(props: Props) {
     return `${day}.${mon}.${yea} ${hou}:${min}`;
   };
 
-  const linkText = (tim: number): string => {
+  const linkText = (tim: number, dur: number): string => {
     const now = Math.floor(Date.now() / 1000);
     const dif = tim - now;
 
@@ -43,7 +43,9 @@ export default function Event(props: Props) {
     const wee = 7 * day;
     const mon = 30 * day;
 
-    if (dif <= 0) {
+    if (dif <= tim - dur) {
+      return "already happened";
+    } else if (dif <= 0) {
       return "join now now";
     } else if (dif <= hou) {
       return "coming up next";
@@ -66,7 +68,7 @@ export default function Event(props: Props) {
       className="relative rounded-t-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-hidden cursor-pointer"
     >
       <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">
-        {props.labl && (
+        {/* {props.labl && (
           <a
             href={`/host/${props.evnt?.host(props.labl)[0]}`}
             onClick={onLinkClick}
@@ -74,7 +76,7 @@ export default function Event(props: Props) {
           >
             <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
           </a>
-        )}
+        )} */}
 
         <div className="flex flex-row w-full">
           {props.labl && (
@@ -97,7 +99,7 @@ export default function Event(props: Props) {
             {` - `}
             {dateTime(props.evnt.dura())}
           </div>
-          {props.evnt.actv() ? linkText(props.evnt.time()) : "already happened"}
+          {linkText(props.evnt.time(), props.evnt.dura())}
         </a>
 
         <button

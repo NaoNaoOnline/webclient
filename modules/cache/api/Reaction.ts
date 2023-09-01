@@ -3,9 +3,9 @@ import useSWR from "swr"
 import { ReactionSearch } from '@/modules/api/reaction/search/Search'
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response'
 
-const fetcher = (atk: string) => {
+const fetcher = () => {
   return async (): Promise<ReactionSearchResponse[]> => {
-    return await ReactionSearch([{ atkn: atk }]);
+    return await ReactionSearch([]);
   };
 };
 
@@ -14,10 +14,10 @@ const fetcher = (atk: string) => {
 // automatically. Users will always get the latest state available on browser
 // tab refresh. If act is true, a valid access token must be provided with atk
 // for making the RPC work triggered by the custom fetcher.
-export default function CacheApiReaction(act: boolean, atk: string): ReactionSearchResponse[] {
+export default function CacheApiReaction(): ReactionSearchResponse[] {
   const { data, error } = useSWR(
-    act && atk ? "cache/api.Reaction" : null, // static cache key
-    fetcher(atk),
+    "cache/api.Reaction", // static cache key
+    fetcher(),
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,

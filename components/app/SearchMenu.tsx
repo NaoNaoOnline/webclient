@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 import { HomeIcon } from '@heroicons/react/24/outline'
 import { LockClosedIcon } from '@heroicons/react/24/outline'
@@ -20,7 +18,12 @@ export default function SearchMenu() {
             </li>
 
             <li className="w-full">
-              <input className="p-2 w-full border-none rounded-lg bg-gray-200 placeholder-gray-400 dark:placeholder-gray-500 dark:text-white dark:bg-gray-800" type="text" id="search-navbar" placeholder="Search" />
+              <input
+                id="search-navbar"
+                type="text"
+                placeholder="Search"
+                className="p-2 w-full text-sm border-none rounded-lg bg-gray-200 placeholder-gray-400 dark:placeholder-gray-500 dark:text-white dark:bg-gray-800 shadow-gray-500 dark:shadow-gray-500 shadow-[0_0_1px]"
+              />
             </li>
 
             <li className="flex items-center ml-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">

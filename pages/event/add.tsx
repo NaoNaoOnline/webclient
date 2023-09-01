@@ -1,8 +1,7 @@
-import "flowbite";
-import React, { useState, FormEvent, KeyboardEvent } from 'react'
+import { useState, FormEvent, KeyboardEvent } from 'react'
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
+import Header from '@/components/app/layout/Header'
 
 import DatePicker from '@/components/app/event/add/DatePicker'
 import TextInput from '@/components/app/event/add/TextInput'
@@ -37,7 +36,7 @@ export default function Page() {
   const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const cat: string = CacheAuthToken(user ? true : false);
-  const cal: LabelSearchResponse[] = CacheApiLabel(user ? true : false, cat);
+  const cal: LabelSearchResponse[] = CacheApiLabel();
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
@@ -99,7 +98,7 @@ export default function Page() {
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, [...nci, ...cci], [...nhi, ...chi])]);
+      const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, cci, chi)]);
       setEvnt(evn.evnt);
       setCmpl(75);
 
@@ -118,24 +117,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="pl-4 pr-4 mt-4 md:ml-64">
-        <div className="pl-4 pr-4 flex grid justify-items-center">
-          <div className="rounded-lg w-full max-w-xl">
-
-            <ul className="flex flex-row w-full">
-              <li className="flex items-center md:hidden mr-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 group">
-                <button className="p-2" data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button">
-                  <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                </button>
-              </li>
-              <li className="w-full">
-                <h3 className="text-3xl text-gray-900 dark:text-white">Add Event</h3>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-      </div>
+      <Header titl="Add Event" />
 
       <div className="pl-4 pr-4 mt-4 md:ml-64">
         <div className="pl-4 pr-4 flex grid justify-items-center">
@@ -240,7 +222,7 @@ export default function Page() {
             )}
             {!isLoading && !user && (
               <LoginToast
-                titl="You need to be logged in if you want to add a new event."
+                titl="Join the beavers and login for adding a new event. Or else!"
               />
             )}
           </div>
