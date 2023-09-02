@@ -8,9 +8,6 @@ import Header from '@/components/app/event/Header'
 import ErrorToast from '@/components/app/toast/ErrorToast'
 import LoginToast from '@/components/app/toast/LoginToast'
 
-import CacheApiLabel from '@/modules/cache/api/Label';
-import CacheApiReaction from '@/modules/cache/api/Reaction';
-
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 import { EventSearch } from '@/modules/api/event/search/Search'
@@ -20,6 +17,9 @@ import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+
+import CacheApiLabel from '@/modules/cache/api/Label';
+import CacheApiReaction from '@/modules/cache/api/Reaction';
 
 import Errors from '@/modules/errors/Errors';
 
@@ -124,6 +124,16 @@ export default function Event(props: Props) {
     }));
   };
 
+  let ltst: EventSearchObject[] = evnt || [];
+  if (evnt && !props.evnt) {
+    ltst = latEvnt(evnt);
+  }
+
+  let past: EventSearchObject[] = evnt || [];
+  if (evnt && !props.evnt) {
+    past = pasEvnt(evnt);
+  }
+
   useEffect(() => {
     if (!clng.current) {
       clng.current = true;
@@ -131,72 +141,73 @@ export default function Event(props: Props) {
     }
   }, []);
 
-  let ltst: EventSearchObject[] = evnt || [];
-  if (evnt && !props.evnt) {
-    ltst = latEvnt(evnt);
-  }
-
   return (
     <>
       {ldng && (
         <></>
       )}
-      {!ldng && !evnt && (
+      {!ldng && (
         <>
-          <div className="flex mt-4 w-full text-4xl justify-center">
-            <span>🤨</span>
-          </div>
-          <div className="flex mt-4 w-full text-2xl justify-center">
-            <span className="text-gray-500 dark:text-gray-400">There are no events. Beavers ate them all!</span>
-          </div>
-        </>
-      )}
-      {!ldng && evnt && desc && labl && rctn && vote && (
-        <>
-          <ul>
-            {ltst.map((x, i) => (
-              <li key={i}>
-                <Header
-                  desc={filDesc(x, [...desc], vote)}
-                  evnt={x}
-                  labl={labl}
-                  xpnd={() => tglXpnd(x.evnt())}
-                />
+          {ltst.length !== 0 && (
+            <>
+              {desc && labl && rctn && vote && (
+                <ul>
+                  {ltst.map((x, i) => (
+                    <li key={i}>
+                      <Header
+                        desc={filDesc(x, [...desc], vote)}
+                        evnt={x}
+                        labl={labl}
+                        xpnd={() => tglXpnd(x.evnt())}
+                      />
 
-                <Content
-                  addd={addDesc}
-                  atkn={props.atkn}
-                  cncl={() => tglForm(x.evnt())}
-                  desc={filDesc(x, [...desc], vote)}
-                  evnt={x}
-                  form={form[x.evnt()]}
-                  labl={labl}
-                  rctn={rctn}
-                  vote={vote}
-                  xpnd={xpnd[x.evnt()]}
-                />
+                      <Content
+                        addd={addDesc}
+                        atkn={props.atkn}
+                        cncl={() => tglForm(x.evnt())}
+                        desc={filDesc(x, [...desc], vote)}
+                        evnt={x}
+                        form={form[x.evnt()]}
+                        labl={labl}
+                        rctn={rctn}
+                        vote={vote}
+                        xpnd={xpnd[x.evnt()]}
+                      />
 
-                <Footer
-                  addd={() => {
-                    if (props.atkn == "") {
-                      setAuth((old: boolean[]) => [...old, true]);
-                    } else {
-                      tglForm(x.evnt());
-                    }
-                  }}
-                  evnt={x}
-                  labl={labl}
-                />
-              </li>
-            ))}
-          </ul>
-          {!props.evnt && (
+                      <Footer
+                        addd={() => {
+                          if (props.atkn == "") {
+                            setAuth((old: boolean[]) => [...old, true]);
+                          } else {
+                            tglForm(x.evnt());
+                          }
+                        }}
+                        evnt={x}
+                        labl={labl}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+          {ltst.length === 0 && (
+            <>
+              <div className="flex my-4 w-full text-4xl justify-center">
+                <span>🤨</span>
+              </div>
+              <div className="flex mb-8 w-full text-2xl justify-center">
+                <span className="text-gray-400 dark:text-gray-500">There are no events. Beavers ate them all!</span>
+              </div>
+            </>
+          )}
+          {!props.evnt && past.length !== 0 && desc && labl && rctn && vote && (
             <>
               <h3 className="text-3xl mb-4 text-gray-400 dark:text-gray-500">
                 Already Happened
               </h3>
               <ul>
-                {pasEvnt(evnt).map((x, i) => (
+                {past.map((x, i) => (
                   <li key={i}>
                     <Header
                       desc={filDesc(x, [...desc], vote)}
@@ -242,7 +253,7 @@ export default function Event(props: Props) {
       {auth.map((x, i) => (
         <LoginToast
           key={i}
-          titl="The beavers need you to login if you want to add a new description."
+          desc="The beavers need you to login if you want to add a new description."
         />
       ))}
     </>

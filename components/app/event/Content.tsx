@@ -185,12 +185,15 @@ export default function Content(props: Props) {
       </div>
 
       {erro.map((x, i) => (
-        <ErrorToast key={i} erro={x} />
+        <ErrorToast
+          key={i}
+          erro={x}
+        />
       ))}
       {auth.map((x, i) => (
         <LoginToast
           key={i}
-          titl="Please login to add your reaction, or the beavers will build a dam."
+          desc="Please login to add your reaction, or the beavers will build a dam."
         />
       ))}
     </>

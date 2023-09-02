@@ -8,12 +8,12 @@ import { ListBulletIcon } from "@heroicons/react/24/outline"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { TagIcon } from "@heroicons/react/24/outline"
 
-import LoginToast from '@/components/app/toast/LoginToast'
-
 import DarkMode from "@/components/app/sidebar/DarkMode"
 import AuthButtons from "@/components/app/sidebar/AuthButtons"
 import SocialButtons from "@/components/app/sidebar/SocialButtons"
 import UserButtons from "@/components/app/sidebar/UserButtons"
+
+import LoginToast from '@/components/app/toast/LoginToast'
 
 export default function Sidebar() {
   const { user } = useUser();
@@ -83,7 +83,7 @@ export default function Sidebar() {
       {auth.map((x, i) => (
         <LoginToast
           key={i}
-          titl="Join the beavers and login for adding a new event. Or else!"
+          desc="Join the beavers and login for adding a new event. Or else!"
         />
       ))}
     </>

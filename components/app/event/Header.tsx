@@ -34,14 +34,15 @@ export default function Event(props: Props) {
   };
 
   const linkText = (tim: number, dur: number): string => {
-    const now = Math.floor(Date.now() / 1000);
-    const dif = tim - now;
-
     const min = 60;
     const hou = 60 * min;
     const day = 24 * hou;
     const wee = 7 * day;
     const mon = 30 * day;
+
+    const now = Math.floor(Date.now() / 1000);
+    const dif = tim - now;
+    const eod = Math.floor(now / day) * day + day;
 
     if (dif <= tim - dur) {
       return "already happened";
@@ -49,7 +50,7 @@ export default function Event(props: Props) {
       return "join now now";
     } else if (dif <= hou) {
       return "coming up next";
-    } else if (dif <= day) {
+    } else if (dif <= eod - now) {
       return "later today";
     } else if (dif <= 2 * day) {
       return "tomorrow";
