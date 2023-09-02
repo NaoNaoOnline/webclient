@@ -86,7 +86,7 @@ export default function Event(props: Props) {
 
       const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
       const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
-      const usr = await UserSearch(uniq(des).map(x => ({ user: x })));
+      const usr = await UserSearch(uniUser(des).map(x => ({ user: x })));
 
       setEvnt(evn.map(x => new EventSearchObject(x)));
       setDesc(des.map(x => {
@@ -131,6 +131,11 @@ export default function Event(props: Props) {
     }
   }, []);
 
+  let ltst: EventSearchObject[] = evnt || [];
+  if (evnt && !props.evnt) {
+    ltst = latEvnt(evnt);
+  }
+
   return (
     <>
       {ldng && (
@@ -147,43 +152,89 @@ export default function Event(props: Props) {
         </>
       )}
       {!ldng && evnt && desc && labl && rctn && vote && (
-        <ul>
-          {sort(evnt).map((x, i) => (
-            <li key={i}>
-              <Header
-                desc={fltr(x, [...desc], vote)}
-                evnt={x}
-                labl={labl}
-                xpnd={() => tglXpnd(x.evnt())}
-              />
+        <>
+          <ul>
+            {ltst.map((x, i) => (
+              <li key={i}>
+                <Header
+                  desc={filDesc(x, [...desc], vote)}
+                  evnt={x}
+                  labl={labl}
+                  xpnd={() => tglXpnd(x.evnt())}
+                />
 
-              <Content
-                addd={addDesc}
-                atkn={props.atkn}
-                cncl={() => tglForm(x.evnt())}
-                desc={fltr(x, [...desc], vote)}
-                evnt={x}
-                form={form[x.evnt()]}
-                labl={labl}
-                rctn={rctn}
-                vote={vote}
-                xpnd={xpnd[x.evnt()]}
-              />
+                <Content
+                  addd={addDesc}
+                  atkn={props.atkn}
+                  cncl={() => tglForm(x.evnt())}
+                  desc={filDesc(x, [...desc], vote)}
+                  evnt={x}
+                  form={form[x.evnt()]}
+                  labl={labl}
+                  rctn={rctn}
+                  vote={vote}
+                  xpnd={xpnd[x.evnt()]}
+                />
 
-              <Footer
-                addd={() => {
-                  if (props.atkn == "") {
-                    setAuth((old: boolean[]) => [...old, true]);
-                  } else {
-                    tglForm(x.evnt());
-                  }
-                }}
-                evnt={x}
-                labl={labl}
-              />
-            </li>
-          ))}
-        </ul>
+                <Footer
+                  addd={() => {
+                    if (props.atkn == "") {
+                      setAuth((old: boolean[]) => [...old, true]);
+                    } else {
+                      tglForm(x.evnt());
+                    }
+                  }}
+                  evnt={x}
+                  labl={labl}
+                />
+              </li>
+            ))}
+          </ul>
+          {!props.evnt && (
+            <>
+              <h3 className="text-3xl mb-4 text-gray-400 dark:text-gray-500">
+                Already Happened
+              </h3>
+              <ul>
+                {pasEvnt(evnt).map((x, i) => (
+                  <li key={i}>
+                    <Header
+                      desc={filDesc(x, [...desc], vote)}
+                      evnt={x}
+                      labl={labl}
+                      xpnd={() => tglXpnd(x.evnt())}
+                    />
+
+                    <Content
+                      addd={addDesc}
+                      atkn={props.atkn}
+                      cncl={() => tglForm(x.evnt())}
+                      desc={filDesc(x, [...desc], vote)}
+                      evnt={x}
+                      form={form[x.evnt()]}
+                      labl={labl}
+                      rctn={rctn}
+                      vote={vote}
+                      xpnd={xpnd[x.evnt()]}
+                    />
+
+                    <Footer
+                      addd={() => {
+                        if (props.atkn == "") {
+                          setAuth((old: boolean[]) => [...old, true]);
+                        } else {
+                          tglForm(x.evnt());
+                        }
+                      }}
+                      evnt={x}
+                      labl={labl}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
       )}
       {erro && (
         <ErrorToast erro={erro} />
@@ -198,7 +249,7 @@ export default function Event(props: Props) {
   );
 };
 
-function fltr(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: VoteSearchResponse[]): DescriptionSearchResponse[] {
+function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: VoteSearchResponse[]): DescriptionSearchResponse[] {
   // Create a lookup table to store the vote counts for each description.
   const cou: Record<string, number> = {};
 
@@ -231,10 +282,12 @@ function fltr(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: Vot
 }
 
 
-function sort(evn: EventSearchObject[]): EventSearchObject[] {
+// latEvnt returns a list of event objects for the events happening right now.
+// The list is sorted by event start time, from earlier to later.
+function latEvnt(evn: EventSearchObject[]): EventSearchObject[] {
   // Filter out events that have already happened.
   const now = Math.floor(Date.now() / 1000);
-  evn = evn.filter((x) => x.time() > now);
+  evn = evn.filter((x) => x.dura() > now);
 
   // Sort the events based on their time, in ascending order.
   evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time() - y.time());
@@ -242,7 +295,20 @@ function sort(evn: EventSearchObject[]): EventSearchObject[] {
   return evn;
 }
 
-function uniq(des: DescriptionSearchResponse[]): string[] {
+// pasEvnt returns a list of event objects for the events that have already
+// happened. The list is sorted by event start time, from earlier to later.
+function pasEvnt(evn: EventSearchObject[]): EventSearchObject[] {
+  // Filter out events that have already happened.
+  const now = Math.floor(Date.now() / 1000);
+  evn = evn.filter((x) => x.dura() < now);
+
+  // Sort the events based on their time, in ascending order.
+  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time() - y.time());
+
+  return evn;
+}
+
+function uniUser(des: DescriptionSearchResponse[]): string[] {
   const lis: string[] = [];
   const set = new Set();
 
