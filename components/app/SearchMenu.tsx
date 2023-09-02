@@ -22,7 +22,7 @@ export default function SearchMenu() {
                 id="search-navbar"
                 type="text"
                 placeholder="Search"
-                className="p-2 w-full text-sm border-none rounded-lg bg-gray-200 placeholder-gray-400 dark:placeholder-gray-500 dark:text-white dark:bg-gray-800 shadow-gray-500 dark:shadow-gray-500 shadow-[0_0_1px]"
+                className="p-2 w-full text-sm border-none rounded-lg bg-gray-200 placeholder-gray-400 dark:placeholder-gray-500 dark:text-white dark:bg-gray-800 shadow-[inset_0_0_2px_0_rgba(0,0,0,0.1)]"
               />
             </li>
 

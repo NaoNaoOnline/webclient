@@ -25,7 +25,7 @@ export default function Header(props: Props) {
               </button>
             </li>
             <li className="w-full">
-              <h3 className="text-3xl text-gray-900 dark:text-gray-50">
+              <h3 className="text-3xl text-gray-400 dark:text-gray-500">
                 {props.titl}
               </h3>
             </li>

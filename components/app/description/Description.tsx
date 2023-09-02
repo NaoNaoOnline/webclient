@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react';
 
 import ReactionBar from '@/components/app/reaction/ReactionBar'
-import ReactionPicker from '@/components/app/reaction/ReactionPicker'
+import Menu from '@/components/app/description/Menu'
 
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
@@ -57,7 +57,7 @@ export default function Description(props: Props) {
         </div>
 
         <div>
-          <ReactionPicker
+          <Menu
             rctn={props.rctn}
             clmn={6}
             radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
