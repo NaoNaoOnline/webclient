@@ -121,21 +121,24 @@ export default function Form(props: Props) {
             key={i}
             cmpl={cmpl}
             cncl={cncl}
+            desc="Adding New Description"
             done={() => {
               props.cncl();
               if (desc) props.done(desc);
             }}
-            titl="Adding New Description"
           />
         ))}
 
         {erro.map((x, i) => (
-          <ErrorToast key={i} erro={x} />
+          <ErrorToast
+            key={i}
+            erro={x}
+          />
         ))}
 
         {cmpl >= 100 && (
           <SuccessToast
-            titl="Huzzah, description addedd my lord!"
+            desc="Huzzah, description addedd my lord!"
           />
         )}
       </form>

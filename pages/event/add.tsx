@@ -35,6 +35,11 @@ export default function Page() {
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
 
+  const offs: number = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
+
+  const [stad, setStad] = useState<Date>(new Date());
+  const [endd, setEndd] = useState<Date>(new Date(stad.getTime() + offs));
+
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
 
@@ -115,6 +120,18 @@ export default function Page() {
     }
   };
 
+  setTimeout(() => {
+    const now: Date = new Date();
+    const minutes: number = now.getMinutes();
+
+    // Check if the current minute is 0, 15, 30, or 45.
+    if (minutes % 15 === 0) {
+      const dat: Date = new Date();
+      setStad(dat);
+      setEndd(new Date(dat.getTime() + offs));
+    }
+  }, 60 * 1000); // every minute
+
   return (
     <>
       <Header titl="Add Event" />
@@ -173,18 +190,32 @@ export default function Page() {
                     description="the day at which this event is expected to happen"
                   />
                   <TimePicker
+                    chng={(dat: Date) => {
+                      // If start date (stad) changes, set end date (endd) to 1
+                      // hour after start date.
+                      setStad(dat);
+                      setEndd(new Date(dat.getTime() + offs));
+                    }}
+                    date={rndHou(stad, (offs / 4))}
+                    desc="the time at which this event is expected to start"
                     name="start"
+                    pstn="right"
                     text="Start"
-                    offset={0}
-                    description="the time at which this event is expected to start"
-                    position="right"
                   />
                   <TimePicker
+                    chng={(dat: Date) => {
+                      // If end date (endd) changes, we do not set start date
+                      // (stad) to 1 hour before end date. This would imply to
+                      // only have events that last 1 hour with the current UX,
+                      // because changing either of stad or endd would always
+                      // update circular.
+                      setEndd(dat);
+                    }}
+                    date={rndHou(endd, (offs / 4))}
+                    desc="the time at which this event is expected to end"
                     name="end"
+                    pstn="left"
                     text="End"
-                    offset={1 * 60 * 60 * 1000}
-                    description="the time at which this event is expected to end"
-                    position="left"
                   />
                 </div>
 
@@ -202,27 +233,30 @@ export default function Page() {
                     key={i}
                     cmpl={cmpl}
                     cncl={cncl}
+                    desc="Adding New Event"
                     done={() => {
                       window.location.href = "/event/" + evnt;
                     }}
-                    titl="Adding New Event"
                   />
                 ))}
 
                 {erro.map((x, i) => (
-                  <ErrorToast key={i} erro={x} />
+                  <ErrorToast
+                    key={i}
+                    erro={x}
+                  />
                 ))}
 
                 {cmpl >= 100 && (
                   <SuccessToast
-                    titl="Hooray, event addedd milady!"
+                    desc="Hooray, event addedd milady!"
                   />
                 )}
               </form>
             )}
             {!isLoading && !user && (
               <LoginToast
-                titl="Join the beavers and login for adding a new event. Or else!"
+                desc="Join the beavers and login for adding a new event. Or else!"
               />
             )}
           </div>
@@ -242,4 +276,8 @@ function unqLab(des: string[], lis: LabelSearchResponse[]): string[] {
   const unq = des.filter(x => !cur.includes(x));
 
   return unq;
+}
+
+function rndHou(dat: Date, rnd: number): Date {
+  return new Date(Math.ceil(dat.getTime() / rnd) * rnd);
 }
