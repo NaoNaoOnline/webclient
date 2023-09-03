@@ -7,7 +7,7 @@ interface Props {
   desc: string;
 }
 
-export default function LoginToast(props: Props) {
+export default function InfoToast(props: Props) {
   return (
     <>
       <Toast.Root

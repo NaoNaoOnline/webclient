@@ -13,7 +13,7 @@ import AuthButtons from "@/components/app/sidebar/AuthButtons"
 import SocialButtons from "@/components/app/sidebar/SocialButtons"
 import UserButtons from "@/components/app/sidebar/UserButtons"
 
-import LoginToast from '@/components/app/toast/LoginToast'
+import InfoToast from '@/components/app/toast/InfoToast'
 
 export default function Sidebar() {
   const { user } = useUser();
@@ -81,7 +81,7 @@ export default function Sidebar() {
       </aside>
 
       {auth.map((x, i) => (
-        <LoginToast
+        <InfoToast
           key={i}
           desc="Join the beavers and login for adding a new event. Or else!"
         />
