@@ -6,7 +6,7 @@ import Footer from '@/components/app/event/Footer'
 import Header from '@/components/app/event/Header'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
-import LoginToast from '@/components/app/toast/LoginToast'
+import InfoToast from '@/components/app/toast/InfoToast'
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
@@ -251,7 +251,7 @@ export default function Event(props: Props) {
         <ErrorToast erro={erro} />
       )}
       {auth.map((x, i) => (
-        <LoginToast
+        <InfoToast
           key={i}
           desc="The beavers need you to login if you want to add a new description."
         />

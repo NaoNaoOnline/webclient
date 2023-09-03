@@ -33,6 +33,17 @@ export default function Event(props: Props) {
     return `${day}.${mon}.${yea} ${hou}:${min}`;
   };
 
+  const rltvDura = (uni: number): string => {
+    const now = Math.floor(Date.now() / 1000);
+    const dif = uni - now;
+
+    if (dif < 0) {
+      return `${Math.abs(Math.floor(dif / 60))}m ago`;
+    } else {
+      return `${Math.floor(dif / 60)}m left`;
+    }
+  };
+
   const linkText = (tim: number, dur: number): string => {
     const min = 60;
     const hou = 60 * min;
@@ -96,9 +107,9 @@ export default function Event(props: Props) {
           className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv() ? "text-green-400" : "text-gray-400"}`}
         >
           <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
-            {dateTime(props.evnt.time())}
+            {props.evnt.actv() ? rltvDura(props.evnt.time()) : dateTime(props.evnt.time())}
             {` - `}
-            {dateTime(props.evnt.dura())}
+            {props.evnt.actv() ? rltvDura(props.evnt.dura()) : dateTime(props.evnt.dura())}
           </div>
           {linkText(props.evnt.time(), props.evnt.dura())}
         </a>

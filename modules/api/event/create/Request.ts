@@ -44,8 +44,18 @@ function newDura(sta: string, end: string): string {
   const sts = sth * 3600 + stm * 60;
   const ens = enh * 3600 + enm * 60;
 
-  return (ens - sts).toString();
+  let dur = ens - sts;
+
+  // Check if the end time is earlier than the start time, which may happen
+  // crossing over into the next day given 23:30 and 00:30. In such a case we
+  // add 24 hours (86400 seconds) to the temporarily negative duration value.
+  if (dur < 0) {
+    dur += 86400;
+  }
+
+  return dur.toString();
 }
+
 
 function newLink(lin: string): string {
   return lin;

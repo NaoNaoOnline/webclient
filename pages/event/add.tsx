@@ -8,7 +8,7 @@ import TextInput from '@/components/app/event/add/TextInput'
 import TimePicker from '@/components/app/event/add/TimePicker'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
-import LoginToast from '@/components/app/toast/LoginToast'
+import InfoToast from '@/components/app/toast/InfoToast'
 import ProgressToast from '@/components/app/toast/ProgressToast'
 import SuccessToast from '@/components/app/toast/SuccessToast'
 
@@ -255,7 +255,7 @@ export default function Page() {
               </form>
             )}
             {!isLoading && !user && (
-              <LoginToast
+              <InfoToast
                 desc="Join the beavers and login for adding a new event. Or else!"
               />
             )}

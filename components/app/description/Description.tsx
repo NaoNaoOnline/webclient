@@ -1,7 +1,10 @@
-import { MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
 
 import ReactionBar from '@/components/app/reaction/ReactionBar'
+import Form from '@/components/app/description/update/Form'
 import Menu from '@/components/app/description/Menu'
+
+import InfoToast from '@/components/app/toast/InfoToast'
 
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 import { EventSearchObject } from "@/modules/api/event/search/Object";
@@ -12,6 +15,7 @@ function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
 }
 
 interface Props {
+  atkn: string;
   radd: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
   rrem: (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => void;
   desc: DescriptionSearchResponse;
@@ -20,6 +24,10 @@ interface Props {
 }
 
 export default function Description(props: Props) {
+  const [equl, setEqul] = useState<boolean[]>([]);
+  const [form, setForm] = useState<boolean>(false);
+  const [text, setText] = useState<string>(props.desc.text);
+
   return (
     <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
       <div className="flex justify-between">
@@ -58,16 +66,40 @@ export default function Description(props: Props) {
 
         <div>
           <Menu
-            rctn={props.rctn}
+            desu={() => setForm((old: boolean) => !old)}
             clmn={6}
             radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
+            rctn={props.rctn}
           />
         </div>
       </div>
 
-      <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
-        {props.desc.text}
-      </p>
+      {form && (
+        <Form
+          atkn={props.atkn}
+          cncl={() => setForm(false)}
+          desc={props.desc.desc}
+          done={(txt: string) => {
+            if (txt === text) {
+              setEqul((old: boolean[]) => [...old, true]);
+            } else {
+              setText(txt);
+            }
+          }}
+          text={text}
+        />
+      )}
+      {!form && (
+        <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
+          {text}
+        </p>
+      )}
+      {equl.map((x, i) => (
+        <InfoToast
+          key={i}
+          desc="Nothing to change here, don't worry mate. No biggie at all!"
+        />
+      ))}
     </div>
   );
 };
