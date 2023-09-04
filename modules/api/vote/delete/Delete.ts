@@ -15,7 +15,7 @@ export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteRe
       },
       {
         meta: {
-          authorization: "Bearer " + req[0].atkn,
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
         },
       },
     );

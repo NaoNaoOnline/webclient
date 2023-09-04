@@ -22,10 +22,13 @@ import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheApiReaction from '@/modules/cache/api/Reaction';
 
 import Errors from '@/modules/errors/Errors';
+import { EventSearchRequest } from '@/modules/api/event/search/Request';
 
 interface Props {
   atkn: string;
   evnt?: string[];
+  ltst?: string;
+  rctn?: string;
 }
 
 interface ToggleState {
@@ -77,7 +80,14 @@ export default function Event(props: Props) {
 
   const getData = async function (): Promise<void> {
     try {
-      const evn = await EventSearch(!props.evnt ? [] : props.evnt.map(x => ({ evnt: x })));
+      let req: EventSearchRequest[] = [];
+      if (!props.evnt) {
+        req = [{ atkn: props.atkn, evnt: "", ltst: props.ltst || "", rctn: props.rctn || "" }];
+      } else {
+        req = props.evnt.map(x => ({ atkn: "", evnt: x, ltst: "", rctn: "" }));
+      }
+
+      const evn = await EventSearch(req);
 
       if (evn.length === 0) {
         setLdng(false);

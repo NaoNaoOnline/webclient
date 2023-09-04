@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from 'react';
 
 import { DescriptionUpdate } from '@/modules/api/description/update/Update'
-import { NewDescriptionUpdateRequestFromFormData } from '@/modules/api/description/update/Request'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
 import ProgressToast from '@/components/app/toast/ProgressToast'

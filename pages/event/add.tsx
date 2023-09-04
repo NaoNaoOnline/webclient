@@ -52,8 +52,8 @@ export default function Page() {
 
     try {
       // Get clean string lists for the user category input and user host input.
-      const uci = (frm.get("category-input")?.toString() || "").split(",").map(x => x.trim());
-      const uhi = (frm.get("host-input")?.toString() || "").split(",").map(x => x.trim());
+      const uci = (frm.get("category-input")?.toString() || "").split(",").map(x => trmLab(x));
+      const uhi = (frm.get("host-input")?.toString() || "").split(",").map(x => trmLab(x));
 
       // Get the list of desired category names and desired host names that
       // still have to be created.
@@ -98,8 +98,8 @@ export default function Page() {
 
       // Get the cached category ids and cached host ids for the user input that
       // did already exist in the backend. 
-      const cci = cal.filter(x => uci.includes(x.name)).map(x => x.labl);
-      const chi = cal.filter(x => uhi.includes(x.name)).map(x => x.labl);
+      const cci = cal.filter(x => uci.map(x => x.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(x => x.labl);
+      const chi = cal.filter(x => uhi.map(x => x.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(x => x.labl);
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
@@ -270,12 +270,26 @@ export default function Page() {
 // the given LabelSearchResponse.
 function unqLab(des: string[], lis: LabelSearchResponse[]): string[] {
   // Extract the current labels from the lis array.
-  const cur = lis.map(x => x.name);
+  const cur = lis.map(x => x.name.toLocaleLowerCase());
 
   // Filter out labels that already exist.
-  const unq = des.filter(x => !cur.includes(x));
+  const unq = des.filter(x => !cur.includes(x.toLocaleLowerCase()));
 
   return unq;
+}
+
+// trmLab cleans strings for their use as label names. For instance, we use
+// trmLab for label names and want to ensure that no erroneous spaces become
+// part of the labels.
+function trmLab(str: string): string {
+  // Replace multiple spaces with a single one.
+  str = str.replace(/\s+/g, ' ');
+  // Remove leading and trailing spaces.
+  str = str.trim();
+  // Escape special characters.
+  str = encodeURIComponent(str);
+
+  return str;
 }
 
 function rndHou(dat: Date, rnd: number): Date {

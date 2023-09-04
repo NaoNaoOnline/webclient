@@ -2,7 +2,7 @@ import "flowbite";
 import { useState, MouseEvent } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
-import { CalendarIcon } from "@heroicons/react/24/outline"
+import { FaceSmileIcon } from "@heroicons/react/24/outline"
 import { HomeIcon } from "@heroicons/react/24/outline"
 import { ListBulletIcon } from "@heroicons/react/24/outline"
 import { PlusIcon } from "@heroicons/react/24/outline"
@@ -18,14 +18,16 @@ import InfoToast from '@/components/app/toast/InfoToast'
 export default function Sidebar() {
   const { user } = useUser();
 
-  const [auth, setAuth] = useState<boolean[]>([]);
+  const [auth, setAuth] = useState<string[]>([]);
 
-  function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
-    if (!user) {
-      setAuth((old: boolean[]) => [...old, true]);
-      evn.preventDefault();
-    }
-  };
+  const newOnLinkClick = (str: string) => {
+    return (evn: MouseEvent<HTMLAnchorElement>) => {
+      if (!user) {
+        setAuth((old: string[]) => [...old, str]);
+        evn.preventDefault();
+      }
+    };
+  }
 
   return (
     <>
@@ -40,15 +42,23 @@ export default function Sidebar() {
 
           <ul className="pt-4 mt-4 space-y-2 border-t border-gray-300 dark:border-gray-700">
             <li>
-              <a href="/event/add" onClick={onLinkClick} className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+              <a
+                href="/event/add"
+                onClick={newOnLinkClick("Join the beavers and login if you want to add a new event. Or else!")}
+                className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+              >
                 <PlusIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Add Event</span>
               </a>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
-                <CalendarIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">My Schedule</span>
+              <a
+                href="/reaction"
+                onClick={newOnLinkClick("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
+                className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+              >
+                <FaceSmileIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">My Reactions</span>
               </a>
             </li>
           </ul>
@@ -83,7 +93,7 @@ export default function Sidebar() {
       {auth.map((x, i) => (
         <InfoToast
           key={i}
-          desc="Join the beavers and login for adding a new event. Or else!"
+          desc={x}
         />
       ))}
     </>
