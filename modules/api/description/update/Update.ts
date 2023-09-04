@@ -19,7 +19,7 @@ export async function DescriptionUpdate(req: DescriptionUpdateRequest[]): Promis
       },
       {
         meta: {
-          authorization: "Bearer " + req[0].atkn,
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
         },
       },
     );

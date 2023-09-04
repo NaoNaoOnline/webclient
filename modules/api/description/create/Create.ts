@@ -16,7 +16,7 @@ export async function DescriptionCreate(req: DescriptionCreateRequest[]): Promis
       },
       {
         meta: {
-          authorization: "Bearer " + req[0].atkn,
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
         },
       },
     );

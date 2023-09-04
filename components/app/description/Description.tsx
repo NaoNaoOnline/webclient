@@ -66,10 +66,12 @@ export default function Description(props: Props) {
 
         <div>
           <Menu
-            desu={() => setForm((old: boolean) => !old)}
             clmn={6}
+            delt={props.desc.user !== props.evnt.user()}
+            desu={() => setForm((old: boolean) => !old)}
             radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
             rctn={props.rctn}
+            updt={(Math.floor(Date.now() / 1000) - parseInt(props.desc.crtd, 10)) >= (5 * 60)}
           />
         </div>
       </div>
