@@ -33,7 +33,7 @@ export default function Event(props: Props) {
     return `${day}.${mon}.${yea} ${hou}:${min}`;
   };
 
-  const rltvDura = (uni: number): string => {
+  const rltvActv = (uni: number): string => {
     const now = Math.floor(Date.now() / 1000);
     const dif = uni - now;
 
@@ -44,14 +44,26 @@ export default function Event(props: Props) {
     }
   };
 
+  const rltvUpcm = (uni: number): string => {
+    const now = Math.floor(Date.now() / 1000);
+    const dif = uni - now;
+
+    return `in ${Math.floor(dif / 60)}m`;
+  };
+
   const linkText = (tim: number, dur: number): string => {
+    const off = (new Date().getTimezoneOffset() * 60)
+
+    tim -= off;
+    dur -= off;
+
     const min = 60;
     const hou = 60 * min;
     const day = 24 * hou;
     const wee = 7 * day;
     const mon = 30 * day;
 
-    const now = Math.floor(Date.now() / 1000);
+    const now = Math.floor(Date.now() / 1000) - off;
     const dif = tim - now;
     const eod = Math.floor(now / day) * day + day;
 
@@ -107,9 +119,29 @@ export default function Event(props: Props) {
           className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv() ? "text-green-400" : "text-gray-400"}`}
         >
           <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900">
-            {props.evnt.actv() ? rltvDura(props.evnt.time()) : dateTime(props.evnt.time())}
-            {` - `}
-            {props.evnt.actv() ? rltvDura(props.evnt.dura()) : dateTime(props.evnt.dura())}
+            {props.evnt.actv() && (
+              <>
+                {rltvActv(props.evnt.time())}
+                {` - `}
+                {rltvActv(props.evnt.dura())}
+              </>
+            )}
+            {!props.evnt.actv() && (
+              <>
+                {props.evnt.upcm() && (
+                  <>
+                    {rltvUpcm(props.evnt.time())}
+                  </>
+                )}
+                {!props.evnt.upcm() && (
+                  <>
+                    {dateTime(props.evnt.time())}
+                    {` - `}
+                    {dateTime(props.evnt.dura())}
+                  </>
+                )}
+              </>
+            )}
           </div>
           {linkText(props.evnt.time(), props.evnt.dura())}
         </a>

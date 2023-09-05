@@ -69,7 +69,25 @@ export class EventSearchObject {
   // actv expresses whether this event is currently ongoing based on
   // this.res.time and this.res.dura.
   actv(): boolean {
-    const now = Math.floor(Date.now() / 1000);
-    return now >= this.time() && now <= this.dura();
+    const off = (new Date().getTimezoneOffset() * 60)
+    const now = Math.floor(Date.now() / 1000) - off;
+    return now >= this.time() - off && now <= this.dura() - off;
+  }
+
+  // upcm expresses whether this event is coming up next based on this.res.time.
+  upcm(): boolean {
+    const off = (new Date().getTimezoneOffset() * 60)
+    const now = Math.floor(Date.now() / 1000) - off;
+
+    const min = 60;
+    const hou = 60 * min;
+
+    const dif = (this.time() - off) - now;
+
+    if (dif <= hou) {
+      return true;
+    }
+
+    return false;
   }
 }
