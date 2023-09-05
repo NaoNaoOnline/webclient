@@ -286,8 +286,6 @@ function trmLab(str: string): string {
   str = str.replace(/\s+/g, ' ');
   // Remove leading and trailing spaces.
   str = str.trim();
-  // Escape special characters.
-  str = encodeURIComponent(str);
 
   return str;
 }
