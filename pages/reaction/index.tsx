@@ -12,7 +12,7 @@ export default function Page() {
 
   return (
     <>
-      <Header titl="My Reactions" />
+      <Header titl="Latest Events" />
 
       {!cat && (
         <></>

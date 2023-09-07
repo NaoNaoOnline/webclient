@@ -21,6 +21,7 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
       // intern
       labl: x.intern?.labl || "",
       // public
+      kind: x.public?.kind || "",
       name: x.public?.name || "",
     }));
   } catch (err) {
