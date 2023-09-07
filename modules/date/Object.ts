@@ -42,10 +42,6 @@ export default class DateObject {
         max: this.addHou(this.sta.tim, 4),
       };
     }
-
-    if (this.end.max > this.setEod(new Date())) {
-      // this.end.max = this.setEod(new Date());
-    }
   }
 
   private addHou(dat: Date, hou: number): Date {
