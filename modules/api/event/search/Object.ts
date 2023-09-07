@@ -84,7 +84,7 @@ export class EventSearchObject {
 
     const dif = (this.time() - off) - now;
 
-    if (dif <= hou) {
+    if (dif >= 0 && dif <= hou) {
       return true;
     }
 

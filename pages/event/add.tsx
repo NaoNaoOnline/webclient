@@ -24,6 +24,8 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 
+import DateObject from '@/modules/date/Object';
+
 import Errors from '@/modules/errors/Errors';
 
 export default function Page() {
@@ -31,14 +33,10 @@ export default function Page() {
 
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
+  const [date, setDate] = useState<DateObject>(new DateObject());
   const [evnt, setEvnt] = useState<string>("");
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
-
-  const offs: number = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
-
-  const [stad, setStad] = useState<Date>(new Date());
-  const [endd, setEndd] = useState<Date>(new Date(stad.getTime() + offs));
 
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
@@ -71,7 +69,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          cal.push({ labl: nci[i], name: dcn[i] });
+          cal.push({ labl: nci[i], kind: "cate", name: dcn[i] });
         }
 
         setCmpl(25);
@@ -89,17 +87,24 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          cal.push({ labl: nhi[i], name: dhn[i] });
+          cal.push({ labl: nhi[i], kind: "host", name: dhn[i] });
         }
 
         setCmpl(50);
         await new Promise(r => setTimeout(r, 200));
       }
 
-      // Get the cached category ids and cached host ids for the user input that
-      // did already exist in the backend. 
-      const cci = cal.filter(x => uci.map(x => x.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(x => x.labl);
-      const chi = cal.filter(x => uhi.map(x => x.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(x => x.labl);
+      // Get the cached category label IDs and cached host label IDs for the
+      // user input that did already exist in the backend, if any. Note that we
+      // need to differentiate explicitely between label kinds, since there
+      // might be category and host labels indexed with the same label names. It
+      // is considered a feature that a host name cannot steal category name and
+      // vice versa. In any case, this does not imply that category labels
+      // having the same name as host labels makes any straight forward sense.
+      // We just do not want to stand in the way of any use case that we might
+      // not be able to see right now.
+      const cci = cal.filter(x => x.kind === "cate" && uci.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
+      const chi = cal.filter(x => x.kind === "host" && uhi.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
@@ -119,18 +124,6 @@ export default function Page() {
       setErro((old: Errors[]) => [...old, new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error)]);
     }
   };
-
-  setTimeout(() => {
-    const now: Date = new Date();
-    const minutes: number = now.getMinutes();
-
-    // Check if the current minute is 0, 15, 30, or 45.
-    if (minutes % 15 === 0) {
-      const dat: Date = new Date();
-      setStad(dat);
-      setEndd(new Date(dat.getTime() + offs));
-    }
-  }, 60 * 1000); // every minute
 
   return (
     <>
@@ -170,6 +163,7 @@ export default function Page() {
                     description="the online location at which this event takes place"
                     placeholder="https://discord.gg/Flashbots"
                     pattern="https:\/\/(www\.)?.*"
+                    title="allowed is a one valid https URL"
                   />
                   <TextInput
                     name="description"
@@ -184,38 +178,47 @@ export default function Page() {
                   />
                 </div>
                 <div className="grid gap-6 grid-cols-3">
-                  <DatePicker
+                  <TimePicker
+                    chng={(dat: Date) => {
+                      date.setDat(dat)
+                      setDate(date.copy());
+                    }}
+                    desc="the day at which this event is expected to happen"
+                    dspl={dspDat}
+                    list={date.getDay()}
+                    mint={null}
+                    maxt={null}
                     name="date"
-                    text="Date"
-                    description="the day at which this event is expected to happen"
+                    pstn="right"
+                    slct={date.getDat()}
                   />
                   <TimePicker
                     chng={(dat: Date) => {
-                      // If start date (stad) changes, set end date (endd) to 1
-                      // hour after start date.
-                      setStad(dat);
-                      setEndd(new Date(dat.getTime() + offs));
+                      date.setSta(dat)
+                      setDate(date.copy());
                     }}
-                    date={rndHou(stad, (offs / 4))}
                     desc="the time at which this event is expected to start"
+                    dspl={dspSta}
+                    list={date.getHou()}
+                    mint={date.getSta().min}
+                    maxt={date.getSta().max}
                     name="start"
                     pstn="right"
-                    text="Start"
+                    slct={date.getSta().tim}
                   />
                   <TimePicker
                     chng={(dat: Date) => {
-                      // If end date (endd) changes, we do not set start date
-                      // (stad) to 1 hour before end date. This would imply to
-                      // only have events that last 1 hour with the current UX,
-                      // because changing either of stad or endd would always
-                      // update circular.
-                      setEndd(dat);
+                      date.setEnd(dat)
+                      setDate(date.copy());
                     }}
-                    date={rndHou(endd, (offs / 4))}
                     desc="the time at which this event is expected to end"
+                    dspl={(dat: Date): string[] => dspEnd(dat, date.getSta().tim)}
+                    list={date.getHou()}
+                    mint={date.getEnd().min}
+                    maxt={date.getEnd().max}
                     name="end"
                     pstn="left"
-                    text="End"
+                    slct={date.getEnd().tim}
                   />
                 </div>
 
@@ -266,16 +269,69 @@ export default function Page() {
   )
 }
 
-// unqLab returns the list of label names that do not already exist according to
-// the given LabelSearchResponse.
-function unqLab(des: string[], lis: LabelSearchResponse[]): string[] {
-  // Extract the current labels from the lis array.
-  const cur = lis.map(x => x.name.toLocaleLowerCase());
+function dspDat(dat: Date): string[] {
+  const now = setSod(new Date());
+  const day = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+  const dif = Math.floor((dat.getTime() - now.getTime()) / day);
 
-  // Filter out labels that already exist.
-  const unq = des.filter(x => !cur.includes(x.toLocaleLowerCase()));
+  if (dif === 0) {
+    return ["Today", `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
+  } else if (dif === 1) {
+    return ["Tomorrow", `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
+  } else {
+    return [`in ${dif} Days`, `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
+  }
+}
 
-  return unq;
+function dspEnd(dat: Date, sta: Date): string[] {
+  const frm = rndDat(sta);
+  const dif = dat.getTime() - frm.getTime();
+
+  const hou = Math.floor(dif / (1000 * 60 * 60));
+  let min = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
+
+  const abs = dat.toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
+  const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
+
+  if (dif < 0) {
+    return [abs, ""];
+  }
+
+  if (dat.getDate() === frm.getDate() || dif > 0) {
+    return [abs, rel];
+  }
+
+  return [abs, ""];
+}
+
+function dspSta(dat: Date): string[] {
+  const frm = rndDat(new Date());
+  const dif = dat.getTime() - frm.getTime();
+
+  const hou = Math.floor(dif / (1000 * 60 * 60));
+  let min = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
+
+  const abs = dat.toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
+  const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
+
+  if (dat.getDate() === frm.getDate()) {
+    return [abs, rel];
+  }
+
+  return [abs, ""];
+}
+
+function rndDat(dat: Date): Date {
+  const rnd: number = 1000 * 60 * 15; // 15 minutes in milliseconds
+  return new Date(Math.ceil(dat.getTime() / rnd) * rnd);
+}
+
+function setSod(dat: Date): Date {
+  const add = new Date(dat);
+
+  add.setHours(0, 0, 0, 0);
+
+  return add;
 }
 
 // trmLab cleans strings for their use as label names. For instance, we use
@@ -290,6 +346,14 @@ function trmLab(str: string): string {
   return str;
 }
 
-function rndHou(dat: Date, rnd: number): Date {
-  return new Date(Math.ceil(dat.getTime() / rnd) * rnd);
+// unqLab returns the list of label names that do not already exist according to
+// the given LabelSearchResponse.
+function unqLab(des: string[], cur: LabelSearchResponse[]): string[] {
+  // Extract the current labels from the cur array.
+  const lis = cur.map(x => x.name.toLocaleLowerCase());
+
+  // Filter out labels that already exist.
+  const unq = des.filter(x => !lis.includes(x.toLocaleLowerCase()));
+
+  return unq;
 }

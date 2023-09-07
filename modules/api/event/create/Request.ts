@@ -15,62 +15,46 @@ export function NewEventCreateRequest(frm: FormData, atk: string, cat: string[],
   const sta = frm.get("start-input")?.toString() || "";
   const end = frm.get("end-input")?.toString() || "";
 
-  // console.log("dat", dat) // 05.08.23
-  // console.log("sta", sta) // 18:00
-  // console.log("end", end) // 19:00
+  let d = newDura(sta, end)
+  let t = newTime(dat, sta)
 
   return {
     atkn: atk,
     cate: cat.join(','),
-    dura: newDura(sta, end),
+    dura: d,
     host: hos.join(','),
     link: newLink(lin),
-    time: newTime(dat, sta),
+    time: t,
   };
 }
 
-// newDura takes the start and end time of an event in 24 hour format like shown
-// below and returns the amount of seconds the new event is expected to last.
-// The returned duration might be negative, causing the RPC API to return an
-// error response.
-//
-//     @inp[0] the event start time, e.g. 15:00
-//     @inp[1] the event end time, e.g. 16:00
-//
+// newDura takes the start time and the end time of an event as string of
+// milliseconds according to the local Date time. The event duration is returned
+// as string of seconds.
 function newDura(sta: string, end: string): string {
-  const [sth, stm] = sta.split(':').map(Number);
-  const [enh, enm] = end.split(':').map(Number);
-
-  const sts = sth * 3600 + stm * 60;
-  const ens = enh * 3600 + enm * 60;
-
-  let dur = ens - sts;
-
-  // Check if the end time is earlier than the start time, which may happen
-  // crossing over into the next day given 23:30 and 00:30. In such a case we
-  // add 24 hours (86400 seconds) to the temporarily negative duration value.
-  if (dur < 0) {
-    dur += 86400;
-  }
-
-  return dur.toString();
+  const mil = new Date(parseInt(end, 10)).getTime() - new Date(parseInt(sta, 10)).getTime();
+  return (mil / 1000).toString();
 }
-
 
 function newLink(lin: string): string {
   return lin;
 }
 
+// newTime takes date and start time as string of milliseconds according to the
+// local Date time. The date parameter accounts for the day, month and year of
+// the event time. The start time parameter accounts for the hours and minutes
+// of the event taking place. Both parameters are merged and a string of unix
+// seconds of the merged Date instances is returned.
 function newTime(dat: string, sta: string): string {
-  const [day, mon, yea] = dat.split('.').map(Number);
-  const [hou, min] = sta.split(':').map(Number);
-
-  const bas = new Date(yea + 2000, mon - 1, day, hou, min);
-
-  bas.setMinutes(bas.getMinutes() - bas.getTimezoneOffset());
-
-  const utc = new Date(bas.getUTCFullYear(), bas.getUTCMonth(), bas.getUTCDate(), bas.getUTCHours(), bas.getUTCMinutes());
-
-  return Math.floor(utc.getTime() / 1000).toString();
+  const mrg = mrgDat(new Date(parseInt(dat, 10)), new Date(parseInt(sta, 10)));
+  mrg.setHours(mrg.getHours(), mrg.getMinutes(), 0, 0);
+  return (mrg.getTime() / 1000).toString();
 }
 
+function mrgDat(day: Date, hou: Date): Date {
+  const add = new Date(day);
+
+  add.setHours(hou.getHours(), hou.getMinutes(), 0, 0);
+
+  return add;
+}

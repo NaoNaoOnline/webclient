@@ -151,7 +151,7 @@ export default function Content(props: Props) {
   return (
     <>
       <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
-        {!props.xpnd && (
+        {!props.xpnd && props.desc.length !== 0 && (
           <Description
             atkn={props.atkn}
             radd={radd}
