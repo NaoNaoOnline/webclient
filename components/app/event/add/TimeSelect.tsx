@@ -1,20 +1,18 @@
-import React from 'react';
 import * as Select from '@radix-ui/react-select';
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
+import spacetime, { Spacetime } from 'spacetime';
 
 interface Props {
-  chng: (dat: Date) => void;
+  chng: (dat: Spacetime) => void;
   desc: string;
-  dspl: (dat: Date) => string[];
-  list: Date[];
-  mint: Date | null;
-  maxt: Date | null;
+  dspl: (dat: Spacetime) => string[];
+  list: Spacetime[];
   name: string;
   pstn: string;
-  slct: Date;
+  slct: Spacetime;
 }
 
-export default function TimePicker(props: Props) {
+export default function TimeSelect(props: Props) {
   let pstn = "left-[-285px]"
   if (props.pstn === "right") {
     pstn = "left-[105%]"
@@ -33,12 +31,13 @@ export default function TimePicker(props: Props) {
         name={`${props.name}-input`}
         onValueChange={(val: string) => {
           if (val !== "") {
-            props.chng(new Date(parseInt(val, 10)));
+            props.chng(spacetime(val));
           }
         }}
-        value={props.slct.getTime().toString()}
+        value={props.slct.format("iso")}
       >
         <Select.Trigger
+          id={`${props.name}-input`}
           className="block py-2 px-0 w-full text-sm text-gray-900 text-gray-900 dark:text-gray-50 text-left bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           aria-label={props.name}
         >
@@ -60,11 +59,11 @@ export default function TimePicker(props: Props) {
 
             <Select.Viewport className="p-[5px]">
               <Select.Group>
-                {props.list.filter((x) => !(props.mint && x < props.mint) && !(props.maxt && x > props.maxt)).map((x, i) => (
+                {props.list.map((x, i) => (
                   <Select.Item
                     key={i}
-                    className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer ${x.getTime() === props.slct.getTime() ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white" : ""}`}
-                    value={x.getTime().toString()}
+                    className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer ${x.isEqual(props.slct) ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white" : ""}`}
+                    value={x.format("iso")}
                   >
                     <Select.ItemText>
                       {props.dspl(x)[0]}
