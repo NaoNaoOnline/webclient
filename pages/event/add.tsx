@@ -4,6 +4,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import Header from '@/components/app/layout/Header'
 
 import TextInput from '@/components/app/event/add/TextInput'
+import LinkInput from '@/components/app/event/add/LinkInput'
 import TimeBar from '@/components/app/event/add/TimeBar'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
@@ -135,42 +136,42 @@ export default function Page() {
               <form onSubmit={handleSubmit}>
                 <div className="grid">
                   <TextInput
+                    desc="the host labels for who is organizing this event"
                     name="host"
+                    pldr="Flashbots"
+                    ptrn="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
                     text="Host"
+                    titl="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
                     type="text"
-                    description="the host labels for who is organizing this event"
-                    placeholder="Flashbots"
-                    pattern="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
-                    title="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
                   />
                   <TextInput
+                    desc="the category labels for topics this event is about"
                     name="category"
+                    pldr="Crypto, DeFi, MEV"
+                    ptrn="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
                     text="Category"
+                    titl="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"
                     type="text"
-                    description="the category labels for topics this event is about"
-                    placeholder="Crypto, DeFi, MEV"
-                    pattern="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
-                    title="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"
                   />
-                  <TextInput
+                  <LinkInput
+                    desc="the online location at which this event takes place"
                     name="link"
+                    pldr="discord.gg/Flashbots"
+                    ptrn="^(www\.)?[\w]+\.[a-z]{2,}(\.[a-z]{2,})?$"
                     text="Link"
-                    type="url"
-                    description="the online location at which this event takes place"
-                    placeholder="https://discord.gg/Flashbots"
-                    pattern="https:\/\/(www\.)?.*"
-                    title="allowed is a one valid https URL"
+                    titl="allowed is one valid https URL (we cover the scheme for you)"
+                    type="text"
                   />
                   <TextInput
+                    desc="the short one-liner for what this event is about"
+                    maxl={120}
+                    minl={20}
                     name="description"
+                    pldr="dicussing how EIP-4844 will change L2 economics forever"
+                    ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
                     text="Description"
+                    titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                     type="text"
-                    description="the short one-liner for what this event is about"
-                    placeholder="dicussing how EIP-4844 will change L2 economics forever"
-                    minLength={20}
-                    maxLength={120}
-                    pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-                    title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                   />
                 </div>
 
