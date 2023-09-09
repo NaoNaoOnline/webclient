@@ -1,7 +1,8 @@
-import { useUser } from '@auth0/nextjs-auth0/client';
+import Image from "next/image"
+import { useUser } from "@auth0/nextjs-auth0/client"
 
-import { Cog6ToothIcon } from '@heroicons/react/24/outline'
-import { UserIcon } from '@heroicons/react/24/outline'
+import { Cog6ToothIcon } from "@heroicons/react/24/outline"
+import { UserIcon } from "@heroicons/react/24/outline"
 
 export default function UserButtons() {
   const { user } = useUser();
@@ -16,7 +17,13 @@ export default function UserButtons() {
             <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
               {user.picture && (
                 <div className="flex-shrink-0">
-                  <img className="w-5 h-5 rounded-full" src={user.picture} alt="profile picture"></img>
+                  <Image
+                    alt="profile picture"
+                    className="w-5 h-5 rounded-full"
+                    height={20}
+                    width={20}
+                    src={user.picture}
+                  />
                 </div>
               )}
               {!user.picture && (

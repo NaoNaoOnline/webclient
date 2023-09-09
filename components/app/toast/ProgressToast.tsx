@@ -38,12 +38,15 @@ export default function ProgressToast(props: Props) {
     }
   }, [props.cncl, open]);
 
-  React.useEffect(() => {
-    if (props.cmpl >= 100 && !open && !term) {
-      props.done();
-      setTerm(true);
-    }
-  }, [props.cmpl, open, term]);
+  {
+    const { cmpl, done } = props;
+    React.useEffect(() => {
+      if (cmpl >= 100 && !open && !term) {
+        done();
+        setTerm(true);
+      }
+    }, [cmpl, done, open, term]);
+  }
 
   return (
     <>

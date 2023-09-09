@@ -78,48 +78,6 @@ export default function Event(props: Props) {
     }
   };
 
-  const getData = async function (): Promise<void> {
-    try {
-      let req: EventSearchRequest[] = [];
-      if (!props.evnt) {
-        req = [{ atkn: props.atkn, evnt: "", ltst: props.ltst || "", rctn: props.rctn || "" }];
-      } else {
-        req = props.evnt.map(x => ({ atkn: "", evnt: x, ltst: "", rctn: "" }));
-      }
-
-      const evn = await EventSearch(req);
-
-      if (evn.length === 0) {
-        setLdng(false);
-        return;
-      }
-
-      const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
-      const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
-      const usr = await UserSearch(uniUser(des).map(x => ({ user: x })));
-
-      setEvnt(evn.map(x => new EventSearchObject(x)));
-      setDesc(des.map(x => {
-        const u = usr.find(y => y.user === x.user);
-        if (u) {
-          return {
-            ...x,
-            imag: u.imag,
-            name: u.name,
-          };
-        } else {
-          return x;
-        }
-      }));
-      setVote(vot);
-
-      setLdng(false);
-    } catch (err) {
-      setErro(new Errors("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
-      setLdng(false);
-    }
-  };
-
   const tglForm = (evnt: string) => {
     setForm((old) => ({
       ...old,
@@ -145,11 +103,53 @@ export default function Event(props: Props) {
   }
 
   useEffect(() => {
+    const getData = async function (): Promise<void> {
+      try {
+        let req: EventSearchRequest[] = [];
+        if (!props.evnt) {
+          req = [{ atkn: props.atkn, evnt: "", ltst: props.ltst || "", rctn: props.rctn || "" }];
+        } else {
+          req = props.evnt.map(x => ({ atkn: "", evnt: x, ltst: "", rctn: "" }));
+        }
+
+        const evn = await EventSearch(req);
+
+        if (evn.length === 0) {
+          setLdng(false);
+          return;
+        }
+
+        const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
+        const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
+        const usr = await UserSearch(uniUser(des).map(x => ({ user: x })));
+
+        setEvnt(evn.map(x => new EventSearchObject(x)));
+        setDesc(des.map(x => {
+          const u = usr.find(y => y.user === x.user);
+          if (u) {
+            return {
+              ...x,
+              imag: u.imag,
+              name: u.name,
+            };
+          } else {
+            return x;
+          }
+        }));
+        setVote(vot);
+
+        setLdng(false);
+      } catch (err) {
+        setErro(new Errors("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
+        setLdng(false);
+      }
+    };
+
     if (!clng.current) {
       clng.current = true;
       getData();
     }
-  }, []);
+  }, [props.atkn, props.evnt, props.ltst, props.rctn]);
 
   return (
     <>

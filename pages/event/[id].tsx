@@ -19,7 +19,7 @@ export default function Page() {
     if (router.isReady) {
       setEvnt(router.query.id?.toString() || "");
     }
-  }, [router.isReady]);
+  }, [router.isReady, router.query.id]);
 
   return (
     <>
