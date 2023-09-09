@@ -3,9 +3,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 
 import Header from '@/components/app/layout/Header'
 
-import DatePicker from '@/components/app/event/add/DatePicker'
 import TextInput from '@/components/app/event/add/TextInput'
-import TimePicker from '@/components/app/event/add/TimePicker'
+import TimeBar from '@/components/app/event/add/TimeBar'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
 import InfoToast from '@/components/app/toast/InfoToast'
@@ -24,8 +23,6 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import CacheApiLabel from '@/modules/cache/api/Label';
 import CacheAuthToken from '@/modules/cache/auth/Token';
 
-import DateObject from '@/modules/date/Object';
-
 import Errors from '@/modules/errors/Errors';
 
 export default function Page() {
@@ -33,7 +30,6 @@ export default function Page() {
 
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
-  const [date, setDate] = useState<DateObject>(new DateObject());
   const [evnt, setEvnt] = useState<string>("");
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
@@ -177,49 +173,9 @@ export default function Page() {
                     title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                   />
                 </div>
+
                 <div className="grid gap-6 grid-cols-3">
-                  <TimePicker
-                    chng={(dat: Date) => {
-                      date.setDat(dat)
-                      setDate(date.copy());
-                    }}
-                    desc="the day at which this event is expected to happen"
-                    dspl={dspDat}
-                    list={date.getDay()}
-                    mint={null}
-                    maxt={null}
-                    name="date"
-                    pstn="right"
-                    slct={date.getDat()}
-                  />
-                  <TimePicker
-                    chng={(dat: Date) => {
-                      date.setSta(dat)
-                      setDate(date.copy());
-                    }}
-                    desc="the time at which this event is expected to start"
-                    dspl={dspSta}
-                    list={date.getHou()}
-                    mint={date.getSta().min}
-                    maxt={date.getSta().max}
-                    name="start"
-                    pstn="right"
-                    slct={date.getSta().tim}
-                  />
-                  <TimePicker
-                    chng={(dat: Date) => {
-                      date.setEnd(dat)
-                      setDate(date.copy());
-                    }}
-                    desc="the time at which this event is expected to end"
-                    dspl={(dat: Date): string[] => dspEnd(dat, date.getSta().tim)}
-                    list={date.getHou()}
-                    mint={date.getEnd().min}
-                    maxt={date.getEnd().max}
-                    name="end"
-                    pstn="left"
-                    slct={date.getEnd().tim}
-                  />
+                  <TimeBar />
                 </div>
 
                 <button
@@ -267,71 +223,6 @@ export default function Page() {
       </div >
     </>
   )
-}
-
-function dspDat(dat: Date): string[] {
-  const now = setSod(new Date());
-  const day = 24 * 60 * 60 * 1000; // 1 day in milliseconds
-  const dif = Math.floor((dat.getTime() - now.getTime()) / day);
-
-  if (dif === 0) {
-    return ["Today", `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
-  } else if (dif === 1) {
-    return ["Tomorrow", `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
-  } else {
-    return [`in ${dif} Days`, `(${dat.toLocaleDateString("de-DE", { month: '2-digit', day: '2-digit' })})`];
-  }
-}
-
-function dspEnd(dat: Date, sta: Date): string[] {
-  const frm = rndDat(sta);
-  const dif = dat.getTime() - frm.getTime();
-
-  const hou = Math.floor(dif / (1000 * 60 * 60));
-  let min = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
-
-  const abs = dat.toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
-  const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
-
-  if (dif < 0) {
-    return [abs, ""];
-  }
-
-  if (dat.getDate() === frm.getDate() || dif > 0) {
-    return [abs, rel];
-  }
-
-  return [abs, ""];
-}
-
-function dspSta(dat: Date): string[] {
-  const frm = rndDat(new Date());
-  const dif = dat.getTime() - frm.getTime();
-
-  const hou = Math.floor(dif / (1000 * 60 * 60));
-  let min = Math.floor((dif % (1000 * 60 * 60)) / (1000 * 60));
-
-  const abs = dat.toLocaleTimeString("de-DE", { hour: '2-digit', minute: '2-digit' });
-  const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
-
-  if (dat.getDate() === frm.getDate()) {
-    return [abs, rel];
-  }
-
-  return [abs, ""];
-}
-
-function rndDat(dat: Date): Date {
-  const rnd: number = 1000 * 60 * 15; // 15 minutes in milliseconds
-  return new Date(Math.ceil(dat.getTime() / rnd) * rnd);
-}
-
-function setSod(dat: Date): Date {
-  const add = new Date(dat);
-
-  add.setHours(0, 0, 0, 0);
-
-  return add;
 }
 
 // trmLab cleans strings for their use as label names. For instance, we use

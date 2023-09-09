@@ -1,205 +1,247 @@
-interface Props {
-  min: Date;
-  tim: Date;
-  max: Date;
+import spacetime, { Spacetime } from "spacetime"
+
+interface Range {
+  min: Spacetime;
+  tim: Spacetime;
+  max: Spacetime;
 }
 
 export default class DateObject {
-  private dat: Date;
-  private end: Props;
-  private now: Date;
-  private sta: Props;
+  private day: Range;
+  private end: Range;
+  private sta: Range;
 
-  constructor(dat?: Date | undefined, end?: Props | undefined, now?: Date | undefined, sta?: Props | undefined) {
-    if (now) {
-      this.now = now;
+  constructor(tim: Spacetime) {
+    this.day = {
+      min: spacetime(0),
+      tim: spacetime(0),
+      max: spacetime(0),
+    };
+
+    this.sta = {
+      min: spacetime(0),
+      tim: spacetime(0),
+      max: spacetime(0),
+    };
+
+    this.end = {
+      min: spacetime(0),
+      tim: spacetime(0),
+      max: spacetime(0),
+    };
+
+    {
+      this.setTim(tim);
+    }
+  }
+
+  private addHou(day: Spacetime, hou: number): Spacetime {
+    return day.add(hou, "hour");
+  }
+
+  private addMin(day: Spacetime, min: number): Spacetime {
+    return day.add(min, "minute");
+  }
+
+  private difDay(sta: Spacetime, end: Spacetime): number {
+    return sta.startOf("day").diff(end.startOf("day"), "day");
+  }
+
+  private maxDat(fir: Spacetime, sec: Spacetime): Spacetime {
+    if (fir.isAfter(sec)) {
+      return fir;
+    }
+
+    return sec;
+  }
+
+  private mrgDat(day: Spacetime, tim: Spacetime): Spacetime {
+    return day.time(tim.time());
+  }
+
+  private nxtDat(dat: Spacetime): Spacetime {
+    return dat.next("quarterHours");
+  }
+
+  private setEod(dat: Spacetime): Spacetime {
+    return dat.endOf("day");
+  }
+
+  private setSod(dat: Spacetime): Spacetime {
+    return dat.startOf("day");
+  }
+
+  dspDay(day: Spacetime): string[] {
+    const dif = this.difDay(this.day.min, day);
+    const fmt = day.format('{date-pad}/{iso-month}');
+
+    if (dif === 0) {
+      return ["Today", `(${fmt})`];
+    } else if (dif === 1) {
+      return ["Tomorrow", `(${fmt})`];
     } else {
-      this.now = this.rndDat(new Date());
-    }
-
-    if (dat) {
-      this.dat = dat;
-    } else {
-      this.dat = this.setSod(new Date());
-    }
-
-    if (sta) {
-      this.sta = sta;
-    } else {
-      this.sta = {
-        min: new Date(this.now),
-        tim: new Date(this.now),
-        max: this.setEod(new Date()),
-      };
-    }
-
-    if (end) {
-      this.end = end;
-    } else {
-      this.end = {
-        min: this.addMin(this.sta.tim, 15),
-        tim: this.addHou(this.sta.tim, 1),
-        max: this.addHou(this.sta.tim, 4),
-      };
+      return [`in ${dif} Days`, `(${fmt})`];
     }
   }
 
-  private addHou(dat: Date, hou: number): Date {
-    const add = new Date(dat);
+  dspEnd(day: Spacetime): string[] {
+    const frm = this.sta.tim.clone();
+    const sec = frm.diff(day, "second");
 
-    add.setHours(add.getHours() + hou);
+    const hou = Math.floor(sec / (60 * 60));
+    const min = Math.floor((sec % (60 * 60)) / 60);
 
-    return add;
-  }
+    const abs = day.format('{hour-24-pad}:{minute-pad}');
+    const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
 
-  private addMin(dat: Date, min: number): Date {
-    const add = new Date(dat);
-
-    add.setMinutes(add.getMinutes() + min);
-
-    return add;
-  }
-
-  private difHou(sta: Date, end: Date): number {
-    return end.getTime() - sta.getTime() / (1000 * 60 * 60);
-  }
-
-  private mrgDat(day: Date, hou: Date): Date {
-    const add = new Date(day);
-
-    add.setHours(hou.getHours(), hou.getMinutes(), 0, 0);
-
-    return add;
-  }
-
-  private rndDat(dat: Date): Date {
-    const rnd: number = 1000 * 60 * 15; // 15 minutes in milliseconds
-    return new Date(Math.ceil(dat.getTime() / rnd) * rnd);
-  }
-
-  private setEod(dat: Date): Date {
-    const add = new Date(dat);
-
-    add.setHours(23, 59, 59, 999);
-
-    return add;
-  }
-
-  private setSod(dat: Date): Date {
-    const add = new Date(dat);
-
-    add.setHours(0, 0, 0, 0);
-
-    return add;
-  }
-
-  copy(): DateObject {
-    return new DateObject(this.dat, this.end, this.now, this.sta);
-  }
-
-  getHou(): Date[] {
-    const lis: Date[] = [];
-
-    const cur: Date = this.setSod(this.dat);
-    const bnd: Date = this.addHou(this.sta.tim, 4);
-
-    let end: Date = this.setEod(this.dat);
-    if (bnd.getTime() > end.getTime()) {
-      end = bnd;
+    if (day.isBefore(frm)) {
+      return [abs, ""];
     }
 
-    while (cur <= end) {
-      lis.push(new Date(cur));
-      cur.setMinutes(cur.getMinutes() + 15);
+    return [abs, rel];
+  }
+
+  dspSta(day: Spacetime): string[] {
+    const frm = this.day.tim.clone();
+    const sec = frm.diff(day, "second");
+
+    const hou = Math.floor(sec / (60 * 60));
+    const min = Math.floor((sec % (60 * 60)) / 60);
+
+    const abs = day.format('{hour-24-pad}:{minute-pad}');
+    const rel = `(${String(hou).padStart(2, '0')}:${String(min).padStart(2, '0')})`;
+
+    if (this.day.min.date() !== this.day.tim.date()) {
+      return [abs, ""];
     }
 
-    return lis;
+    return [abs, rel];
   }
 
-  getDat(): Date {
-    return this.dat;
+  getDay(): Range {
+    return this.day;
   }
 
-  getDay(): Date[] {
-    const lis: Date[] = [];
-
-    const cur: Date = this.setSod(this.now);
-    const end: Date = this.addHou(this.now, 24 * 30);
-
-    while (cur <= end) {
-      lis.push(new Date(cur));
-      cur.setHours(cur.getHours() + 24);
-    }
-
-    return lis;
-  }
-
-  getEnd(): Props {
+  getEnd(): Range {
     return this.end;
   }
 
-  getNow(): Date {
-    return this.now;
-  }
-
-  getSta(): Props {
+  getSta(): Range {
     return this.sta;
   }
 
-  setDat(dat: Date) {
-    this.dat = this.setSod(dat);
+  lisDay(): Spacetime[] {
+    const lis: Spacetime[] = [];
 
-    if (dat.getDate() === this.now.getDate()) {
-      if (this.mrgDat(this.now, this.sta.tim).getTime() < this.now.getTime()) {
-        this.sta.tim = this.now;
-        this.end.tim = this.addHou(this.now, 1);
-      }
+    let cur: Spacetime = this.day.min.clone();
+    let end: Spacetime = this.day.max.clone();
 
-      this.sta.min = this.rndDat(this.now);
-      this.sta.tim = this.mrgDat(this.now, this.sta.tim);
-      this.sta.max = this.setEod(this.now);
+    while (!cur.isAfter(end)) {
+      lis.push(cur.clone());
+      cur = cur.add(1, "day");
+    }
 
-      this.end.min = this.addMin(this.sta.min, 15)
-      this.end.tim = this.mrgDat(this.sta.tim, this.end.tim);
+    return lis;
+  }
+
+  lisEnd(): Spacetime[] {
+    const lis: Spacetime[] = [];
+    const bnd: Spacetime = this.sta.tim.add(4, "hour");
+
+    let cur: Spacetime = this.end.min.clone();
+    let end: Spacetime = this.end.max.clone();
+
+    if (bnd.isAfter(end)) {
+      end = bnd;
+    }
+
+    while (!cur.isAfter(end)) {
+      lis.push(cur.clone());
+      cur = cur.add(15, "minute");
+    }
+
+    return lis;
+  }
+
+  lisSta(): Spacetime[] {
+    const lis: Spacetime[] = [];
+
+    let cur: Spacetime = this.sta.min.clone();
+    let end: Spacetime = this.sta.max.clone();
+
+    while (!cur.isAfter(end)) {
+      lis.push(cur.clone());
+      cur = cur.add(15, "minute");
+    }
+
+    return lis;
+  }
+
+  setDay(day: Spacetime) {
+    if (day.date() === this.day.tim.date()) {
+      this.day.tim = day.clone();
+
+      this.sta.min = this.day.tim.clone();
+      this.sta.tim = this.day.tim.clone();
+      this.sta.max = this.setEod(this.day.tim);
+
+      this.end.min = this.addMin(this.sta.tim, 15);
+      this.end.tim = this.addHou(this.sta.tim, 1);
       this.end.max = this.addHou(this.sta.tim, 4);
     } else {
-      this.sta.min = this.setSod(dat);
-      this.sta.tim = this.mrgDat(dat, this.sta.tim);
-      this.sta.max = this.setEod(dat);
+      this.day.tim = day.clone();
 
-      this.end.min = this.setSod(dat);
-      this.end.tim = this.mrgDat(dat, this.end.tim);
+      if (this.sta.min.isEqual(this.sta.tim)) {
+        this.sta.min = this.setSod(this.day.tim);
+        this.sta.tim = this.day.tim.clone();
+        this.sta.max = this.setEod(this.day.tim);
+      } else {
+        this.sta.min = this.setSod(this.day.tim);
+        this.sta.tim = this.mrgDat(this.day.tim, this.sta.tim);
+        this.sta.max = this.setEod(this.day.tim);
+      }
+
+      this.end.min = this.addMin(this.sta.tim, 15);
+      this.end.tim = this.addHou(this.sta.tim, 1);
       this.end.max = this.addHou(this.sta.tim, 4);
     }
   }
 
-  setSta(dat: Date) {
-    this.sta.min = this.rndDat(this.now);
-    this.sta.tim = this.rndDat(dat);
-    this.sta.max = this.setEod(dat);
+  setEnd(dat: Spacetime) {
+    this.end.tim = dat;
+  }
 
-    const isd: boolean = dat.getDate() === this.now.getDate(); // is start day
-    const dec: boolean = this.end.tim.getTime() === this.addHou(this.now, 1).getTime(); // default end did not change
-    const sae: boolean = this.sta.tim.getTime() >= this.end.tim.getTime(); // start after end
-    const ofh: boolean = this.difHou(this.sta.tim, this.end.tim) > 4; // over four hours
+  setSta(dat: Spacetime) {
+    this.sta.tim = dat.clone();
 
-    if ((isd && dec) || sae || ofh) {
-      this.end.tim = this.addHou(this.sta.tim, 1);
-    }
-
-    this.end.min = this.addMin(this.sta.min, 15)
+    this.end.min = this.addMin(this.sta.tim, 15);
+    this.end.tim = this.addHou(this.sta.tim, 1);
     this.end.max = this.addHou(this.sta.tim, 4);
   }
 
-  setEnd(dat: Date) {
-    this.end.tim = dat;
-
-    if (dat.getTime() <= this.sta.tim.getTime()) {
-      this.sta.tim = this.addHou(dat, -1);
-
-      if (this.sta.tim < this.sta.min) {
-        this.sta.tim = this.sta.min;
-      }
+  setTim(tim: Spacetime) {
+    if (this.day.min.date() !== this.day.tim.date()) {
+      // If the user selected any other day than "today", setTim has no function
+      // at all. In that case the user wants to configure the date and time for
+      // an event in the future, and all setTim is supposed to do is to bump up
+      // the minimum time values if the clock time moves us into the new time
+      // interval. 
+      return
     }
+
+    // Move up dat if necessary. 
+    this.day.min = this.maxDat(this.day.min, this.nxtDat(tim));
+    this.day.tim = this.maxDat(this.day.tim, this.nxtDat(tim));
+    this.day.max = this.maxDat(this.day.max, this.day.min.add(30, "day"));
+
+    // Move up sta if necessary. 
+    this.sta.min = this.maxDat(this.sta.min, this.day.tim.clone());
+    this.sta.tim = this.maxDat(this.sta.tim, this.day.tim.clone());
+    this.sta.max = this.maxDat(this.sta.max, this.setEod(this.day.tim));
+
+    // Move up end if necessary. 
+    this.end.min = this.maxDat(this.end.min, this.addMin(this.sta.tim, 15));
+    this.end.tim = this.maxDat(this.end.tim, this.addHou(this.sta.tim, 1));
+    this.end.max = this.maxDat(this.end.max, this.addHou(this.sta.tim, 4));
   }
 }
