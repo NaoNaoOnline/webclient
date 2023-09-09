@@ -1,23 +1,24 @@
-import { useState, MouseEvent } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useState, MouseEvent } from "react"
+import Image from "next/image"
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import Form from '@/components/app/description/create/Form'
-import Description from '@/components/app/description/Description'
+import Form from "@/components/app/description/create/Form"
+import Description from "@/components/app/description/Description"
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-import InfoToast from '@/components/app/toast/InfoToast'
+import ErrorToast from "@/components/app/toast/ErrorToast"
+import InfoToast from "@/components/app/toast/InfoToast"
 
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
-import { EventSearchObject } from "@/modules/api/event/search/Object";
-import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
-import { VoteCreate } from '@/modules/api/vote/create/Create';
-import { VoteDelete } from '@/modules/api/vote/delete/Delete';
-import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
-import { VoteCreateResponse } from '@/modules/api/vote/create/Response';
-import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
+import { EventSearchObject } from "@/modules/api/event/search/Object"
+import { LabelSearchResponse } from "@/modules/api/label/search/Response"
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
+import { VoteCreate } from "@/modules/api/vote/create/Create"
+import { VoteDelete } from "@/modules/api/vote/delete/Delete"
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response"
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response"
+import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response"
 
-import Errors from '@/modules/errors/Errors';
+import Errors from "@/modules/errors/Errors"
 
 interface Props {
   addd: (des: DescriptionSearchResponse) => void;
@@ -185,7 +186,13 @@ export default function Content(props: Props) {
                   onClick={onLinkClick}
                   className="flex items-center pl-2"
                 >
-                  <img className="w-7 h-7 rounded-full" src={user?.picture || ""} alt="profile picture"></img>
+                  <Image
+                    alt="profile picture"
+                    className="w-7 h-7 rounded-full"
+                    height={28}
+                    width={28}
+                    src={user?.picture || ""}
+                  />
                 </a>
                 <a
                   href={`/user/${user?.nickname || user?.name || ""}`}

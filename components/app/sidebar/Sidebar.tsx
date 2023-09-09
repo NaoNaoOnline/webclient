@@ -1,6 +1,7 @@
-import "flowbite";
-import { useState, MouseEvent } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import "flowbite"
+import { useState, MouseEvent } from "react"
+import Link from "next/link"
+import { useUser } from "@auth0/nextjs-auth0/client"
 
 import { FaceSmileIcon } from "@heroicons/react/24/outline"
 import { HomeIcon } from "@heroicons/react/24/outline"
@@ -13,7 +14,7 @@ import AuthButtons from "@/components/app/sidebar/AuthButtons"
 import SocialButtons from "@/components/app/sidebar/SocialButtons"
 import UserButtons from "@/components/app/sidebar/UserButtons"
 
-import InfoToast from '@/components/app/toast/InfoToast'
+import InfoToast from "@/components/app/toast/InfoToast"
 
 export default function Sidebar() {
   const { user } = useUser();
@@ -42,45 +43,54 @@ export default function Sidebar() {
 
           <ul className="pt-4 mt-4 space-y-2 border-t border-gray-300 dark:border-gray-700">
             <li>
-              <a
+              <Link
                 href="/event/add"
                 onClick={newOnLinkClick("Join the beavers and login if you want to add a new event. Or else!")}
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
                 <PlusIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Add Event</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="/reaction"
                 onClick={newOnLinkClick("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
                 <FaceSmileIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">My Reactions</span>
-              </a>
+              </Link>
             </li>
           </ul>
 
           <ul className="pt-4 mt-4 space-y-2 border-t border-gray-300 dark:border-gray-700">
             <li>
-              <a href="/" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+              <Link
+                href="/"
+                className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+              >
                 <HomeIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Default View</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+              <Link
+                href="#"
+                className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+              >
                 <ListBulletIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Custom Lists</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+              <Link
+                href="#"
+                className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+              >
                 <TagIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Common Lists</span>
-              </a>
+              </Link>
             </li>
           </ul>
 

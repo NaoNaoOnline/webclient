@@ -1,14 +1,15 @@
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from "react"
+import Image from "next/image"
 
-import ReactionBar from '@/components/app/reaction/ReactionBar'
-import Form from '@/components/app/description/update/Form'
-import Menu from '@/components/app/description/Menu'
+import ReactionBar from "@/components/app/reaction/ReactionBar"
+import Form from "@/components/app/description/update/Form"
+import Menu from "@/components/app/description/Menu"
 
-import InfoToast from '@/components/app/toast/InfoToast'
+import InfoToast from "@/components/app/toast/InfoToast"
 
-import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
-import { EventSearchObject } from "@/modules/api/event/search/Object";
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
+import { EventSearchObject } from "@/modules/api/event/search/Object"
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
 
 function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
   evn.stopPropagation();
@@ -37,7 +38,13 @@ export default function Description(props: Props) {
             onClick={onLinkClick}
             className="flex items-center pl-2"
           >
-            <img className="w-7 h-7 rounded-full" src={props.desc.imag} alt="profile picture"></img>
+            <Image
+              alt="profile picture"
+              className="w-7 h-7 rounded-full"
+              height={28}
+              width={28}
+              src={props.desc.imag}
+            />
           </a>
           <a
             href={`/user/${props.desc.name}`}
