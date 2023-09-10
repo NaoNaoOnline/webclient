@@ -55,8 +55,8 @@ export default function ProgressToast(props: Props) {
         open={open}
         onOpenChange={setOpen}
       >
-        <Toast.Title className="[grid-area:_title] text-black">
-          <span className="text-base font-medium text-black">
+        <Toast.Title className="[grid-area:_title] text-gray-900">
+          <span className="text-base font-medium text-gray-900">
             Info
           </span>
         </Toast.Title>
@@ -68,7 +68,7 @@ export default function ProgressToast(props: Props) {
         </Toast.Close>
 
         <Toast.Description className="[grid-area:_description]">
-          <span className="text-sm text-black">
+          <span className="text-sm text-gray-900">
             {props.desc}
           </span>
           <div className="mt-4 w-full rounded-full h-2 bg-gray-200">

@@ -48,8 +48,8 @@ export default function Sidebar() {
                 onClick={newOnLinkClick("Join the beavers and login if you want to add a new event. Or else!")}
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
-                <PlusIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Add Event</span>
+                <PlusIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Add Event</span>
               </Link>
             </li>
             <li>
@@ -58,8 +58,8 @@ export default function Sidebar() {
                 onClick={newOnLinkClick("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
-                <FaceSmileIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">My Reactions</span>
+                <FaceSmileIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">My Reactions</span>
               </Link>
             </li>
           </ul>
@@ -70,8 +70,8 @@ export default function Sidebar() {
                 href="/"
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
-                <HomeIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Default View</span>
+                <HomeIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Default View</span>
               </Link>
             </li>
             <li>
@@ -79,8 +79,8 @@ export default function Sidebar() {
                 href="#"
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
-                <ListBulletIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Custom Lists</span>
+                <ListBulletIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Custom Lists</span>
               </Link>
             </li>
             <li>
@@ -88,8 +88,8 @@ export default function Sidebar() {
                 href="#"
                 className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
               >
-                <TagIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Common Lists</span>
+                <TagIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Common Lists</span>
               </Link>
             </li>
           </ul>

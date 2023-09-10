@@ -73,7 +73,7 @@ export default class DateObject {
 
   dspDay(day: Spacetime): string[] {
     const dif = this.difDay(this.day.min, day);
-    const fmt = day.format('{date-pad}/{iso-month}');
+    const fmt = day.format('{date-ordinal} {month-short}');
 
     if (dif === 0) {
       return ["Today", `(${fmt})`];

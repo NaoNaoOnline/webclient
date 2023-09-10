@@ -32,7 +32,7 @@ export default function Page() {
       {router.isReady && evnt && (
         <div className="pl-4 pr-4 mt-4 md:ml-64">
           <div className="pl-4 pr-4 flex grid justify-items-center">
-            <div className="w-full max-w-xl dark:text-white">
+            <div className="w-full max-w-xl dark:text-gray-50">
               <Event
                 atkn={cat}
                 evnt={[evnt]}

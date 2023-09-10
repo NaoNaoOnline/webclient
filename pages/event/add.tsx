@@ -40,6 +40,7 @@ export default function Page() {
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
+    setCmpl(10);
     setCncl(false);
     setSbmt((old: boolean[]) => [...old, true]);
 
@@ -128,7 +129,7 @@ export default function Page() {
 
       <div className="pl-4 pr-4 mt-4 md:ml-64">
         <div className="pl-4 pr-4 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-white">
+          <div className="w-full max-w-xl dark:text-gray-50">
             {isLoading && (
               <></>
             )}
@@ -175,14 +176,14 @@ export default function Page() {
                   />
                 </div>
 
-                <div className="grid gap-6 grid-cols-3">
+                <div className="grid gap-6 grid-cols-10">
                   <TimeBar />
                 </div>
 
                 <button
                   type="submit"
-                  disabled={sbmt && !erro}
-                  className="text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 mb-6 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full md:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  disabled={cmpl !== 0}
+                  className="text-sm mb-6 font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
                   onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
                 >
                   Submit

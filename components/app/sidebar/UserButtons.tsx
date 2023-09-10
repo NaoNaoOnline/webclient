@@ -27,20 +27,20 @@ export default function UserButtons() {
                 </div>
               )}
               {!user.picture && (
-                <UserIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                <UserIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
               )}
               {name && (
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">{name}</span>
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">{name}</span>
               )}
               {!name && (
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Profile</span>
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Profile</span>
               )}
             </a>
           </li>
           <li>
             <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
-              <Cog6ToothIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-              <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-white">Settings</span>
+              <Cog6ToothIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+              <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Settings</span>
             </a>
           </li>
         </ul>

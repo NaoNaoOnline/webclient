@@ -3,7 +3,7 @@ export default function Custom404() {
     <>
       <div className="pl-4 pr-4 mt-4 md:ml-64">
         <div className="pl-4 pr-4 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-white">
+          <div className="w-full max-w-xl dark:text-gray-50">
             <div className="flex mt-4 w-full text-4xl justify-center">
               <span>🥸</span>
             </div>
