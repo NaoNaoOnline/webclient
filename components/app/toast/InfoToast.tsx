@@ -14,8 +14,8 @@ export default function InfoToast(props: Props) {
         className="bg-yellow-300 rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-4 grid [grid-template-areas:_'title_title_action'_'description_description_description'] grid-cols-[auto_auto_24px] grid-rows-[24px_auto] gap-y-2 items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
         duration={10 * 1000} // 10 seconds
       >
-        <Toast.Title className="[grid-area:_title] text-black">
-          <span className="text-base font-medium text-black">
+        <Toast.Title className="[grid-area:_title] text-gray-900">
+          <span className="text-base font-medium text-gray-900">
             Info
           </span>
         </Toast.Title>
@@ -27,7 +27,7 @@ export default function InfoToast(props: Props) {
         </Toast.Close>
 
         <Toast.Description className="[grid-area:_description]">
-          <span className="text-sm text-black">
+          <span className="text-sm text-gray-900">
             {props.desc}
           </span>
         </Toast.Description>

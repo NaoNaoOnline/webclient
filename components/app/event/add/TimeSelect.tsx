@@ -13,16 +13,21 @@ interface Props {
 }
 
 export default function TimeSelect(props: Props) {
-  let pstn = "left-[-285px]"
+  let pstn = "left-[-285px]";
   if (props.pstn === "right") {
-    pstn = "left-[105%]"
+    pstn = "left-[105%]";
+  }
+
+  let span = "col-span-4";
+  if (props.name !== "date") {
+    span = "col-span-3";
   }
 
   return (
-    <div className="relative z-0 w-full mb-6">
-      <label htmlFor={`${props.name}-input`} className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-white">
+    <div className={`relative z-0 w-full mb-6 ${span}`}>
+      <label htmlFor={`${props.name}-input`} className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50">
         {ttlCas(props.name)}
-        <div className={`absolute top-[-85%] ${pstn} ml-4 z-10 w-[250px] invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900`}>
+        <div className={`absolute top-[-85%] ${pstn} ml-4 z-10 w-[250px] invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900`}>
           {props.desc}
         </div>
       </label>
@@ -42,7 +47,7 @@ export default function TimeSelect(props: Props) {
           aria-label={props.name}
         >
           <Select.Value className="h-[25px]" />
-          <div className="absolute right-[15px] w-[35px] text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
+          <div className="absolute right-[10px] w-fit text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
             {props.dspl(props.slct)[1]}
           </div>
         </Select.Trigger>
@@ -62,13 +67,13 @@ export default function TimeSelect(props: Props) {
                 {props.list.map((x, i) => (
                   <Select.Item
                     key={i}
-                    className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-white cursor-pointer ${x.isEqual(props.slct) ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white" : ""}`}
+                    className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer ${x.isEqual(props.slct) ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50" : ""}`}
                     value={x.format("iso")}
                   >
                     <Select.ItemText>
                       {props.dspl(x)[0]}
                     </Select.ItemText>
-                    <div className="absolute right-[10px] w-[35px] text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
+                    <div className="absolute right-[5px] w-fit text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
                       {props.dspl(x)[1]}
                     </div>
                   </Select.Item>

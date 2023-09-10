@@ -28,6 +28,7 @@ export default function Form(props: Props) {
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
+    setCmpl(10);
     setCncl(false);
     setSbmt((old: boolean[]) => [...old, true]);
 
@@ -90,7 +91,7 @@ export default function Form(props: Props) {
           maxLength={120}
           pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
           title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-          className="flex-1 px-0 pt-0 w-full text-sm align-middle text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="flex-1 px-0 pt-0 w-full text-sm align-middle text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-50 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder="dicussing how EIP-4844 will change L2 economics forever"
           ref={inpt}
           required
@@ -99,8 +100,8 @@ export default function Form(props: Props) {
         <div className="flex flex-row pt-2">
           <button
             type="submit"
-            disabled={sbmt && !erro}
-            className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+            disabled={cmpl !== 0}
+            className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
             onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
           >
             Submit
@@ -109,7 +110,7 @@ export default function Form(props: Props) {
           <button
             onClick={props.cncl}
             type="button"
-            className="flex-1 w-full md:w-auto ml-1 px-5 py-2.5 text-white bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+            className="flex-1 w-full md:w-auto ml-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
             onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
           >
             Cancel

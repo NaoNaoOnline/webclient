@@ -21,7 +21,7 @@ export default function Header(props: Props) {
                 aria-controls="default-sidebar"
                 type="button"
               >
-                <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
               </button>
             </li>
             <li className="w-full">

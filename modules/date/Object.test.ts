@@ -712,13 +712,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["12:30", "(00:00)"]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", "(11:15)"]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -755,13 +755,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["12:30", "(00:00)"]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", "(11:15)"]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -798,13 +798,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["12:45", "(00:00)"]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", "(11:00)"]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -847,13 +847,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -894,13 +894,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -941,13 +941,13 @@ describe("DateObject", () => {
         const end: Spacetime[] = obj.lisEnd();
 
         test("first item", () => {
-          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+          expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
           expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
           expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
         });
 
         test("last item", () => {
-          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+          expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
           expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
           expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
         });
@@ -989,13 +989,13 @@ describe("DateObject", () => {
       const end: Spacetime[] = obj.lisEnd();
 
       test("first item", () => {
-        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
         expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
         expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
       });
 
       test("last item", () => {
-        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
         expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
         expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
       });
@@ -1036,13 +1036,13 @@ describe("DateObject", () => {
       const end: Spacetime[] = obj.lisEnd();
 
       test("first item", () => {
-        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
         expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
         expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
       });
 
       test("last item", () => {
-        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
         expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
         expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
       });
@@ -1083,13 +1083,13 @@ describe("DateObject", () => {
       const end: Spacetime[] = obj.lisEnd();
 
       test("first item", () => {
-        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(08/09)"]);
+        expect(obj.dspDay(day[0])).toStrictEqual(["Today", "(8th Sep)"]);
         expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
         expect(obj.dspEnd(end[0])).toStrictEqual(["15:15", "(00:15)"]);
       });
 
       test("last item", () => {
-        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(08/10)"]);
+        expect(obj.dspDay(day[day.length - 1])).toStrictEqual(["in 30 Days", "(8th Oct)"]);
         expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
         expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["19:00", "(04:00)"]);
       });
