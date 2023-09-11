@@ -92,6 +92,11 @@ export default function Event(props: Props) {
     }));
   };
 
+  let fltr: Record<string, DescriptionSearchResponse[]> = {};
+  if (evnt && desc && vote) {
+    evnt.forEach((x: EventSearchObject) => fltr[x.evnt()] = filDesc(x, [...desc], vote));
+  }
+
   let ltst: EventSearchObject[] = evnt || [];
   if (evnt && !props.evnt) {
     ltst = latEvnt(evnt);
@@ -160,22 +165,25 @@ export default function Event(props: Props) {
         <>
           {ltst.length !== 0 && (
             <>
-              {desc && labl && rctn && vote && (
+              {desc && Object.keys(fltr).length !== 0 && labl && rctn && vote && (
                 <ul>
                   {ltst.map((x, i) => (
                     <li key={i}>
                       <Header
-                        desc={filDesc(x, [...desc], vote)}
+                        desc={fltr[x.evnt()]}
                         evnt={x}
                         labl={labl}
                         xpnd={() => tglXpnd(x.evnt())}
                       />
 
                       <Content
-                        addd={addDesc}
                         atkn={props.atkn}
                         cncl={() => tglForm(x.evnt())}
-                        desc={filDesc(x, [...desc], vote)}
+                        desc={fltr[x.evnt()]}
+                        done={(des: DescriptionSearchResponse) => {
+                          if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
+                          addDesc(des);
+                        }}
                         evnt={x}
                         form={form[x.evnt()]}
                         labl={labl}
@@ -211,7 +219,7 @@ export default function Event(props: Props) {
               </div>
             </>
           )}
-          {!props.evnt && past.length !== 0 && desc && labl && rctn && vote && (
+          {!props.evnt && past.length !== 0 && desc && Object.keys(fltr).length !== 0 && labl && rctn && vote && (
             <>
               <h3 className="text-3xl mb-4 text-gray-400 dark:text-gray-500">
                 Already Happened
@@ -220,17 +228,20 @@ export default function Event(props: Props) {
                 {past.map((x, i) => (
                   <li key={i}>
                     <Header
-                      desc={filDesc(x, [...desc], vote)}
+                      desc={fltr[x.evnt()]}
                       evnt={x}
                       labl={labl}
                       xpnd={() => tglXpnd(x.evnt())}
                     />
 
                     <Content
-                      addd={addDesc}
                       atkn={props.atkn}
                       cncl={() => tglForm(x.evnt())}
-                      desc={filDesc(x, [...desc], vote)}
+                      desc={fltr[x.evnt()]}
+                      done={(des: DescriptionSearchResponse) => {
+                        if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
+                        addDesc(des);
+                      }}
                       evnt={x}
                       form={form[x.evnt()]}
                       labl={labl}

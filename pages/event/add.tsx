@@ -4,6 +4,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import Header from '@/components/app/layout/Header'
 
 import TextInput from '@/components/app/event/add/TextInput'
+import LabelInput from '@/components/app/event/add/LabelInput'
 import LinkInput from '@/components/app/event/add/LinkInput'
 import TimeBar from '@/components/app/event/add/TimeBar'
 
@@ -29,6 +30,7 @@ import Errors from '@/modules/errors/Errors';
 export default function Page() {
   const { user, isLoading } = useUser();
 
+  const [blck, setBlck] = useState<string[]>([]);
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [evnt, setEvnt] = useState<string>("");
@@ -136,32 +138,29 @@ export default function Page() {
             {!isLoading && user && (
               <form onSubmit={handleSubmit}>
                 <div className="grid">
-                  <TextInput
+                  <LabelInput
+                    blck={blck}
+                    crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
                     desc="the host labels for who is organizing this event"
+                    labl={cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)}
                     name="host"
                     pldr="Flashbots"
-                    ptrn="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
-                    text="Host"
                     titl="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
-                    type="text"
                   />
-                  <TextInput
+                  <LabelInput
+                    blck={blck}
+                    crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
                     desc="the category labels for topics this event is about"
+                    labl={cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)}
                     name="category"
                     pldr="Crypto, DeFi, MEV"
-                    ptrn="^(?:[A-Za-z0-9\s]{3,18}(?:\s*,\s*[A-Za-z0-9\s]{3,18}){0,4})?$"
-                    text="Category"
                     titl="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"
-                    type="text"
                   />
                   <LinkInput
                     desc="the online location at which this event takes place"
                     name="link"
                     pldr="discord.gg/Flashbots"
-                    ptrn="^(www\.)?[\w]+\.[a-z]{2,}(\.[a-z]{2,})?$"
-                    text="Link"
                     titl="allowed is one valid https URL (we cover the scheme for you)"
-                    type="text"
                   />
                   <TextInput
                     desc="the short one-liner for what this event is about"
@@ -170,9 +169,7 @@ export default function Page() {
                     name="description"
                     pldr="dicussing how EIP-4844 will change L2 economics forever"
                     ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-                    text="Description"
                     titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-                    type="text"
                   />
                 </div>
 
