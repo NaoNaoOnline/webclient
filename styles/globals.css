@@ -8,6 +8,15 @@
   }
 }
 
+/*
+Using some third party components like Mantine Multiselect render some annoying
+borders when input fields are selected. Assigning tailwind classnames does not
+seam to be able to clear those properties. And so the reset goes here.
+*/
+input[type='text']:focus {
+  box-shadow: none;
+}
+
 .dark {
   /* bg-gray-700 */
   background-color: rgb(55 65 81);

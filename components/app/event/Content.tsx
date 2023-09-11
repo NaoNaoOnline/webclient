@@ -21,9 +21,9 @@ import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response"
 import Errors from "@/modules/errors/Errors"
 
 interface Props {
-  addd: (des: DescriptionSearchResponse) => void;
   atkn: string;
   cncl: () => void;
+  done: (des: DescriptionSearchResponse) => void;
   evnt: EventSearchObject;
   desc: DescriptionSearchResponse[];
   form: boolean;
@@ -214,7 +214,7 @@ export default function Content(props: Props) {
             <Form
               atkn={props.atkn}
               cncl={props.cncl}
-              done={props.addd}
+              done={props.done}
               evnt={props.evnt.evnt()}
             />
           </div>
