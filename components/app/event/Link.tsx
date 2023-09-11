@@ -1,6 +1,7 @@
 import { useEffect, useState, MouseEvent } from 'react';
 
-import { EventSearchObject } from "@/modules/api/event/search/Object";
+import EventSearchObject from "@/modules/api/event/search/Object";
+import spacetime, { Spacetime } from 'spacetime';
 
 function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
   e.stopPropagation();
@@ -12,6 +13,8 @@ interface Props {
 
 export default function Link(props: Props) {
   const [_, setRndr] = useState(true);
+
+  const now: Spacetime = spacetime.now();
 
   // Setup a periodic state change for updating the time based information in
   // the user interface every 5 seconds. Every time the setInterval callback is
@@ -26,102 +29,35 @@ export default function Link(props: Props) {
 
   return (
     <a
-      href={props.evnt.actv() ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
+      href={props.evnt.actv(now) ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
       onClick={onLinkClick}
-      target={props.evnt.actv() ? "_blank" : "_self"}
-      className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv() ? "text-green-400" : "text-gray-400"}`}
+      target={props.evnt.actv(now) ? "_blank" : "_self"}
+      className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
     >
       <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-        {props.evnt.actv() && (
+        {props.evnt.upcm(now) && (
           <>
-            {rltvActv(props.evnt.time())}
-            {` - `}
-            {rltvActv(props.evnt.dura())}
+            {props.evnt.dsplUpcm(now)}
           </>
         )}
-        {!props.evnt.actv() && (
+        {props.evnt.actv(now) && (
           <>
-            {props.evnt.upcm() && (
-              <>
-                {rltvUpcm(props.evnt.time())}
-              </>
-            )}
-            {!props.evnt.upcm() && (
-              <>
-                {dateTime(props.evnt.time())}
-                {` - `}
-                {dateTime(props.evnt.dura())}
-              </>
-            )}
+            {props.evnt.dsplActv(now)}
+          </>
+        )}
+        {!props.evnt.upcm(now) && !props.evnt.actv(now) && (
+          <>
+            {dateTime(props.evnt.time())}
+            {` - `}
+            {dateTime(props.evnt.dura())}
           </>
         )}
       </div>
-      {linkText(props.evnt.time(), props.evnt.dura())}
+      {props.evnt.dsplLink(now)}
     </a>
   );
 };
 
-function dateTime(uni: number): string {
-  const dat = new Date(uni * 1000);
-
-  const day = String(dat.getDate()).padStart(2, '0');
-  const mon = String(dat.getMonth() + 1).padStart(2, '0');
-  const yea = String(dat.getFullYear()).slice(-2);
-  const hou = String(dat.getHours()).padStart(2, '0');
-  const min = String(dat.getMinutes()).padStart(2, '0');
-
-  return `${day}.${mon}.${yea} ${hou}:${min}`;
+function dateTime(tim: Spacetime): string {
+  return tim.format("{date-ordinal} {month-short}, {hour-24-pad}:{minute-pad}");
 };
-
-function rltvActv(uni: number): string {
-  const now = Math.floor(Date.now() / 1000);
-  const dif = uni - now;
-
-  if (dif < 0) {
-    return `${Math.abs(Math.floor(dif / 60)) - 1}m ago`;
-  } else {
-    return `${Math.ceil(dif / 60)}m left`;
-  }
-};
-
-function rltvUpcm(uni: number): string {
-  const now = Math.floor(Date.now() / 1000);
-  const dif = uni - now;
-
-  return `in ${Math.ceil(dif / 60)}m`;
-};
-
-function linkText(tim: number, dur: number): string {
-  const zon = (new Date().getTimezoneOffset() * 60)
-
-  tim -= zon;
-  dur -= zon;
-
-  const min = 60;
-  const hou = 60 * min;
-  const day = 24 * hou;
-  const wee = 7 * day;
-  const mon = 30 * day;
-
-  const now = Math.floor(Date.now() / 1000) - zon;
-  const dif = tim - now;
-  const eod = Math.floor(now / day) * day + day;
-
-  if (dif <= tim - dur) {
-    return "already happened";
-  } else if (dif <= 0) {
-    return "join now now";
-  } else if (dif <= hou) {
-    return "coming up next";
-  } else if (dif <= eod - now) {
-    return "later today";
-  } else if (dif <= 2 * day) {
-    return "tomorrow";
-  } else if (dif <= wee) {
-    return "next week";
-  } else if (dif <= mon) {
-    return "next month";
-  } else {
-    return "in the future";
-  }
-}

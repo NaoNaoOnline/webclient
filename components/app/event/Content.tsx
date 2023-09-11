@@ -9,7 +9,7 @@ import ErrorToast from "@/components/app/toast/ErrorToast"
 import InfoToast from "@/components/app/toast/InfoToast"
 
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
-import { EventSearchObject } from "@/modules/api/event/search/Object"
+import EventSearchObject from "@/modules/api/event/search/Object"
 import { LabelSearchResponse } from "@/modules/api/label/search/Response"
 import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
 import { VoteCreate } from "@/modules/api/vote/create/Create"
