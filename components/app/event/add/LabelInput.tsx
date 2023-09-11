@@ -23,7 +23,7 @@ export default function TextInput(props: Props) {
     if (inpt.current) {
       inpt.current.required = true;
     }
-  }, [inpt.current]);
+  }, []);
 
   return (
     <div className="relative w-full mb-6">
