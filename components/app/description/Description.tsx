@@ -8,7 +8,7 @@ import Menu from "@/components/app/description/Menu"
 import InfoToast from "@/components/app/toast/InfoToast"
 
 import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
-import { EventSearchObject } from "@/modules/api/event/search/Object"
+import EventSearchObject from "@/modules/api/event/search/Object"
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
 
 function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {

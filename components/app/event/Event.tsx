@@ -11,7 +11,7 @@ import InfoToast from '@/components/app/toast/InfoToast'
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
 import { EventSearch } from '@/modules/api/event/search/Search'
-import { EventSearchObject } from "@/modules/api/event/search/Object";
+import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
 import { UserSearch } from "@/modules/api/user/search/Search";
@@ -23,6 +23,7 @@ import CacheApiReaction from '@/modules/cache/api/Reaction';
 
 import Errors from '@/modules/errors/Errors';
 import { EventSearchRequest } from '@/modules/api/event/search/Request';
+import spacetime, { Spacetime } from 'spacetime';
 
 interface Props {
   atkn: string;
@@ -317,12 +318,12 @@ function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: 
 // latEvnt returns a list of event objects for the events happening right now.
 // The list is sorted by event start time, from earlier to later.
 function latEvnt(evn: EventSearchObject[]): EventSearchObject[] {
-  // Filter out events that have already happened.
-  const now = Math.floor(Date.now() / 1000);
-  evn = evn.filter((x) => x.dura() > now);
+  // Keep all the events that have not already happened.
+  const now: Spacetime = spacetime.now();
+  evn = evn.filter((x) => !x.hpnd(now));
 
   // Sort the events based on their time, in ascending order.
-  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time() - y.time());
+  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time().epoch - y.time().epoch);
 
   return evn;
 }
@@ -330,26 +331,28 @@ function latEvnt(evn: EventSearchObject[]): EventSearchObject[] {
 // pasEvnt returns a list of event objects for the events that have already
 // happened. The list is sorted by event start time, from earlier to later.
 function pasEvnt(evn: EventSearchObject[]): EventSearchObject[] {
-  // Filter out events that have already happened.
-  const now = Math.floor(Date.now() / 1000);
-  evn = evn.filter((x) => x.dura() < now);
+  // Keep all the events that have already happened.
+  const now: Spacetime = spacetime.now();
+  evn = evn.filter((x) => x.hpnd(now));
 
   // Sort the events based on their time, in ascending order.
-  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time() - y.time());
+  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time().epoch - y.time().epoch);
 
   return evn;
 }
 
+// uniUser extracts unique user names from a list of descriptions and returns
+// them as a list of strings.
 function uniUser(des: DescriptionSearchResponse[]): string[] {
-  const lis: string[] = [];
-  const set = new Set();
+  const usr: Record<string, boolean> = {};
+  const uni: string[] = [];
 
-  des.forEach((x) => {
-    if (!set.has(x.user)) {
-      set.add(x.user);
-      lis.push(x.user);
+  for (const x of des) {
+    if (!usr[x.user]) {
+      usr[x.user] = true;
+      uni.push(x.user);
     }
-  });
+  }
 
-  return lis;
+  return uni;
 }

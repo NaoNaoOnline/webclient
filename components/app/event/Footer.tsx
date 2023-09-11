@@ -1,11 +1,11 @@
-import { MouseEvent } from 'react';
+import { MouseEvent } from "react"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import spacetime from "spacetime"
 
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline"
 
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
-
-import { EventSearchObject } from "@/modules/api/event/search/Object";
-import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+import EventSearchObject from "@/modules/api/event/search/Object"
+import { LabelSearchResponse } from "@/modules/api/label/search/Response"
 
 function onItemClick(e: MouseEvent<HTMLDivElement>) {
   e.stopPropagation();
@@ -52,6 +52,7 @@ export default function Footer(props: Props) {
           >
 
             <DropdownMenu.Item
+              disabled={props.evnt.hpnd(spacetime.now())}
               onSelect={props.addd}
               className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer"
             >
