@@ -27,7 +27,9 @@ import spacetime, { Spacetime } from 'spacetime';
 
 interface Props {
   atkn: string;
+  cate?: string[];
   evnt?: string[];
+  host?: string[];
   ltst?: string;
   rctn?: string;
 }
@@ -112,10 +114,20 @@ export default function Event(props: Props) {
     const getData = async function (): Promise<void> {
       try {
         let req: EventSearchRequest[] = [];
-        if (!props.evnt) {
-          req = [{ atkn: props.atkn, evnt: "", ltst: props.ltst || "", rctn: props.rctn || "" }];
-        } else {
-          req = props.evnt.map(x => ({ atkn: "", evnt: x, ltst: "", rctn: "" }));
+        if (labl && (props.cate || props.host)) {
+          req = [{ atkn: props.atkn, cate: getLabl(labl, props.cate), host: getLabl(labl, props.host), evnt: "", ltst: "", rctn: "" }];
+        }
+
+        if (props.evnt) {
+          req = props.evnt.map(x => ({ atkn: "", cate: "", host: "", evnt: x, ltst: "", rctn: "" }));
+        }
+
+        if (props.ltst) {
+          req = [{ atkn: props.atkn, cate: "", host: "", evnt: "", ltst: props.ltst, rctn: "" }];
+        }
+
+        if (props.rctn) {
+          req = [{ atkn: props.atkn, cate: "", host: "", evnt: "", ltst: "", rctn: props.rctn }];
         }
 
         const evn = await EventSearch(req);
@@ -151,11 +163,11 @@ export default function Event(props: Props) {
       }
     };
 
-    if (!clng.current) {
+    if (!clng.current && labl) {
       clng.current = true;
       getData();
     }
-  }, [props.atkn, props.evnt, props.ltst, props.rctn]);
+  }, [props.atkn, props.cate, props.evnt, props.host, props.ltst, props.rctn, labl]);
 
   return (
     <>
@@ -281,6 +293,24 @@ export default function Event(props: Props) {
     </>
   );
 };
+
+function getLabl(lab: LabelSearchResponse[], nam: string[] | undefined): string {
+  if (!nam) {
+    return "";
+  }
+
+  const ids: string[] = [];
+
+  for (const x of nam) {
+    const lsr: LabelSearchResponse | undefined = lab.find((y) => y.name.toLocaleLowerCase() === x.toLocaleLowerCase());
+
+    if (lsr) {
+      ids.push(lsr.labl);
+    }
+  }
+
+  return ids.join(",");
+}
 
 function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: VoteSearchResponse[]): DescriptionSearchResponse[] {
   // Create a lookup table to store the vote counts for each description.

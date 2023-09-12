@@ -11,8 +11,8 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
             evnt: x.evnt,
           },
           public: {
-            cate: "",
-            host: "",
+            cate: x.cate,
+            host: x.host,
           },
           symbol: {
             ltst: x.ltst,
