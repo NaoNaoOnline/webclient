@@ -13,7 +13,7 @@ interface Props {
 
 const expr = /^[A-Za-z0-9\s]{3,18}$/;
 
-export default function TextInput(props: Props) {
+export default function LabelInput(props: Props) {
   const [data, setData] = useState<{ value: string; label: string; }[]>(props.labl.map((x) => ({ value: x, label: x })));
   const [fcsd, setFcsd] = useState<boolean>(false);
 

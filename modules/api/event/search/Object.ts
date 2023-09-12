@@ -89,7 +89,7 @@ export default class EventSearchObject {
   //
 
   dsplActv(now: Spacetime): string {
-    return `${this.time().diff(now, "minute")}m ago - ${now.round("minute").diff(this.dura(), "minute")}m left`;
+    return `${this.time().diff(now, "minute")}m ago - ${now.startOf("minute").diff(this.dura(), "minute")}m left`;
   }
 
   dsplLink(now: Spacetime): string {
@@ -121,6 +121,6 @@ export default class EventSearchObject {
   }
 
   dsplUpcm(now: Spacetime): string {
-    return `in ${now.diff(this.time(), "minute")}m`;
+    return `in ${now.startOf("minute").diff(this.time(), "minute")}m`;
   }
 }
