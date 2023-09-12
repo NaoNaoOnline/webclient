@@ -3,6 +3,9 @@ export interface EventSearchRequest {
   atkn: string;
   // intern
   evnt: string;
+  // public
+  cate: string;
+  host: string;
   // symbol
   ltst: string;
   rctn: string;
