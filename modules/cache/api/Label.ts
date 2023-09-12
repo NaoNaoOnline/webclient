@@ -6,7 +6,7 @@ import { LabelSearchResponse } from '@/modules/api/label/search/Response'
 
 const fetcher = () => {
   return async (): Promise<LabelSearchResponse[]> => {
-    return await LabelSearch(NewLabelSearchRequest("cate", "host"));
+    return await LabelSearch(NewLabelSearchRequest("bltn", "cate", "host"));
   };
 };
 

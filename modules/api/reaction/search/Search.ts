@@ -6,7 +6,11 @@ export async function ReactionSearch(req: ReactionSearchRequest[]): Promise<Reac
   try {
     const cal = await API.search(
       {
-        object: [],
+        object: [{
+          public: {
+            kind: "bltn"
+          }
+        }],
       },
     );
 
@@ -18,6 +22,7 @@ export async function ReactionSearch(req: ReactionSearchRequest[]): Promise<Reac
       rctn: x.intern?.rctn || "",
       // public
       html: x.public?.html || "",
+      kind: x.public?.kind || "",
       name: x.public?.name || "",
     }));
   } catch (err) {

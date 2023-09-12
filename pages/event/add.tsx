@@ -40,6 +40,10 @@ export default function Page() {
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
 
+  const bltn: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "bltn").map((y) => y.name), ...blck]
+  const cate: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
+  const host: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
+
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
     setCmpl(10);
@@ -139,19 +143,19 @@ export default function Page() {
               <form onSubmit={handleSubmit}>
                 <div className="grid">
                   <LabelInput
-                    blck={blck}
+                    blck={bltn}
                     crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
                     desc="the host labels for who is organizing this event"
-                    labl={cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)}
+                    labl={host}
                     name="host"
                     pldr="Flashbots"
                     titl="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
                   />
                   <LabelInput
-                    blck={blck}
+                    blck={bltn}
                     crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
                     desc="the category labels for topics this event is about"
-                    labl={cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)}
+                    labl={cate}
                     name="category"
                     pldr="Crypto, DeFi, MEV"
                     titl="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"

@@ -4,8 +4,15 @@ export interface LabelSearchRequest {
   labl: string;
 }
 
-export function NewLabelSearchRequest(cat: string, hos: string): LabelSearchRequest[] {
+export function NewLabelSearchRequest(blt: string, cat: string, hos: string): LabelSearchRequest[] {
   const req: LabelSearchRequest[] = [];
+
+  if (blt !== "") {
+    req.push({
+      kind: blt,
+      labl: "",
+    });
+  }
 
   if (cat !== "") {
     req.push({

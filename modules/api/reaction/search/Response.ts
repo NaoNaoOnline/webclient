@@ -6,5 +6,6 @@ export interface ReactionSearchResponse {
   rctn: string;
   // public
   html: string;
+  kind: string;
   name: string;
 }
