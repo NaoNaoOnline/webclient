@@ -1,1 +1,4 @@
-export interface ReactionSearchRequest { }
+export interface ReactionSearchRequest {
+  // public
+  kind: string;
+}

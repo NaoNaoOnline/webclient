@@ -5,7 +5,7 @@ import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response'
 
 const fetcher = () => {
   return async (): Promise<ReactionSearchResponse[]> => {
-    return await ReactionSearch([]);
+    return await ReactionSearch([{ kind: "bltn" }]);
   };
 };
 

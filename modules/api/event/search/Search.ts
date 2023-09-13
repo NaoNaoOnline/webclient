@@ -9,6 +9,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
         object: req.map((x) => ({
           intern: {
             evnt: x.evnt,
+            user: x.user,
           },
           public: {
             cate: x.cate,

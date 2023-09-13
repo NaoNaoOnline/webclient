@@ -47,9 +47,9 @@ export default function Link(props: Props) {
         )}
         {!props.evnt.upcm(now) && !props.evnt.actv(now) && (
           <>
-            {dateTime(props.evnt.time())}
+            {dateTime(props.evnt.time(), now)}
             {` - `}
-            {dateTime(props.evnt.dura())}
+            {dateTime(props.evnt.dura(), now)}
           </>
         )}
       </div>
@@ -58,6 +58,6 @@ export default function Link(props: Props) {
   );
 };
 
-function dateTime(tim: Spacetime): string {
-  return tim.format("{date-ordinal} {month-short}, {hour-24-pad}:{minute-pad}");
+function dateTime(tim: Spacetime, now: Spacetime): string {
+  return tim.goto(now.timezone().name).format("{date-ordinal} {month-short}, {hour-24-pad}:{minute-pad}");
 };

@@ -34,7 +34,7 @@ export default function Description(props: Props) {
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
           <a
-            href={`/user/${props.desc.name}`}
+            href={`/event?user=${props.desc.name}`}
             onClick={onLinkClick}
             className="flex items-center pl-2"
           >
@@ -47,7 +47,7 @@ export default function Description(props: Props) {
             />
           </a>
           <a
-            href={`/user/${props.desc.name}`}
+            href={`/event?user=${props.desc.name}`}
             onClick={onLinkClick}
             className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >
