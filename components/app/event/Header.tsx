@@ -25,7 +25,13 @@ export default function Event(props: Props) {
 
   return (
     <div
-      onClick={() => window.location.href = "/event/" + props.evnt.evnt()}
+      onClick={(e: MouseEvent<HTMLDivElement>) => {
+        if (e.metaKey || e.ctrlKey) {
+          window.open("/event/" + props.evnt.evnt(), '_blank');
+        } else {
+          window.location.href = "/event/" + props.evnt.evnt();
+        }
+      }}
       className="relative rounded-t-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-hidden cursor-pointer"
     >
       <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">

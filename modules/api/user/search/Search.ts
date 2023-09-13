@@ -10,7 +10,9 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
           intern: {
             user: x.user,
           },
-          public: {},
+          public: {
+            name: x.name,
+          },
         })),
       },
     );

@@ -32,6 +32,7 @@ interface Props {
   host?: string[];
   ltst?: string;
   rctn?: string;
+  user?: string;
 }
 
 interface ToggleState {
@@ -115,19 +116,64 @@ export default function Event(props: Props) {
       try {
         let req: EventSearchRequest[] = [];
         if (labl && (props.cate || props.host)) {
-          req = [{ atkn: props.atkn, cate: getLabl(labl, props.cate), host: getLabl(labl, props.host), evnt: "", ltst: "", rctn: "" }];
+          req = [{
+            atkn: "",
+            cate: getLabl(labl, props.cate),
+            evnt: "",
+            host: getLabl(labl, props.host),
+            ltst: "",
+            rctn: "",
+            user: "",
+          }];
         }
 
         if (props.evnt) {
-          req = props.evnt.map(x => ({ atkn: "", cate: "", host: "", evnt: x, ltst: "", rctn: "" }));
+          req = props.evnt.map(x => ({
+            atkn: "",
+            cate: "",
+            evnt: x,
+            host: "",
+            ltst: "",
+            rctn: "",
+            user: "",
+          }));
         }
 
         if (props.ltst) {
-          req = [{ atkn: props.atkn, cate: "", host: "", evnt: "", ltst: props.ltst, rctn: "" }];
+          req = [{
+            atkn: "",
+            cate: "",
+            evnt: "",
+            host: "",
+            ltst: props.ltst,
+            rctn: "",
+            user: "",
+          }];
         }
 
         if (props.rctn) {
-          req = [{ atkn: props.atkn, cate: "", host: "", evnt: "", ltst: "", rctn: props.rctn }];
+          req = [{
+            atkn: props.atkn,
+            cate: "",
+            evnt: "",
+            host: "",
+            ltst: "",
+            rctn: props.rctn,
+            user: "",
+          }];
+        }
+
+        if (props.user) {
+          const usr = await UserSearch([{ user: "", name: props.user }]);
+          req = [{
+            atkn: "",
+            cate: "",
+            evnt: "",
+            host: "",
+            ltst: "",
+            rctn: "",
+            user: usr[0].user,
+          }];
         }
 
         const evn = await EventSearch(req);
@@ -139,7 +185,7 @@ export default function Event(props: Props) {
 
         const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
         const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
-        const usr = await UserSearch(uniUser(des).map(x => ({ user: x })));
+        const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "" })));
 
         setEvnt(evn.map(x => new EventSearchObject(x)));
         setDesc(des.map(x => {
