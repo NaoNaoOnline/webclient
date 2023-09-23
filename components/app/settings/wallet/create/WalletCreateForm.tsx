@@ -163,7 +163,6 @@ export default function WalletCreateForm(props: Props) {
         />
       ))}
 
-      {/* TODO test adding multiple wallets in a row */}
       {cmpl >= 100 && (
         <SuccessToast
           desc="Lecko Mio, the wallet's in pirate!"
