@@ -10,6 +10,7 @@ export async function DescriptionUpdate(req: DescriptionUpdateRequest[]): Promis
           intern: {
             desc: x.desc,
           },
+          public: {},
           update: [{
             ope: "replace",
             pat: "/text",

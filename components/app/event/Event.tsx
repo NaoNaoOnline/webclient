@@ -53,7 +53,7 @@ export default function Event(props: Props) {
   const [vote, setVote] = useState<VoteSearchResponse[] | null>(null);
   const [xpnd, setXpnd] = useState<ToggleState>({});
 
-  const clng = useRef(false);
+  const clld = useRef(false);
 
   const cal: LabelSearchResponse[] = CacheApiLabel();
   if (cal && cal.length !== 0 && (!labl || labl.length === 0)) {
@@ -209,11 +209,11 @@ export default function Event(props: Props) {
       }
     };
 
-    if (!clng.current && labl) {
-      clng.current = true;
+    if (!clld.current && labl) {
+      clld.current = true;
       getData();
     }
-  }, [props.atkn, props.cate, props.evnt, props.host, props.ltst, props.rctn, labl]);
+  }, [props.atkn, props.cate, props.evnt, props.host, props.ltst, props.rctn, props.user, labl]);
 
   return (
     <>

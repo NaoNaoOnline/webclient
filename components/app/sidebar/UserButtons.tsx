@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { useUser } from "@auth0/nextjs-auth0/client"
 
 import { Cog6ToothIcon } from "@heroicons/react/24/outline"
@@ -38,10 +39,13 @@ export default function UserButtons() {
             </a>
           </li>
           <li>
-            <a href="#" className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+            <Link
+              href="/settings"
+              className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group"
+            >
               <Cog6ToothIcon className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
               <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Settings</span>
-            </a>
+            </Link>
           </li>
         </ul>
       )}
