@@ -12,12 +12,10 @@ const fetcher = () => {
 
 // CacheApiLabel fetches all category and host labels that exist already. Since
 // labels ought to not change frequently, data is automatically refreshed every
-// hour. The SWR hook can be deactivated if act is false. If act is true, a
-// valid access token must be provided with atk for making the RPC work
-// triggered by the custom fetcher.
+// hour. The SWR hook can be deactivated if act is false.
 export default function CacheApiLabel(): LabelSearchResponse[] {
   const { data, error } = useSWR(
-    "cache/api.Label", // static cache key
+    "label.API/Cache", // static cache key
     fetcher(),
     {
       refreshInterval: 60 * 60 * 1000, // every hour

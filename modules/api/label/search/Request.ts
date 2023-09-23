@@ -1,7 +1,8 @@
 export interface LabelSearchRequest {
+  // intern
+  labl: string;
   // public
   kind: string;
-  labl: string;
 }
 
 export function NewLabelSearchRequest(blt: string, cat: string, hos: string): LabelSearchRequest[] {

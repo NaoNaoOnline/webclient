@@ -1,0 +1,38 @@
+import API from '@/modules/api/wallet/API';
+import { WalletSearchRequest } from '@/modules/api/wallet/search/Request';
+import { WalletSearchResponse } from '@/modules/api/wallet/search/Response';
+
+export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSearchResponse[]> {
+  try {
+    const call = await API.search(
+      {
+        object: req.map((x) => ({
+          intern: {
+            wllt: x.wllt,
+          },
+          public: {
+            kind: x.kind,
+          },
+        })),
+      },
+      {
+        meta: {
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
+        },
+      },
+    );
+
+    return call.response.object.map((x) => ({
+      // intern
+      crtd: x.intern?.crtd || "",
+      last: x.intern?.last || "",
+      user: x.intern?.user || "",
+      wllt: x.intern?.wllt || "",
+      // public
+      addr: x.public?.addr || "",
+      kind: x.public?.kind || "",
+    }));
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
