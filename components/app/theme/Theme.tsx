@@ -30,7 +30,7 @@ export function useTheme(): [string, () => void] {
     if (loc) {
       setThem(loc);
     }
-  }, []);
+  }, [setThem]);
 
   return [them, tglThem];
 }

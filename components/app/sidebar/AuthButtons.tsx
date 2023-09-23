@@ -1,5 +1,5 @@
-import { useUser } from "@auth0/nextjs-auth0/client"
 import Link from "next/link"
+import { useUser } from "@auth0/nextjs-auth0/client"
 
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline"
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline"
