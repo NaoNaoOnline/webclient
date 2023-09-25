@@ -49,7 +49,7 @@ function frmt(x: string): string {
 };
 
 function uniq(zon: Zone) {
-  if (!list.some((x) => x.lowr.name === zon.lowr.name && x.lowr.shrt === zon.lowr.shrt) && !zon.lowr.name.includes("Etc")) {
+  if (!list.some((x) => x.lowr.name === zon.lowr.name && x.lowr.shrt === zon.lowr.shrt)) {
     list.push(zon);
   }
 }
