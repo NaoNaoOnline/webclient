@@ -1,6 +1,7 @@
-import * as Select from '@radix-ui/react-select';
-import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
-import spacetime, { Spacetime } from 'spacetime';
+import * as Select from "@radix-ui/react-select";
+import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import spacetime, { Spacetime } from "spacetime";
+import { Zone } from "@/modules/date/TimeZone";
 
 interface Props {
   chng: (dat: Spacetime) => void;
@@ -10,6 +11,8 @@ interface Props {
   name: string;
   pstn: string;
   slct: Spacetime;
+  span: string;
+  zone: Zone;
 }
 
 export default function TimeSelect(props: Props) {
@@ -18,16 +21,13 @@ export default function TimeSelect(props: Props) {
     pstn = "left-[105%]";
   }
 
-  let span = "col-span-4";
-  if (props.name !== "date") {
-    span = "col-span-3";
-  }
+  const offs: string = spacetime().goto(props.zone.iana).format("offset");
 
   return (
-    <div className={`relative z-0 w-full mb-6 ${span}`}>
+    <div className={`relative z-0 w-full mb-6 ${props.span}`}>
       <label htmlFor={`${props.name}-input`} className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50">
         {ttlCas(props.name)}
-        <div className={`absolute top-[-85%] ${pstn} ml-4 z-10 w-[250px] invisible group-hover:visible px-3 py-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900`}>
+        <div className={`absolute top-[-85%] ${pstn} ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900`}>
           {props.desc}
         </div>
       </label>
@@ -39,7 +39,7 @@ export default function TimeSelect(props: Props) {
             props.chng(spacetime(val));
           }
         }}
-        value={props.slct.format("iso")}
+        value={props.slct.format("iso").slice(0, -6) + offs}
       >
         <Select.Trigger
           id={`${props.name}-input`}
@@ -68,7 +68,7 @@ export default function TimeSelect(props: Props) {
                   <Select.Item
                     key={i}
                     className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer ${x.isEqual(props.slct) ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50" : ""}`}
-                    value={x.format("iso")}
+                    value={x.format("iso").slice(0, -6) + offs}
                   >
                     <Select.ItemText>
                       {props.dspl(x)[0]}
