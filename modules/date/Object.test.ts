@@ -594,44 +594,6 @@ describe("DateObject", () => {
   });
 
   describe("setDay", () => {
-    describe("without setTim", () => {
-      const obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
-      let day: Spacetime[] = obj.lisDay();
-
-      obj.setDay(day[1]); // set next day
-
-      const sta: Spacetime[] = obj.lisSta();
-      const end: Spacetime[] = obj.lisEnd();
-
-      test("first item", () => {
-        expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
-        expect(obj.dspEnd(end[0])).toStrictEqual(["12:45", "(00:15)"]); // this.sta.tim is 12:30
-      });
-
-      test("last item", () => {
-        expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
-        expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["16:30", "(04:00)"]);
-      });
-
-      test("getDay", () => {
-        expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
-        expect(obj.getDay().tim.format("iso")).toBe("2023-09-09T12:30:00.000Z");
-        expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
-      });
-
-      test("getSta", () => {
-        expect(obj.getSta().min.format("iso")).toBe("2023-09-09T00:00:00.000Z");
-        expect(obj.getSta().tim.format("iso")).toBe("2023-09-09T12:30:00.000Z");
-        expect(obj.getSta().max.format("iso")).toBe("2023-09-09T23:59:59.999Z");
-      });
-
-      test("getEnd", () => {
-        expect(obj.getEnd().min.format("iso")).toBe("2023-09-09T12:45:00.000Z");
-        expect(obj.getEnd().tim.format("iso")).toBe("2023-09-09T13:30:00.000Z");
-        expect(obj.getEnd().max.format("iso")).toBe("2023-09-09T16:30:00.000Z");
-      });
-    });
-
     describe("with setTim", () => {
       const obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
       let day: Spacetime[] = obj.lisDay();
@@ -671,31 +633,157 @@ describe("DateObject", () => {
         expect(obj.getEnd().max.format("iso")).toBe("2023-09-09T16:30:00.000Z");
       });
     });
+
+    describe("without setTim", () => {
+      const obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
+      let day: Spacetime[] = obj.lisDay();
+
+      obj.setDay(day[1]); // set next day
+
+      const sta: Spacetime[] = obj.lisSta();
+      const end: Spacetime[] = obj.lisEnd();
+
+      test("first item", () => {
+        expect(obj.dspSta(sta[0])).toStrictEqual(["00:00", ""]);
+        expect(obj.dspEnd(end[0])).toStrictEqual(["12:45", "(00:15)"]); // this.sta.tim is 12:30
+      });
+
+      test("last item", () => {
+        expect(obj.dspSta(sta[sta.length - 1])).toStrictEqual(["23:45", ""]);
+        expect(obj.dspEnd(end[end.length - 1])).toStrictEqual(["16:30", "(04:00)"]);
+      });
+
+      test("getDay", () => {
+        expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+        expect(obj.getDay().tim.format("iso")).toBe("2023-09-09T12:30:00.000Z");
+        expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+      });
+
+      test("getSta", () => {
+        expect(obj.getSta().min.format("iso")).toBe("2023-09-09T00:00:00.000Z");
+        expect(obj.getSta().tim.format("iso")).toBe("2023-09-09T12:30:00.000Z");
+        expect(obj.getSta().max.format("iso")).toBe("2023-09-09T23:59:59.999Z");
+      });
+
+      test("getEnd", () => {
+        expect(obj.getEnd().min.format("iso")).toBe("2023-09-09T12:45:00.000Z");
+        expect(obj.getEnd().tim.format("iso")).toBe("2023-09-09T13:30:00.000Z");
+        expect(obj.getEnd().max.format("iso")).toBe("2023-09-09T16:30:00.000Z");
+      });
+    });
   });
 
   describe("setEnd", () => {
-    let obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
+    describe("with setTim", () => {
+      describe("thirty minutes", () => {
+        let obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
 
-    const end: Spacetime[] = obj.lisEnd();
+        const end: Spacetime[] = obj.lisEnd();
 
-    obj.setEnd(end[7]); // add another hour
+        obj.setEnd(end[1]);
 
-    test("getDay", () => {
-      expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
-      expect(obj.getDay().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
-      expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+        obj.setTim(spacetime("2023-09-08T12:28:30.000Z")); // 30 seconds later
+
+        test("getDay", () => {
+          expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+        });
+
+        test("getSta", () => {
+          expect(obj.getSta().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().max.format("iso")).toBe("2023-09-08T23:59:59.999Z");
+        });
+
+        test("getEnd", () => {
+          expect(obj.getEnd().min.format("iso")).toBe("2023-09-08T12:45:00.000Z");
+          expect(obj.getEnd().tim.format("iso")).toBe("2023-09-08T13:00:00.000Z");
+          expect(obj.getEnd().max.format("iso")).toBe("2023-09-08T16:30:00.000Z");
+        });
+      });
+
+      describe("two hours", () => {
+        let obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
+
+        const end: Spacetime[] = obj.lisEnd();
+
+        obj.setEnd(end[7]);
+
+        obj.setTim(spacetime("2023-09-08T12:28:30.000Z")); // 30 seconds later
+
+        test("getDay", () => {
+          expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+        });
+
+        test("getSta", () => {
+          expect(obj.getSta().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().max.format("iso")).toBe("2023-09-08T23:59:59.999Z");
+        });
+
+        test("getEnd", () => {
+          expect(obj.getEnd().min.format("iso")).toBe("2023-09-08T12:45:00.000Z");
+          expect(obj.getEnd().tim.format("iso")).toBe("2023-09-08T14:30:00.000Z");
+          expect(obj.getEnd().max.format("iso")).toBe("2023-09-08T16:30:00.000Z");
+        });
+      });
     });
 
-    test("getSta", () => {
-      expect(obj.getSta().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
-      expect(obj.getSta().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
-      expect(obj.getSta().max.format("iso")).toBe("2023-09-08T23:59:59.999Z");
-    });
+    describe("without setTim", () => {
+      describe("thirty minutes", () => {
+        let obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
 
-    test("getEnd", () => {
-      expect(obj.getEnd().min.format("iso")).toBe("2023-09-08T12:45:00.000Z");
-      expect(obj.getEnd().tim.format("iso")).toBe("2023-09-08T14:30:00.000Z");
-      expect(obj.getEnd().max.format("iso")).toBe("2023-09-08T16:30:00.000Z");
+        const end: Spacetime[] = obj.lisEnd();
+
+        obj.setEnd(end[1]);
+
+        test("getDay", () => {
+          expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+        });
+
+        test("getSta", () => {
+          expect(obj.getSta().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().max.format("iso")).toBe("2023-09-08T23:59:59.999Z");
+        });
+
+        test("getEnd", () => {
+          expect(obj.getEnd().min.format("iso")).toBe("2023-09-08T12:45:00.000Z");
+          expect(obj.getEnd().tim.format("iso")).toBe("2023-09-08T13:00:00.000Z");
+          expect(obj.getEnd().max.format("iso")).toBe("2023-09-08T16:30:00.000Z");
+        });
+      });
+
+      describe("two hours", () => {
+        let obj: DateObject = new DateObject(spacetime("2023-09-08T12:28:00.000Z"));
+
+        const end: Spacetime[] = obj.lisEnd();
+
+        obj.setEnd(end[7]);
+
+        test("getDay", () => {
+          expect(obj.getDay().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getDay().max.format("iso")).toBe("2023-10-08T12:30:00.000Z");
+        });
+
+        test("getSta", () => {
+          expect(obj.getSta().min.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().tim.format("iso")).toBe("2023-09-08T12:30:00.000Z");
+          expect(obj.getSta().max.format("iso")).toBe("2023-09-08T23:59:59.999Z");
+        });
+
+        test("getEnd", () => {
+          expect(obj.getEnd().min.format("iso")).toBe("2023-09-08T12:45:00.000Z");
+          expect(obj.getEnd().tim.format("iso")).toBe("2023-09-08T14:30:00.000Z");
+          expect(obj.getEnd().max.format("iso")).toBe("2023-09-08T16:30:00.000Z");
+        });
+      });
     });
   });
 
