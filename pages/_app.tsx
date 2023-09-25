@@ -40,7 +40,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
             </ConnectKitProvider>
           </WagmiConfig>
         </ThemeContext.Provider>
-      </Toast.Provider >
+      </Toast.Provider>
     </UserProvider>
   );
 }

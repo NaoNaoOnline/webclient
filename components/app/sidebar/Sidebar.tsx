@@ -38,7 +38,7 @@ export default function Sidebar() {
         aria-label="Sidebar"
         aria-hidden
       >
-        <div className="h-full px-3 py-4 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div className="h-full px-4 py-4 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <DarkMode />
 
           <ul className="pt-4 mt-4 space-y-2 border-t border-gray-300 dark:border-gray-700">

@@ -8,7 +8,7 @@ npm run dev
 ```
 
 The communication between `webclient` and [apiserver] is managed using the auto
-generated [apitscode] library. 
+generated [apitscode] library.
 
 ```
 npm install https://github.com/NaoNaoOnline/apitscode.git#v0.6.0

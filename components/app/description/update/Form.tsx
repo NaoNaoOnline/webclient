@@ -17,13 +17,13 @@ interface Props {
 }
 
 export default function Form(props: Props) {
-  const inpt = useRef<HTMLInputElement | null>(null);
-
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
+
+  const inpt = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();

@@ -6,8 +6,8 @@ import { UsersIcon } from '@heroicons/react/24/outline'
 
 export default function SearchMenu() {
   return (
-    <div className="pl-4 pr-4 mt-4 md:ml-64">
-      <div className="pl-4 pr-4 flex grid justify-items-center">
+    <div className="px-2 mt-4 md:ml-64">
+      <div className="px-2 flex grid justify-items-center">
         <div className="rounded-lg w-full max-w-xl">
 
           <ul className="flex flex-row w-full">
