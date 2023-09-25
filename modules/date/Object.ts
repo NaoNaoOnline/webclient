@@ -223,25 +223,38 @@ export default class DateObject {
     if (this.day.min.date() !== this.day.tim.date()) {
       // If the user selected any other day than "today", setTim has no function
       // at all. In that case the user wants to configure the date and time for
-      // an event in the future, and all setTim is supposed to do is to bump up
-      // the minimum time values if the clock time moves us into the new time
-      // interval. 
+      // an event in the future. All setTim is supposed to do for "today" is to
+      // bump up the minimum time values if the clock time moves us into the new
+      // time interval.
       return
     }
 
-    // Move up dat if necessary. 
+    // Calculate the currently configured event length before any internal
+    // modification takes place.
+    const len: number = this.sta.tim.diff(this.end.tim, "minute");
+
+    // End time has to be adjusted before start time changes again, if the user
+    // set end time to something else than the default value.
+    if (len !== 0 && len !== 60) {
+      this.end.tim = this.sta.tim.add(len, "minute");
+    }
+
+    // Move up dat if necessary.
     this.day.min = this.maxDat(this.day.min, this.nxtDat(tim));
     this.day.tim = this.maxDat(this.day.tim, this.nxtDat(tim));
     this.day.max = this.maxDat(this.day.max, this.day.min.add(30, "day"));
 
-    // Move up sta if necessary. 
+    // Move up sta if necessary.
     this.sta.min = this.maxDat(this.sta.min, this.day.tim.clone());
     this.sta.tim = this.maxDat(this.sta.tim, this.day.tim.clone());
     this.sta.max = this.maxDat(this.sta.max, this.setEod(this.day.tim));
 
-    // Move up end if necessary. 
+    // Move up end if necessary. Note that this.end.tim is defaulted to one hour
+    // after this.sta.tim if the user did not set another value.
     this.end.min = this.maxDat(this.end.min, this.addMin(this.sta.tim, 15));
-    this.end.tim = this.maxDat(this.end.tim, this.addHou(this.sta.tim, 1));
+    if (len === 0 || len === 60) {
+      this.end.tim = this.maxDat(this.end.tim, this.addHou(this.sta.tim, 1));
+    }
     this.end.max = this.maxDat(this.end.max, this.addHou(this.sta.tim, 4));
   }
 }
