@@ -1,15 +1,16 @@
-import { useState, MouseEvent } from "react"
-import Image from "next/image"
+import { useState, MouseEvent } from "react";
+import Image from "next/image";
 
-import ReactionBar from "@/components/app/reaction/ReactionBar"
-import Form from "@/components/app/description/update/Form"
-import DescriptionMenu from "@/components/app/description/DescriptionMenu"
+import ReactionBar from "@/components/app/reaction/ReactionBar";
+import Form from "@/components/app/description/update/Form";
+import DescriptionMenu from "@/components/app/description/DescriptionMenu";
 
-import InfoToast from "@/components/app/toast/InfoToast"
+import InfoToast from "@/components/app/toast/InfoToast";
 
-import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
-import EventSearchObject from "@/modules/api/event/search/Object"
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
+import EventSearchObject from "@/modules/api/event/search/Object";
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import spacetime, { Spacetime } from "spacetime";
 
 function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
   evn.stopPropagation();
@@ -28,6 +29,8 @@ export default function Description(props: Props) {
   const [equl, setEqul] = useState<boolean[]>([]);
   const [form, setForm] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.desc.text);
+
+  const now: Spacetime = spacetime.now();
 
   return (
     <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
@@ -65,6 +68,7 @@ export default function Description(props: Props) {
 
         <div className="flex-grow relative overflow-x-auto">
           <ReactionBar
+            updt={!props.evnt.hpnd(now)}
             radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
             rrem={(rctn: ReactionSearchResponse) => props.rrem(props.desc, rctn)}
             rctn={props.rctn}
@@ -78,7 +82,7 @@ export default function Description(props: Props) {
             desu={() => setForm((old: boolean) => !old)}
             radd={(rctn: ReactionSearchResponse) => props.radd(props.desc, rctn)}
             rctn={props.rctn}
-            updt={(Math.floor(Date.now() / 1000) - parseInt(props.desc.crtd, 10)) >= (5 * 60)}
+            updt={!now.isBefore(crtd(props.desc.crtd).add(5, "minute"))}
           />
         </div>
       </div>
@@ -112,3 +116,7 @@ export default function Description(props: Props) {
     </div>
   );
 };
+
+const crtd = (uni: string): Spacetime => {
+  return spacetime(Number(uni) * 1000).goto("GMT");
+}
