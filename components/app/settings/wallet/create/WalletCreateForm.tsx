@@ -5,16 +5,15 @@ import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { recoverPublicKey } from "viem";
 import { hashMessage } from "viem";
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-import InfoToast from "@/components/app/toast/InfoToast"
-import ProgressToast from '@/components/app/toast/ProgressToast'
-import SuccessToast from '@/components/app/toast/SuccessToast'
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import ProgressToast from "@/components/app/toast/ProgressToast";
+import SuccessToast from "@/components/app/toast/SuccessToast";
 
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { WalletUpdate } from "@/modules/api/wallet/update/Update";
 
-import Errors from '@/modules/errors/Errors';
+import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;

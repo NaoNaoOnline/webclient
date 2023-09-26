@@ -13,7 +13,7 @@ interface MenuProps {
   updt: boolean;
 }
 
-export default function Menu(props: MenuProps) {
+export default function DescriptionMenu(props: MenuProps) {
   // Group emojis into rows with the specified number of columns.
   const row: ReactionSearchResponse[][] = [];
   for (let i = 0; i < props.rctn.length; i += props.clmn) {

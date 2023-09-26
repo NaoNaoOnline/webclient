@@ -3,7 +3,7 @@ import Image from "next/image"
 
 import ReactionBar from "@/components/app/reaction/ReactionBar"
 import Form from "@/components/app/description/update/Form"
-import Menu from "@/components/app/description/Menu"
+import DescriptionMenu from "@/components/app/description/DescriptionMenu"
 
 import InfoToast from "@/components/app/toast/InfoToast"
 
@@ -72,7 +72,7 @@ export default function Description(props: Props) {
         </div>
 
         <div>
-          <Menu
+          <DescriptionMenu
             clmn={6}
             delt={props.desc.user !== props.evnt.user()}
             desu={() => setForm((old: boolean) => !old)}
