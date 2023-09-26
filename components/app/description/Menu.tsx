@@ -1,8 +1,8 @@
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline'
+import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
-import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
 
 interface MenuProps {
   clmn: number;

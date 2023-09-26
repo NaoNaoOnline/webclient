@@ -11,7 +11,7 @@ import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCrea
 
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
-import CacheApiWallet from '@/modules/cache/api/Wallet';
+import CacheApiWallet from "@/modules/cache/api/Wallet";
 
 interface Props {
   atkn: string;
@@ -44,7 +44,10 @@ export default function WalletSection(props: Props) {
         </li>
 
         <li className="flex absolute right-0 items-center">
-          <WalletButton titl="Connect Wallet" />
+          <WalletButton
+            dsbl={wllt && wllt.length >= 5 ? true : false}
+            titl="Connect Wallet"
+          />
 
           <WalletCreateForm
             atkn={props.atkn}
