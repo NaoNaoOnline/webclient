@@ -1,17 +1,25 @@
 import { useState } from "react";
 
+import { ConnectKitButton } from "connectkit";
 import spacetime from "spacetime";
 import { useAccount } from "wagmi";
 
-import { TrashIcon } from "@heroicons/react/24/outline";
 import { FaEthereum } from "react-icons/fa";
 
-import WalletButton from "@/components/app/settings/wallet/WalletButton";
+import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import ProgressToast from "@/components/app/toast/ProgressToast";
+import SuccessToast from "@/components/app/toast/SuccessToast";
+
+import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
+import { WalletDeleteResponse } from "@/modules/api/wallet/delete/Response";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 import CacheApiWallet from "@/modules/cache/api/Wallet";
+
+import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
@@ -19,12 +27,49 @@ interface Props {
 
 export default function WalletSection(props: Props) {
   const [addr, setAddr] = useState<string>("");
+  const [cmpl, setCmpl] = useState<number>(0);
+  const [cncl, setCncl] = useState<boolean>(false);
+  const [dltd, setDltd] = useState<WalletSearchResponse | null>(null);
+  const [erro, setErro] = useState<Errors[]>([]);
+  const [sbmt, setSbmt] = useState<boolean[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
+  // Setting the user's wallets based on the backend state should only happen
+  // initially. If a user deletes all wallets then CacheApiWallet may still
+  // provide locally cached wallet objects which should not be rendered anymore.
+  // Below we work with the assumption that the uninitialized wllt value is
+  // null, so that once it is an array of length 0 wllt is not updated anymore,
+  // because we are then in the middle of the user experience.
   const caw: WalletSearchResponse[] = CacheApiWallet(props.atkn ? true : false, props.atkn);
-  if (caw && caw.length !== 0 && (!wllt || wllt.length === 0)) {
+  if (caw.length !== 0 && !wllt) {
     setWllt(caw);
   }
+
+  const walletDelete = async function (wal: WalletSearchResponse): Promise<WalletDeleteResponse> {
+    setCmpl(10);
+    setCncl(false);
+    setSbmt((old: boolean[]) => [...old, true]);
+
+    try {
+      setCmpl(25);
+      await new Promise(r => setTimeout(r, 200));
+      setCmpl(50);
+      await new Promise(r => setTimeout(r, 200));
+
+      const [res] = await WalletDelete([{ atkn: props.atkn, wllt: wal.wllt }]);
+
+      setCmpl(100);
+      await new Promise(r => setTimeout(r, 200));
+
+      return res;
+    } catch (err) {
+      setCmpl(0);
+      setCncl(true);
+      setErro((old: Errors[]) => [...old, new Errors("Outrage, and the beavers are plundering again out of town!", err as Error)]);
+
+      return Promise.reject(err);
+    }
+  };
 
   useAccount({
     onConnect({ address }) {
@@ -44,10 +89,19 @@ export default function WalletSection(props: Props) {
         </li>
 
         <li className="flex absolute right-0 items-center">
-          <WalletButton
-            dsbl={wllt && wllt.length >= 5 ? true : false}
-            titl="Connect Wallet"
-          />
+          <ConnectKitButton.Custom>
+            {({ isConnected, show, ensName, truncatedAddress }) => {
+              return (
+                <button
+                  className="p-3 rounded-lg text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:pointer-events-none"
+                  disabled={wllt && wllt.length >= 5 ? true : false}
+                  onClick={show}
+                >
+                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+                </button>
+              );
+            }}
+          </ConnectKitButton.Custom>
 
           <WalletCreateForm
             atkn={props.atkn}
@@ -84,12 +138,60 @@ export default function WalletSection(props: Props) {
               </li>
 
               <li className={`flex relative w-full items-center p-3 ${x.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                {/* TODO implement context menu to delete and re-sign */}
-                <TrashIcon className="flex-shrink-0 absolute right-0 mr-3 w-5 h-5" />
+                <div className="flex-shrink-0 absolute right-0 mr-3">
+                  <WalletMenu
+                    delt={() => {
+                      walletDelete(x).then(
+                        // onfulfilled removes the deleted wallet from the
+                        // user's local copy.
+                        () => {
+                          setDltd(x);
+                        },
+                      );
+                    }}
+                  />
+                </div>
               </li>
             </ul>
           ))}
         </>
+      )}
+
+      {sbmt.map((x, i) => (
+        <ProgressToast
+          key={i}
+          cmpl={cmpl}
+          cncl={cncl}
+          desc="Removing Existing Wallet"
+          done={() => {
+            if (wllt && dltd) {
+              setWllt((old: WalletSearchResponse[] | null) => {
+                // if (old) return old.filter((x) => dltd.wllt !== x.wllt);
+                if (old) {
+                  const fil = old.filter((x) => dltd.wllt !== x.wllt);
+                  console.log("fil", fil);
+                  return fil;
+                }
+                console.log("old", old);
+                return old;
+              });
+              setDltd(null);
+            }
+          }}
+        />
+      ))}
+
+      {erro.map((x, i) => (
+        <ErrorToast
+          key={i}
+          erro={x}
+        />
+      ))}
+
+      {cmpl >= 100 && (
+        <SuccessToast
+          desc="We trashed it Pinky, that wallet's dust!"
+        />
       )}
     </>
   );
