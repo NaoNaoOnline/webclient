@@ -45,7 +45,7 @@ export default function WalletSection(props: Props) {
     setWllt(caw);
   }
 
-  const walletDelete = async function (wal: WalletSearchResponse): Promise<WalletDeleteResponse> {
+  const walletDelete = async function (wal: WalletSearchResponse) {
     setCmpl(10);
     setCncl(false);
     setSbmt((old: boolean[]) => [...old, true]);
@@ -56,18 +56,17 @@ export default function WalletSection(props: Props) {
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [res] = await WalletDelete([{ atkn: props.atkn, wllt: wal.wllt }]);
+      const [del] = await WalletDelete([{ atkn: props.atkn, wllt: wal.wllt }]);
 
       setCmpl(100);
       await new Promise(r => setTimeout(r, 200));
 
-      return res;
+      setDltd(wal);
+
     } catch (err) {
       setCmpl(0);
       setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Outrage, and the beavers are plundering again out of town!", err as Error)]);
-
-      return Promise.reject(err);
     }
   };
 
@@ -140,15 +139,7 @@ export default function WalletSection(props: Props) {
               <li className={`flex relative w-full items-center p-3 ${x.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <div className="flex-shrink-0 absolute right-0 mr-3">
                   <WalletMenu
-                    delt={() => {
-                      walletDelete(x).then(
-                        // onfulfilled removes the deleted wallet from the
-                        // user's local copy.
-                        () => {
-                          setDltd(x);
-                        },
-                      );
-                    }}
+                    delt={() => walletDelete(x)}
                   />
                 </div>
               </li>
@@ -166,13 +157,7 @@ export default function WalletSection(props: Props) {
           done={() => {
             if (wllt && dltd) {
               setWllt((old: WalletSearchResponse[] | null) => {
-                // if (old) return old.filter((x) => dltd.wllt !== x.wllt);
-                if (old) {
-                  const fil = old.filter((x) => dltd.wllt !== x.wllt);
-                  console.log("fil", fil);
-                  return fil;
-                }
-                console.log("old", old);
+                if (old) return old.filter((x) => dltd.wllt !== x.wllt);
                 return old;
               });
               setDltd(null);

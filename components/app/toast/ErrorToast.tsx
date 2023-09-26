@@ -17,9 +17,11 @@ export default function ErrorToast(props: Props) {
   const rpce: RpcError = props.erro.tech as RpcError;
 
   let desc: string = props.erro.user;
-  if (rpce?.meta?.desc) {
+  if (rpce && rpce.meta?.desc) {
     desc = rpce.meta.desc.toString();
-  } else {
+  } else if (rpce && rpce.message !== "Failed to fetch") {
+    desc = rpce.message
+  } else if (!rpce) {
     desc = props.erro.tech.message
   }
 
