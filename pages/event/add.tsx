@@ -142,6 +142,8 @@ export default function Page() {
             {!isLoading && user && (
               <form onSubmit={handleSubmit}>
                 <div className="grid">
+                  <TimeBar />
+
                   <LabelInput
                     blck={bltn}
                     crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
@@ -151,6 +153,7 @@ export default function Page() {
                     pldr="Flashbots"
                     titl="allowed are up to 5 comma separated host labels, each 3-18 characters long, without special characters"
                   />
+
                   <LabelInput
                     blck={bltn}
                     crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
@@ -160,12 +163,7 @@ export default function Page() {
                     pldr="Crypto, DeFi, MEV"
                     titl="allowed are up to 5 comma separated category labels, each 3-18 characters long, without special characters"
                   />
-                  <LinkInput
-                    desc="the online location at which this event takes place"
-                    name="link"
-                    pldr="discord.gg/Flashbots"
-                    titl="allowed is one valid https URL (we cover the scheme for you)"
-                  />
+
                   <TextInput
                     desc="the short one-liner for what this event is about"
                     maxl={120}
@@ -175,9 +173,14 @@ export default function Page() {
                     ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
                     titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                   />
-                </div>
 
-                <TimeBar />
+                  <LinkInput
+                    desc="the online location at which this event takes place"
+                    name="link"
+                    pldr="discord.gg/Flashbots"
+                    titl="allowed is one valid https URL (we cover the scheme for you)"
+                  />
+                </div>
 
                 <button
                   type="submit"

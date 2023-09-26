@@ -1,6 +1,8 @@
-import * as Select from "@radix-ui/react-select";
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { useRef, useState } from "react";
+
+import { Command } from "cmdk";
 import spacetime, { Spacetime } from "spacetime";
+
 import { Zone } from "@/modules/date/TimeZone";
 
 interface Props {
@@ -9,84 +11,105 @@ interface Props {
   dspl: (dat: Spacetime) => string[];
   list: Spacetime[];
   name: string;
-  pstn: string;
   slct: Spacetime;
   span: string;
+  zind: string;
   zone: Zone;
 }
 
 export default function TimeSelect(props: Props) {
-  let pstn = "left-[-285px]";
-  if (props.pstn === "right") {
-    pstn = "left-[105%]";
-  }
+  const [open, setOpen] = useState<boolean>(false);
 
+  const inpt = useRef<HTMLInputElement | null>(null);
   const offs: string = spacetime().goto(props.zone.iana).format("offset");
 
+  // Render the item components to make them available to the combobox component
+  // below.
+  const item = props.list.map((x, j) => (
+    <Command.Item
+      key={j}
+      className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[selected]:bg-gray-200 data-[selected]:text-gray-900 dark:data-[selected]:bg-gray-800 dark:data-[selected]:text-gray-50 cursor-pointer"
+      onSelect={() => {
+        setOpen(false);
+        inpt?.current?.blur();
+        props.chng(x);
+      }}
+    >
+      <div className="relative">
+        <span className="">
+          {props.dspl(x)[0]}
+        </span>
+        <span className="absolute right-0">
+          {props.dspl(x)[1]}
+        </span>
+      </div>
+    </Command.Item>
+  ));
+
   return (
-    <div className={`relative z-0 w-full mb-6 ${props.span}`}>
-      <label htmlFor={`${props.name}-input`} className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50">
+    <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
+      <label
+        htmlFor={`${props.name}-input`}
+        className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
+        onClick={() => inpt?.current?.focus()}
+      >
         {ttlCas(props.name)}
-        <div className={`absolute top-[-85%] ${pstn} ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900`}>
+        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[178px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
           {props.desc}
         </div>
       </label>
 
-      <Select.Root
-        name={`${props.name}-input`}
-        onValueChange={(val: string) => {
-          if (val !== "") {
-            props.chng(spacetime(val));
-          }
-        }}
-        value={props.slct.format("iso").slice(0, -6) + offs}
+      <Command
+        loop={true}
+        shouldFilter={false}
       >
-        <Select.Trigger
-          id={`${props.name}-input`}
-          className="block py-2 px-0 w-full text-sm text-gray-900 text-gray-900 dark:text-gray-50 text-left bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-          aria-label={props.name}
-        >
-          <Select.Value className="h-[25px]" />
-          <div className="absolute right-[10px] w-fit text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
-            {props.dspl(props.slct)[1]}
-          </div>
-        </Select.Trigger>
-
-        <Select.Portal>
-          <Select.Content
-            align="center"
-            className="overflow-hidden bg-gray-50 dark:bg-gray-700 rounded-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
-            side="top"
+        <div className="relative">
+          <Command.Input
+            className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 cursor-pointer peer"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                setOpen(false);
+                inpt?.current?.blur();
+              }
+            }}
+            value={props.dspl(props.slct)[0]}
+            onClick={() => {
+              setOpen(true);
+            }}
+            onFocus={() => {
+              setOpen(true);
+            }}
+            onBlur={() => {
+              setOpen(false);
+            }}
+            readOnly={true}
+            ref={inpt}
+          />
+          <input
+            type="hidden"
+            name={`${props.name}-input`}
+            value={props.slct.format("iso").slice(0, -6) + offs}
+          />
+          <span
+            className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-400 dark:text-gray-500"
           >
-            <Select.ScrollUpButton className="flex items-center justify-center h-[25px] bg-gray-50 dark:bg-gray-700 cursor-default">
-              <ChevronUpIcon className="text-gray-900 dark:text-gray-50" />
-            </Select.ScrollUpButton>
+            {props.dspl(props.slct)[1]}
+          </span>
+        </div>
+        {open && (
+          <Command.List
+            className={`absolute top-[70px] ${props.zind} w-full max-h-[154px] overflow-y-auto bg-gray-50 dark:bg-gray-700 rounded-b-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px]`}
+            onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+              e.preventDefault();
+            }}
+          >
 
-            <Select.Viewport className="p-[5px]">
-              <Select.Group>
-                {props.list.map((x, i) => (
-                  <Select.Item
-                    key={i}
-                    className={`text-sm leading-none text-gray-900 dark:text-gray-50 rounded-md flex items-center h-[25px] px-[5px] relative select-none outline-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer ${x.isEqual(props.slct) ? "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-50" : ""}`}
-                    value={x.format("iso").slice(0, -6) + offs}
-                  >
-                    <Select.ItemText>
-                      {props.dspl(x)[0]}
-                    </Select.ItemText>
-                    <div className="absolute right-[5px] w-fit text-gray-900 dark:text-gray-50 inline-flex items-center justify-center">
-                      {props.dspl(x)[1]}
-                    </div>
-                  </Select.Item>
-                ))}
-              </Select.Group>
-            </Select.Viewport>
+            {item}
 
-            <Select.ScrollDownButton className="flex items-center justify-center h-[25px] bg-gray-50 dark:bg-gray-700 cursor-default">
-              <ChevronDownIcon className="text-gray-900 dark:text-gray-50" />
-            </Select.ScrollDownButton>
-          </Select.Content>
-        </Select.Portal>
-      </Select.Root >
+          </Command.List>
+        )}
+      </Command>
     </div>
   );
 }

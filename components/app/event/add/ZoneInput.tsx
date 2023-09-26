@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import { Command } from "cmdk";
 
 import { Locl, Zone } from "@/modules/date/TimeZone";
@@ -8,6 +9,7 @@ interface Props {
   desc: string;
   name: string;
   span: string;
+  zind: string;
   zone: Zone[];
 }
 
@@ -92,14 +94,14 @@ export default function ZoneInput(props: Props) {
   }, [open, srch]);
 
   return (
-    <div className={`relative w-full mb-6 ${props.span}`}>
+    <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
       <label
         className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group"
         htmlFor={`${props.name}-input`}
         onClick={() => inpt?.current?.focus()}
       >
         {ttlCas(props.name)}
-        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
+        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[178px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
           {props.desc}
         </div>
       </label>
@@ -110,7 +112,7 @@ export default function ZoneInput(props: Props) {
       >
         <div className="relative">
           <Command.Input
-            className="relative py-2 px-0 z-10 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             onKeyDown={(e) => {
               if (e.key === "Escape") {
                 e.preventDefault();
@@ -135,7 +137,7 @@ export default function ZoneInput(props: Props) {
           />
           {!open && (
             <span
-              className="absolute py-2 px-0 z-0 right-0 text-sm bg-transparent appearance-none"
+              className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-400 dark:text-gray-500"
             >
               {srch[0] === "{" ? JSON.parse(srch).name : ""}
             </span>
@@ -143,7 +145,7 @@ export default function ZoneInput(props: Props) {
         </div>
         {open && (
           <Command.List
-            className="absolute top-[70px] z-10 w-full max-h-[154px] overflow-y-auto bg-gray-50 dark:bg-gray-700 rounded-b-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+            className="absolute top-[70px] z-20 w-full max-h-[154px] overflow-y-auto bg-gray-50 dark:bg-gray-700 rounded-b-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
             onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
               e.preventDefault();
             }}
