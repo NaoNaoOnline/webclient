@@ -14,7 +14,15 @@ const afterCallback = async (req, res, session, state) => {
 
   try {
     const usr = await UserCreate([{ atkn: atkn, imag: imag, name: name }])
-    session.user.uuid = usr[0].user
+
+    session.user.intern = {
+      uuid: usr[0].user,
+    }
+
+    session.user.public = {
+      name: name,
+    }
+
     return session;
   } catch (err) {
     res.status(err.status || 500).end(err.message);

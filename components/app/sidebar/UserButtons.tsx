@@ -8,8 +8,6 @@ import { UserIcon } from "@heroicons/react/24/outline"
 export default function UserButtons() {
   const { user } = useUser();
 
-  const name = user?.nickname || user?.name;
-
   return (
     <>
       {user && (
@@ -30,10 +28,10 @@ export default function UserButtons() {
               {!user.picture && (
                 <UserIcon className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
               )}
-              {name && (
-                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">{name}</span>
+              {user?.public?.name && (
+                <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">{user?.public?.name}</span>
               )}
-              {!name && (
+              {!user?.public?.name && (
                 <span className="flex-1 ml-3 whitespace-nowrap dark:group-hover:text-gray-50">Profile</span>
               )}
             </a>

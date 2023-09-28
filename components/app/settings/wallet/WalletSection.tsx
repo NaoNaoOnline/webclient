@@ -82,7 +82,7 @@ export default function WalletSection(props: Props) {
   return (
     <>
       <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
-        <li className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50">
+        <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
           <FaEthereum className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
           <span className="flex-1 ml-3 whitespace-nowrap">My Wallets</span>
         </li>
