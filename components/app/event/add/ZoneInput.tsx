@@ -91,7 +91,7 @@ export default function ZoneInput(props: Props) {
     if (!open && srch[0] !== "{") {
       setSrch(last);
     }
-  }, [open, srch]);
+  }, [last, open, srch]);
 
   return (
     <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
