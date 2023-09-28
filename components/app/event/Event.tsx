@@ -70,11 +70,11 @@ export default function Event(props: Props) {
       desc.push({
         // local
         imag: user?.picture || "",
-        name: user?.nickname || user?.name || "",
+        name: user?.public?.name || "",
         // intern
         crtd: des.crtd,
         desc: des.desc,
-        user: user?.uuid || "",
+        user: user?.intern?.uuid || "",
         // public
         evnt: des.evnt,
         text: des.text,
@@ -412,7 +412,7 @@ function pasEvnt(evn: EventSearchObject[]): EventSearchObject[] {
   evn = evn.filter((x) => x.hpnd(now));
 
   // Sort the events based on their time, in ascending order.
-  evn.sort((x: EventSearchObject, y: EventSearchObject) => x.time().epoch - y.time().epoch);
+  evn.sort((x: EventSearchObject, y: EventSearchObject) => y.time().epoch - x.time().epoch);
 
   return evn;
 }

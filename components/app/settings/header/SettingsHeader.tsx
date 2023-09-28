@@ -6,11 +6,9 @@ import { UserIcon } from "@heroicons/react/24/outline";
 export default function SettingsHeader() {
   const { user } = useUser();
 
-  const name = user?.nickname || user?.name;
-
   return (
-    <ul className="space-y-2">
-      <li className="flex items-center p-3 text-gray-900 rounded-lg dark:text-gray-50">
+    <ul className="flex flex-row relative w-full">
+      <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
         {user?.picture && (
           <div className="flex-shrink-0">
             <Image
@@ -25,12 +23,16 @@ export default function SettingsHeader() {
         {!user?.picture && (
           <UserIcon className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500" />
         )}
-        {name && (
-          <span className="flex-1 ml-3 whitespace-nowrap">{name}</span>
+        {user?.public?.name && (
+          <span className="flex-1 ml-3 whitespace-nowrap">{user?.public?.name}</span>
         )}
-        {!name && (
+        {!user?.public?.name && (
           <span className="flex-1 ml-3 whitespace-nowrap">Profile</span>
         )}
+      </li>
+
+      <li className="flex absolute right-0 items-center">
+        <span className="flex-1 ml-3 p-3 whitespace-nowrap rounded-lg text-gray-400 dark:text-gray-500">{user?.intern?.uuid}</span>
       </li>
     </ul>
   );

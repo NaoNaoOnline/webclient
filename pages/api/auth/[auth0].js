@@ -1,5 +1,5 @@
-import { handleAuth, handleLogin, handleCallback } from '@auth0/nextjs-auth0';
-import { UserCreate } from '@/modules/api/user/create/Create';
+import { handleAuth, handleLogin, handleCallback } from "@auth0/nextjs-auth0";
+import { UserCreate } from "@/modules/api/user/create/Create";
 
 const getLoginState = (req, loginOptions) => {
   return {
@@ -14,7 +14,15 @@ const afterCallback = async (req, res, session, state) => {
 
   try {
     const usr = await UserCreate([{ atkn: atkn, imag: imag, name: name }])
-    session.user.uuid = usr[0].user
+
+    session.user.intern = {
+      uuid: usr[0].user,
+    }
+
+    session.user.public = {
+      name: name,
+    }
+
     return session;
   } catch (err) {
     res.status(err.status || 500).end(err.message);

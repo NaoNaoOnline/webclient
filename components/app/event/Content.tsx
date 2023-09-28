@@ -52,7 +52,7 @@ export default function Content(props: Props) {
 
   const voteDelete = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteDeleteResponse> {
     try {
-      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.uuid || ""))?.vote || "";
+      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid)?.vote || "";
       const [vot] = await VoteDelete([{ atkn: props.atkn, vote: vid }]);
       return vot;
     } catch (err) {
@@ -78,7 +78,7 @@ export default function Content(props: Props) {
     const tmp: VoteSearchResponse = {
       // intern
       crtd: "tmp",
-      user: user?.uuid || "",
+      user: user?.intern?.uuid || "",
       vote: "tmp",
       // public
       desc: des.desc,
@@ -131,7 +131,7 @@ export default function Content(props: Props) {
     // allowed to have any effect at all.
     if (!rct.clck) return;
 
-    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.uuid || ""));
+    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid);
 
     // For an optimistic UI approach we remove the vote object right away in
     // order for the user to get instant feedback on removing their reaction.
@@ -159,7 +159,7 @@ export default function Content(props: Props) {
             rrem={rrem}
             desc={props.desc[0]}
             evnt={props.evnt}
-            rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((x) => x.desc === props.desc[0].desc))}
+            rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((x) => x.desc === props.desc[0].desc))}
           />
         )}
         {props.xpnd && (
@@ -172,7 +172,7 @@ export default function Content(props: Props) {
                 rrem={rrem}
                 desc={x}
                 evnt={props.evnt}
-                rctn={fltr(user?.uuid || "", [...props.rctn], vote.filter((y) => y.desc === x.desc))}
+                rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((y) => y.desc === x.desc))}
               />
             ))}
           </>
@@ -182,7 +182,7 @@ export default function Content(props: Props) {
             <div className="flex justify-between">
               <div className="flex-shrink-0 flex flex-row">
                 <a
-                  href={`/user/${user?.nickname || user?.name || ""}`}
+                  href={`/user/${user?.public?.name}`}
                   onClick={onLinkClick}
                   className="flex items-center pl-2"
                 >
@@ -195,13 +195,13 @@ export default function Content(props: Props) {
                   />
                 </a>
                 <a
-                  href={`/user/${user?.nickname || user?.name || ""}`}
+                  href={`/user/${user?.public?.name}`}
                   onClick={onLinkClick}
                   className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
                 >
-                  {user?.nickname || user?.name || ""}
+                  {user?.public?.name}
                 </a>
-                {user?.uuid === props.evnt.user() && (
+                {user?.intern?.uuid === props.evnt.user() && (
                   <label className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
                     EC
                     <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">

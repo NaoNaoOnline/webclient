@@ -53,7 +53,7 @@ export default function WalletCreateForm(props: Props) {
             time: wal.crtd,
           },
           crtd: wal.crtd,
-          user: user?.uuid || "",
+          user: user?.intern?.uuid || "",
           wllt: wal.wllt,
         },
         public: {
