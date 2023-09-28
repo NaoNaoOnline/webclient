@@ -1,5 +1,5 @@
-import { handleAuth, handleLogin, handleCallback } from '@auth0/nextjs-auth0';
-import { UserCreate } from '@/modules/api/user/create/Create';
+import { handleAuth, handleLogin, handleCallback } from "@auth0/nextjs-auth0";
+import { UserCreate } from "@/modules/api/user/create/Create";
 
 const getLoginState = (req, loginOptions) => {
   return {

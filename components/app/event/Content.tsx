@@ -52,7 +52,7 @@ export default function Content(props: Props) {
 
   const voteDelete = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteDeleteResponse> {
     try {
-      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.intern?.uuid || ""))?.vote || "";
+      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid)?.vote || "";
       const [vot] = await VoteDelete([{ atkn: props.atkn, vote: vid }]);
       return vot;
     } catch (err) {
@@ -131,7 +131,7 @@ export default function Content(props: Props) {
     // allowed to have any effect at all.
     if (!rct.clck) return;
 
-    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === (user?.intern?.uuid || ""));
+    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid);
 
     // For an optimistic UI approach we remove the vote object right away in
     // order for the user to get instant feedback on removing their reaction.
@@ -182,7 +182,7 @@ export default function Content(props: Props) {
             <div className="flex justify-between">
               <div className="flex-shrink-0 flex flex-row">
                 <a
-                  href={`/user/${user?.public?.name || ""}`}
+                  href={`/user/${user?.public?.name}`}
                   onClick={onLinkClick}
                   className="flex items-center pl-2"
                 >
@@ -195,11 +195,11 @@ export default function Content(props: Props) {
                   />
                 </a>
                 <a
-                  href={`/user/${user?.public?.name || ""}`}
+                  href={`/user/${user?.public?.name}`}
                   onClick={onLinkClick}
                   className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
                 >
-                  {user?.public?.name || ""}
+                  {user?.public?.name}
                 </a>
                 {user?.intern?.uuid === props.evnt.user() && (
                   <label className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
