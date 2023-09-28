@@ -48,14 +48,18 @@ export default function WalletCreateForm(props: Props) {
       const [wal] = await WalletCreate([{ atkn: props.atkn, kind: "eth", mess: mess, pubk: pubk, sign: sign }]);
 
       setWllt({
-        // intern
-        crtd: wal.crtd,
-        last: wal.crtd,
-        user: user?.uuid || "",
-        wllt: wal.wllt,
-        // public
-        addr: addr,
-        kind: "eth",
+        intern: {
+          addr: {
+            time: wal.crtd,
+          },
+          crtd: wal.crtd,
+          user: user?.uuid || "",
+          wllt: wal.wllt,
+        },
+        public: {
+          addr: addr,
+          kind: "eth",
+        },
       });
 
       setCmpl(100);
@@ -83,17 +87,21 @@ export default function WalletCreateForm(props: Props) {
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [sta] = await WalletUpdate([{ atkn: props.atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.wllt }]);
+      const [wal] = await WalletUpdate([{ atkn: props.atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.intern.wllt }]);
 
       setWllt({
-        // intern
-        crtd: curr.crtd,
-        last: Math.floor(Date.now() / 1000).toString(),
-        user: curr.user,
-        wllt: curr.wllt,
-        // public
-        addr: curr.addr,
-        kind: curr.kind,
+        intern: {
+          addr: {
+            time: wal.intern.addr.time,
+          },
+          crtd: curr.intern.crtd,
+          user: curr.intern.user,
+          wllt: curr.intern.wllt,
+        },
+        public: {
+          addr: curr.public.addr,
+          kind: curr.public.kind,
+        },
       });
 
       setCmpl(100);
@@ -114,7 +122,7 @@ export default function WalletCreateForm(props: Props) {
     async onConnect({ address, isReconnected }) {
       if (clld.current || isReconnected) return;
 
-      const curr = props.wllt?.find((x) => x.addr === (address as string));
+      const curr = props.wllt?.find((x) => x.public.addr === (address as string));
 
       try {
         clld.current = true;

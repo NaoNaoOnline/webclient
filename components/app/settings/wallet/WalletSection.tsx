@@ -56,7 +56,7 @@ export default function WalletSection(props: Props) {
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [del] = await WalletDelete([{ atkn: props.atkn, wllt: wal.wllt }]);
+      const [del] = await WalletDelete([{ atkn: props.atkn, wllt: wal.intern.wllt }]);
 
       setCmpl(100);
       await new Promise(r => setTimeout(r, 200));
@@ -108,7 +108,7 @@ export default function WalletSection(props: Props) {
               setWllt((old: WalletSearchResponse[] | null) => {
                 if (old === null) return [wal];
 
-                const ind = old.findIndex((x) => x.wllt === wal.wllt);
+                const ind = old.findIndex((x) => x.intern.wllt === wal.intern.wllt);
 
                 if (ind === -1) return [...old, wal];
 
@@ -127,16 +127,16 @@ export default function WalletSection(props: Props) {
         <>
           {sortWllt(wllt).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
-              <li className={`flex items-center p-3 rounded-lg ${x.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+              <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <span className="w-[20px]"></span>
-                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap">{truncateEthAddress(x.addr)}</span>
+                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap">{truncateEthAddress(x.public.addr)}</span>
               </li>
 
-              <li className={`flex items-center pl-6 p-3 rounded-lg ${x.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap text-right">{spacetime.now().since(spacetime(Number(x.last) * 1000, "GMT")).rounded}</span>
+              <li className={`flex items-center pl-6 p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap text-right">{spacetime.now().since(spacetime(Number(x.intern.addr.time) * 1000, "GMT")).rounded}</span>
               </li>
 
-              <li className={`flex relative w-full items-center p-3 ${x.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+              <li className={`flex relative w-full items-center p-3 ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <div className="flex-shrink-0 absolute right-0 mr-3">
                   <WalletMenu
                     delt={() => walletDelete(x)}
@@ -157,7 +157,7 @@ export default function WalletSection(props: Props) {
           done={() => {
             if (wllt && dltd) {
               setWllt((old: WalletSearchResponse[] | null) => {
-                if (old) return old.filter((x) => dltd.wllt !== x.wllt);
+                if (old) return old.filter((x) => dltd.intern.wllt !== x.intern.wllt);
                 return old;
               });
               setDltd(null);
@@ -196,8 +196,8 @@ const truncateEthAddress = (address?: string, separator: string = '••••'
 
 const sortWllt = (lis: WalletSearchResponse[]): WalletSearchResponse[] => {
   lis.sort((x: WalletSearchResponse, y: WalletSearchResponse) => {
-    if (x.addr < y.addr) return -1;
-    if (x.addr > y.addr) return 1;
+    if (x.public.addr < y.public.addr) return -1;
+    if (x.public.addr > y.public.addr) return +1;
     return 0;
   });
 
