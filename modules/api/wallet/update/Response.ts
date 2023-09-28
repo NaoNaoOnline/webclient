@@ -1,4 +1,12 @@
 export interface WalletUpdateResponse {
-  // intern
+  intern: WalletUpdateResponseIntern;
+}
+
+export interface WalletUpdateResponseIntern {
+  addr: WalletUpdateResponseInternAddr;
   stts: string;
+}
+
+export interface WalletUpdateResponseInternAddr {
+  time: string;
 }

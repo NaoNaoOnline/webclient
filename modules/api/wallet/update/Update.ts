@@ -26,8 +26,12 @@ export async function WalletUpdate(req: WalletUpdateRequest[]): Promise<WalletUp
     );
 
     return cal.response.object.map((x) => ({
-      // intern
-      stts: x.intern?.stts || "",
+      intern: {
+        addr: {
+          time: x.intern?.addr?.time || "",
+        },
+        stts: x.intern?.stts || "",
+      },
     }));
   } catch (err) {
     return Promise.reject(err);

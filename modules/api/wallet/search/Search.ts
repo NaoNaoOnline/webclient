@@ -23,14 +23,18 @@ export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSe
     );
 
     return call.response.object.map((x) => ({
-      // intern
-      crtd: x.intern?.crtd || "",
-      last: x.intern?.last || "",
-      user: x.intern?.user || "",
-      wllt: x.intern?.wllt || "",
-      // public
-      addr: x.public?.addr || "",
-      kind: x.public?.kind || "",
+      intern: {
+        addr: {
+          time: x.intern?.addr?.time || "",
+        },
+        crtd: x.intern?.crtd || "",
+        user: x.intern?.user || "",
+        wllt: x.intern?.wllt || "",
+      },
+      public: {
+        addr: x.public?.addr || "",
+        kind: x.public?.kind || "",
+      },
     }));
   } catch (err) {
     return Promise.reject(err);

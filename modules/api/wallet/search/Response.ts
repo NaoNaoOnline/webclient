@@ -1,10 +1,20 @@
 export interface WalletSearchResponse {
-  // intern
+  intern: WalletSearchResponseIntern;
+  public: WalletSearchResponsePublic;
+}
+
+export interface WalletSearchResponseIntern {
+  addr: WalletSearchResponseInternAddr;
   crtd: string;
-  last: string;
   user: string;
   wllt: string;
-  // public
+}
+
+export interface WalletSearchResponseInternAddr {
+  time: string;
+}
+
+export interface WalletSearchResponsePublic {
   addr: string;
   kind: string;
 }
