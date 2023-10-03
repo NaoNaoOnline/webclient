@@ -97,7 +97,7 @@ export default function ZoneInput(props: Props) {
     <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
       <label
         className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group"
-        htmlFor={`${props.name}-input`}
+        htmlFor={inpt?.current?.id}
         onClick={() => inpt?.current?.focus()}
       >
         {ttlCas(props.name)}

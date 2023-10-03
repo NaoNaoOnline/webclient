@@ -14,7 +14,6 @@ import ProgressToast from "@/components/app/toast/ProgressToast";
 import SuccessToast from "@/components/app/toast/SuccessToast";
 
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
-import { WalletDeleteResponse } from "@/modules/api/wallet/delete/Response";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 import CacheApiWallet from "@/modules/cache/api/Wallet";
@@ -153,7 +152,7 @@ export default function WalletSection(props: Props) {
           key={i}
           cmpl={cmpl}
           cncl={cncl}
-          desc="Removing Existing Wallet"
+          desc="Removing Wallet"
           done={() => {
             if (wllt && dltd) {
               setWllt((old: WalletSearchResponse[] | null) => {

@@ -49,7 +49,7 @@ export default function TimeSelect(props: Props) {
   return (
     <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
       <label
-        htmlFor={`${props.name}-input`}
+        htmlFor={inpt?.current?.id}
         className="group relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
         onClick={() => inpt?.current?.focus()}
       >

@@ -1,29 +1,33 @@
-import { useState, MouseEvent } from "react"
-import Image from "next/image"
+import { useState, MouseEvent } from "react";
+import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-import Form from "@/components/app/description/create/Form"
-import Description from "@/components/app/description/Description"
+import Form from "@/components/app/description/create/Form";
+import Description from "@/components/app/description/Description";
 
-import ErrorToast from "@/components/app/toast/ErrorToast"
-import InfoToast from "@/components/app/toast/InfoToast"
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import InfoToast from "@/components/app/toast/InfoToast";
+import ProgressToast from "@/components/app/toast/ProgressToast";
+import SuccessToast from "@/components/app/toast/SuccessToast";
 
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response"
-import EventSearchObject from "@/modules/api/event/search/Object"
-import { LabelSearchResponse } from "@/modules/api/label/search/Response"
-import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response"
-import { VoteCreate } from "@/modules/api/vote/create/Create"
-import { VoteDelete } from "@/modules/api/vote/delete/Delete"
-import { VoteSearchResponse } from "@/modules/api/vote/search/Response"
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response"
-import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response"
+import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import EventSearchObject from "@/modules/api/event/search/Object";
+import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
+import { VoteCreate } from "@/modules/api/vote/create/Create";
+import { VoteDelete } from "@/modules/api/vote/delete/Delete";
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response";
 
-import Errors from "@/modules/errors/Errors"
+import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
   cncl: () => void;
-  done: (des: DescriptionSearchResponse) => void;
+  dadd: (des: DescriptionSearchResponse) => void;
+  drem: (des: DescriptionSearchResponse) => void;
   evnt: EventSearchObject;
   desc: DescriptionSearchResponse[];
   form: boolean;
@@ -37,8 +41,37 @@ export default function Content(props: Props) {
   const { user } = useUser();
 
   const [auth, setAuth] = useState<boolean[]>([]);
+  const [cmpl, setCmpl] = useState<number>(0);
+  const [cncl, setCncl] = useState<boolean>(false);
+  const [dltd, setDltd] = useState<DescriptionSearchResponse | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
+  const [sbmt, setSbmt] = useState<boolean[]>([]);
   const [vote, setVote] = useState<VoteSearchResponse[]>(props.vote);
+
+  const descriptionDelete = async function (des: DescriptionSearchResponse) {
+    setCmpl(10);
+    setCncl(false);
+    setSbmt((old: boolean[]) => [...old, true]);
+
+    try {
+      setCmpl(25);
+      await new Promise(r => setTimeout(r, 200));
+      setCmpl(50);
+      await new Promise(r => setTimeout(r, 200));
+
+      const [del] = await DescriptionDelete([{ atkn: props.atkn, desc: des.desc }]);
+
+      setCmpl(100);
+      await new Promise(r => setTimeout(r, 200));
+
+      setDltd(des);
+
+    } catch (err) {
+      setCmpl(0);
+      setCncl(true);
+      setErro((old: Errors[]) => [...old, new Errors("Fog mey, it's even more over than we thought it was!", err as Error)]);
+    }
+  };
 
   const voteCreate = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteCreateResponse> {
     try {
@@ -155,6 +188,7 @@ export default function Content(props: Props) {
         {!props.xpnd && props.desc.length !== 0 && (
           <Description
             atkn={props.atkn}
+            drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
             radd={radd}
             rrem={rrem}
             desc={props.desc[0]}
@@ -167,6 +201,7 @@ export default function Content(props: Props) {
             {props.desc.map((x, i) => (
               <Description
                 key={i}
+                drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
                 atkn={props.atkn}
                 radd={radd}
                 rrem={rrem}
@@ -202,24 +237,39 @@ export default function Content(props: Props) {
                   {user?.public?.name}
                 </a>
                 {user?.intern?.uuid === props.evnt.user() && (
-                  <label className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
+                  <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
                     EC
                     <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
                       Event Creator
                     </div>
-                  </label>
+                  </span>
                 )}
               </div>
             </div>
             <Form
               atkn={props.atkn}
               cncl={props.cncl}
-              done={props.done}
+              done={props.dadd}
               evnt={props.evnt.evnt()}
             />
           </div>
         )}
       </div>
+
+      {sbmt.map((x, i) => (
+        <ProgressToast
+          key={i}
+          cmpl={cmpl}
+          cncl={cncl}
+          desc="Removing Description"
+          done={() => {
+            if (dltd) {
+              props.drem(dltd);
+              setDltd(null);
+            }
+          }}
+        />
+      ))}
 
       {erro.map((x, i) => (
         <ErrorToast
@@ -227,6 +277,13 @@ export default function Content(props: Props) {
           erro={x}
         />
       ))}
+
+      {cmpl >= 100 && (
+        <SuccessToast
+          desc="Bye bye baby, no more descriptions like that!"
+        />
+      )}
+
       {auth.map((x, i) => (
         <InfoToast
           key={i}
