@@ -1,29 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useEffect, useRef, useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import Content from '@/components/app/event/Content'
-import Footer from '@/components/app/event/Footer'
-import Header from '@/components/app/event/Header'
+import Content from "@/components/app/event/Content";
+import Footer from "@/components/app/event/Footer";
+import Header from "@/components/app/event/Header";
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-import InfoToast from '@/components/app/toast/InfoToast'
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import InfoToast from "@/components/app/toast/InfoToast";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
-import { EventSearch } from '@/modules/api/event/search/Search'
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import { EventSearch } from "@/modules/api/event/search/Search";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
-import CacheApiLabel from '@/modules/cache/api/Label';
-import CacheApiReaction from '@/modules/cache/api/Reaction';
+import CacheApiLabel from "@/modules/cache/api/Label";
+import CacheApiReaction from "@/modules/cache/api/Reaction";
 
-import Errors from '@/modules/errors/Errors';
-import { EventSearchRequest } from '@/modules/api/event/search/Request';
-import spacetime, { Spacetime } from 'spacetime';
+import Errors from "@/modules/errors/Errors";
+import { EventSearchRequest } from "@/modules/api/event/search/Request";
+import spacetime, { Spacetime } from "spacetime";
 
 interface Props {
   atkn: string;
@@ -66,8 +66,8 @@ export default function Event(props: Props) {
   }
 
   const addDesc = (des: DescriptionSearchResponse) => {
-    if (desc) {
-      desc.push({
+    setDesc((old: DescriptionSearchResponse[] | null) => {
+      if (old) return [...old, {
         // local
         imag: user?.picture || "",
         name: user?.public?.name || "",
@@ -78,8 +78,16 @@ export default function Event(props: Props) {
         // public
         evnt: des.evnt,
         text: des.text,
-      });
-    }
+      }];
+      return old;
+    });
+  };
+
+  const remDesc = (des: DescriptionSearchResponse) => {
+    setDesc((old: DescriptionSearchResponse[] | null) => {
+      if (old) return old.filter((x) => des.desc !== x.desc);
+      return old;
+    });
   };
 
   const tglForm = (evnt: string) => {
@@ -239,10 +247,11 @@ export default function Event(props: Props) {
                         atkn={props.atkn}
                         cncl={() => tglForm(x.evnt())}
                         desc={fltr[x.evnt()]}
-                        done={(des: DescriptionSearchResponse) => {
+                        dadd={(des: DescriptionSearchResponse) => {
                           if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
                           addDesc(des);
                         }}
+                        drem={remDesc}
                         evnt={x}
                         form={form[x.evnt()]}
                         labl={labl}
@@ -297,10 +306,11 @@ export default function Event(props: Props) {
                       atkn={props.atkn}
                       cncl={() => tglForm(x.evnt())}
                       desc={fltr[x.evnt()]}
-                      done={(des: DescriptionSearchResponse) => {
+                      dadd={(des: DescriptionSearchResponse) => {
                         if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
                         addDesc(des);
                       }}
+                      drem={remDesc}
                       evnt={x}
                       form={form[x.evnt()]}
                       labl={labl}
