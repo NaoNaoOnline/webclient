@@ -90,6 +90,13 @@ export default function Event(props: Props) {
     });
   };
 
+  const remEvnt = (eve: EventSearchObject) => {
+    setEvnt((old: EventSearchObject[] | null) => {
+      if (old) return old.filter((x) => eve.evnt() !== x.evnt());
+      return old;
+    });
+  };
+
   const tglForm = (evnt: string) => {
     setForm((old) => ({
       ...old,
@@ -261,13 +268,15 @@ export default function Event(props: Props) {
                       />
 
                       <Footer
-                        addd={() => {
+                        atkn={props.atkn}
+                        dadd={() => {
                           if (props.atkn == "") {
                             setAuth((old: boolean[]) => [...old, true]);
                           } else {
                             tglForm(x.evnt());
                           }
                         }}
+                        erem={remEvnt}
                         evnt={x}
                         labl={labl}
                       />
@@ -320,13 +329,15 @@ export default function Event(props: Props) {
                     />
 
                     <Footer
-                      addd={() => {
+                      atkn={props.atkn}
+                      dadd={() => {
                         if (props.atkn == "") {
                           setAuth((old: boolean[]) => [...old, true]);
                         } else {
                           tglForm(x.evnt());
                         }
                       }}
+                      erem={remEvnt}
                       evnt={x}
                       labl={labl}
                     />
