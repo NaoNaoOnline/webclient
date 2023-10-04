@@ -187,12 +187,13 @@ export default function Content(props: Props) {
       <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
         {!props.xpnd && props.desc.length !== 0 && (
           <Description
+            amnt={props.desc.length}
             atkn={props.atkn}
+            desc={props.desc[0]}
             drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
+            evnt={props.evnt}
             radd={radd}
             rrem={rrem}
-            desc={props.desc[0]}
-            evnt={props.evnt}
             rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((x) => x.desc === props.desc[0].desc))}
           />
         )}
@@ -201,12 +202,13 @@ export default function Content(props: Props) {
             {props.desc.map((x, i) => (
               <Description
                 key={i}
-                drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
+                amnt={props.desc.length}
                 atkn={props.atkn}
+                desc={x}
+                drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
+                evnt={props.evnt}
                 radd={radd}
                 rrem={rrem}
-                desc={x}
-                evnt={props.evnt}
                 rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((y) => y.desc === x.desc))}
               />
             ))}

@@ -21,15 +21,15 @@ export default function Page() {
     if (nxtrtr.isReady) {
       const cate: string[] | undefined = nxtrtr.query.cate?.toString().split(",");
       if (cate && cate.length !== 0) {
-        setCate(cate);
+        setCate(cate.map(x => decodeURIComponent(x)));
       }
       const host: string[] | undefined = nxtrtr.query.host?.toString().split(",");
       if (host && host.length !== 0) {
-        setHost(host);
+        setHost(host.map(x => decodeURIComponent(x)));
       }
       const user: string | undefined = nxtrtr.query.user?.toString();
       if (user && user !== "") {
-        setUser(user);
+        setUser(decodeURIComponent(user));
       }
     }
   }, [nxtrtr.isReady, nxtrtr.query.cate, nxtrtr.query.host, nxtrtr.query.user]);

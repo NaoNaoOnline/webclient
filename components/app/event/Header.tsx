@@ -48,7 +48,12 @@ export default function Event(props: Props) {
         <div className="flex flex-row w-full">
           {props.labl && (
             props.evnt?.host(props.labl).map((x, i) => (
-              <a key={i} href={`/event?host=${x}`} onClick={onLinkClick} className="flex items-center pl-2 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline">
+              <a
+                key={i}
+                href={`/event?host=${encodeURIComponent(x)}`}
+                onClick={onLinkClick}
+                className="flex items-center pl-2 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline"
+              >
                 @{x}
               </a>
             ))
