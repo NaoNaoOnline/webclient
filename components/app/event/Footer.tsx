@@ -1,27 +1,71 @@
-import { MouseEvent } from "react"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
-import spacetime from "spacetime"
+import { useState, MouseEvent } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline"
+import spacetime, { Spacetime } from "spacetime";
 
-import EventSearchObject from "@/modules/api/event/search/Object"
-import { LabelSearchResponse } from "@/modules/api/label/search/Response"
+import EventMenu from "@/components/app/event/EventMenu";
 
-function onItemClick(e: MouseEvent<HTMLDivElement>) {
-  e.stopPropagation();
-}
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import ProgressToast from "@/components/app/toast/ProgressToast";
+import SuccessToast from "@/components/app/toast/SuccessToast";
+
+import EventSearchObject from "@/modules/api/event/search/Object";
+import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+
+import Errors from "@/modules/errors/Errors";
+import { EventDelete } from "@/modules/api/event/delete/Delete";
 
 function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
   e.stopPropagation();
 }
 
 interface Props {
-  addd: () => void;
+  atkn: string;
+  dadd: () => void;
+  erem: (eve: EventSearchObject) => void;
   evnt: EventSearchObject;
   labl: LabelSearchResponse[];
 }
 
 export default function Footer(props: Props) {
+  const { user } = useUser();
+
+  const [cmpl, setCmpl] = useState<number>(0);
+  const [cncl, setCncl] = useState<boolean>(false);
+  const [dltd, setDltd] = useState<EventSearchObject | null>(null);
+  const [erro, setErro] = useState<Errors[]>([]);
+  const [sbmt, setSbmt] = useState<boolean[]>([]);
+
+  const now: Spacetime = spacetime.now();
+
+  const ownr: boolean = props.evnt.user() === user?.intern?.uuid; // current user is event owner
+  const hpnd: boolean = props.evnt.hpnd(now); // event already happened
+
+  const eventDelete = async function (eve: EventSearchObject) {
+    setCmpl(10);
+    setCncl(false);
+    setSbmt((old: boolean[]) => [...old, true]);
+
+    try {
+      setCmpl(25);
+      await new Promise(r => setTimeout(r, 200));
+      setCmpl(50);
+      await new Promise(r => setTimeout(r, 200));
+
+      const [del] = await EventDelete([{ atkn: props.atkn, evnt: eve.evnt() }]);
+
+      setCmpl(100);
+      await new Promise(r => setTimeout(r, 200));
+
+      setDltd(eve);
+
+    } catch (err) {
+      setCmpl(0);
+      setCncl(true);
+      setErro((old: Errors[]) => [...old, new Errors("The beavers are sick of it, no more carpin' all them diems!", err as Error)]);
+    }
+  };
+
   return (
     <div
       onClick={(e: MouseEvent<HTMLDivElement>) => {
@@ -43,39 +87,40 @@ export default function Footer(props: Props) {
         )}
       </div>
 
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <button className="py-3 outline-none group" type="button">
-            <EllipsisHorizontalIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
-          </button>
-        </DropdownMenu.Trigger>
+      <EventMenu
+        cadd={ownr && !hpnd}
+        crem={ownr && !hpnd}
+        dadd={props.dadd}
+        erem={() => eventDelete(props.evnt)}
+      />
 
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            onClick={onItemClick}
-            className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
-            loop
-          >
+      {sbmt.map((x, i) => (
+        <ProgressToast
+          key={i}
+          cmpl={cmpl}
+          cncl={cncl}
+          desc="Removing Event"
+          done={() => {
+            if (dltd) {
+              props.erem(dltd);
+              setDltd(null);
+            }
+          }}
+        />
+      ))}
 
-            <DropdownMenu.Item
-              disabled={props.evnt.hpnd(spacetime.now())}
-              onSelect={props.addd}
-              className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer"
-            >
-              Add Description
-            </DropdownMenu.Item>
+      {erro.map((x, i) => (
+        <ErrorToast
+          key={i}
+          erro={x}
+        />
+      ))}
 
-            <DropdownMenu.Separator className="h-[1px] bg-gray-200 dark:bg-gray-800 my-[5px]" />
-
-            <DropdownMenu.Item
-              className="text-red-600 dark:text-red-600 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-red-600 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-red-600 cursor-pointer"
-            >
-              Delete Event
-            </DropdownMenu.Item>
-
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+      {cmpl >= 100 && (
+        <SuccessToast
+          desc="You are crushing it bb, that event's gone for good!"
+        />
+      )}
     </div>
   );
 };
