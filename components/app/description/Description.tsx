@@ -19,6 +19,7 @@ function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
 }
 
 interface Props {
+  amnt: number;
   atkn: string;
   drem: (des: DescriptionSearchResponse) => void;
   desc: DescriptionSearchResponse;
@@ -37,6 +38,7 @@ export default function Description(props: Props) {
 
   const now: Spacetime = spacetime.now();
 
+  const only: boolean = props.amnt == 1; // the event has only one description
   const ownr: boolean = props.desc.user === user?.intern?.uuid; // current user is description owner
   const told: boolean = !now.isBefore(crtd(props.desc.crtd).add(5, "minute")); // description is too old
   const hpnd: boolean = props.evnt.hpnd(now); // event already happened
@@ -46,7 +48,7 @@ export default function Description(props: Props) {
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
           <a
-            href={`/event?user=${props.desc.name}`}
+            href={`/event?user=${encodeURIComponent(props.desc.name)}`}
             onClick={onLinkClick}
             className="flex items-center pl-2"
           >
@@ -59,7 +61,7 @@ export default function Description(props: Props) {
             />
           </a>
           <a
-            href={`/event?user=${props.desc.name}`}
+            href={`/event?user=${encodeURIComponent(props.desc.name)}`}
             onClick={onLinkClick}
             className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >
@@ -87,7 +89,7 @@ export default function Description(props: Props) {
         <div>
           <DescriptionMenu
             clmn={6}
-            cdel={ownr && !told && !hpnd}
+            cdel={ownr && !told && !hpnd && !only}
             cupd={ownr && !told && !hpnd}
             desd={() => props.drem(props.desc)}
             desu={() => setForm((old: boolean) => !old)}

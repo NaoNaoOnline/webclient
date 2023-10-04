@@ -80,7 +80,12 @@ export default function Footer(props: Props) {
       <div className="flex flex-row w-full">
         {props.labl && (
           props.evnt?.cate(props.labl).map((x, i) => (
-            <a key={i} href={`/event?cate=${x}`} onClick={onLinkClick} className="flex items-center pl-2 py-2 text-sm font-medium text-sky-500 hover:underline">
+            <a
+              key={i}
+              href={`/event?cate=${encodeURIComponent(x)}`}
+              onClick={onLinkClick}
+              className="flex items-center pl-2 py-2 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
+            >
               #{x}
             </a>
           ))
