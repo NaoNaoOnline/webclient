@@ -6,14 +6,12 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
   try {
     const cal = await API.search(
       {
-        object: req.map((x) => ({
-          intern: {
-            user: x.user,
-          },
-          public: {
-            name: x.name,
-          },
-        })),
+        object: req.map((x) => {
+          if (x.user) return { intern: { user: x.user, } }
+          if (x.name) return { public: { name: x.name, } }
+          if (x.self) return { symbol: { user: "self", } }
+          return {};
+        }),
       },
     );
 
