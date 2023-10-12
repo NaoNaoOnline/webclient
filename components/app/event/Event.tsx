@@ -179,7 +179,7 @@ export default function Event(props: Props) {
         }
 
         if (props.user) {
-          const usr = await UserSearch([{ user: "", name: props.user }]);
+          const usr = await UserSearch([{ user: "", name: props.user, self: false }]);
           req = [{
             atkn: "",
             cate: "",
@@ -200,7 +200,7 @@ export default function Event(props: Props) {
 
         const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
         const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
-        const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "" })));
+        const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
 
         setEvnt(evn.map(x => new EventSearchObject(x)));
         setDesc(des.map(x => {
