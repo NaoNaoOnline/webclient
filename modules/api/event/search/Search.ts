@@ -6,20 +6,12 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
   try {
     const cal = await API.search(
       {
-        object: req.map((x) => ({
-          intern: {
-            evnt: x.evnt,
-            user: x.user,
-          },
-          public: {
-            cate: x.cate,
-            host: x.host,
-          },
-          symbol: {
-            ltst: x.ltst,
-            rctn: x.rctn,
-          },
-        })),
+        object: req.map((x) => {
+          if (x.evnt || x.user) return { intern: { evnt: x.evnt, user: x.user } }
+          if (x.cate || x.host) return { public: { cate: x.cate, host: x.host } }
+          if (x.ltst || x.rctn) return { symbol: { ltst: x.ltst, rctn: x.rctn } }
+          return {};
+        }),
       },
       {
         meta: {

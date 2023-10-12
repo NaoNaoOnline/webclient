@@ -6,14 +6,11 @@ export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSe
   try {
     const call = await API.search(
       {
-        object: req.map((x) => ({
-          intern: {
-            wllt: x.wllt,
-          },
-          public: {
-            kind: x.kind,
-          },
-        })),
+        object: req.map((x) => {
+          if (x.wllt) return { intern: { wllt: x.wllt, } }
+          if (x.kind) return { public: { kind: x.kind, } }
+          return {};
+        }),
       },
       {
         meta: {

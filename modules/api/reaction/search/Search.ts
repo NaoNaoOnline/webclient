@@ -6,11 +6,10 @@ export async function ReactionSearch(req: ReactionSearchRequest[]): Promise<Reac
   try {
     const cal = await API.search(
       {
-        object: req.map((x) => ({
-          public: {
-            kind: x.kind,
-          },
-        })),
+        object: req.map((x) => {
+          if (x.kind) return { public: { kind: x.kind, } }
+          return {};
+        }),
       },
     );
 
