@@ -3,4 +3,6 @@ export interface UserSearchRequest {
   user: string;
   // public
   name: string;
+  // symbol
+  self: boolean;
 }
