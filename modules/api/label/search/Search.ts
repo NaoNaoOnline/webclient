@@ -7,8 +7,8 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
     const call = await API.search(
       {
         object: req.map((x) => {
-          if (x.labl) return { intern: { labl: x.labl, } }
-          if (x.kind) return { public: { kind: x.kind, } }
+          if (x.labl) return { intern: { labl: x.labl } }
+          if (x.kind) return { public: { kind: x.kind } }
           return {};
         }),
       },

@@ -7,7 +7,7 @@ export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchRe
     const cal = await API.search(
       {
         object: req.map((x) => {
-          if (x.desc) return { public: { desc: x.desc, } }
+          if (x.desc) return { public: { desc: x.desc } }
           return {};
         }),
       },

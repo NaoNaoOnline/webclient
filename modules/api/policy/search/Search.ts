@@ -7,7 +7,7 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
     const cal = await API.search(
       {
         object: req.map((x) => {
-          if (x.ltst) return { symbol: { ltst: x.ltst, } }
+          if (x.ltst) return { symbol: { ltst: x.ltst } }
           return {};
         }),
       },
