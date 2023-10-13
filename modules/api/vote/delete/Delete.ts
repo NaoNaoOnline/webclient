@@ -1,6 +1,6 @@
-import API from '@/modules/api/vote/API';
-import { VoteDeleteRequest } from '@/modules/api/vote/delete/Request';
-import { VoteDeleteResponse } from '@/modules/api/vote/delete/Response';
+import API from "@/modules/api/vote/API";
+import { VoteDeleteRequest } from "@/modules/api/vote/delete/Request";
+import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response";
 
 export async function VoteDelete(req: VoteDeleteRequest[]): Promise<VoteDeleteResponse[]> {
   try {

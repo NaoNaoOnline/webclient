@@ -1,6 +1,6 @@
-import API from '@/modules/api/description/API';
-import { DescriptionDeleteRequest } from '@/modules/api/description/delete/Request';
-import { DescriptionDeleteResponse } from '@/modules/api/description/delete/Response';
+import API from "@/modules/api/description/API";
+import { DescriptionDeleteRequest } from "@/modules/api/description/delete/Request";
+import { DescriptionDeleteResponse } from "@/modules/api/description/delete/Response";
 
 export async function DescriptionDelete(req: DescriptionDeleteRequest[]): Promise<DescriptionDeleteResponse[]> {
   try {

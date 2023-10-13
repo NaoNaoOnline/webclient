@@ -1,6 +1,6 @@
-import API from '@/modules/api/reaction/API';
-import { ReactionSearchRequest } from '@/modules/api/reaction/search/Request';
-import { ReactionSearchResponse } from '@/modules/api/reaction/search/Response';
+import API from "@/modules/api/reaction/API";
+import { ReactionSearchRequest } from "@/modules/api/reaction/search/Request";
+import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
 
 export async function ReactionSearch(req: ReactionSearchRequest[]): Promise<ReactionSearchResponse[]> {
   try {

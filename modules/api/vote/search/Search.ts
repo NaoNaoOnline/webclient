@@ -1,6 +1,6 @@
-import API from '@/modules/api/vote/API';
-import { VoteSearchRequest } from '@/modules/api/vote/search/Request';
-import { VoteSearchResponse } from '@/modules/api/vote/search/Response';
+import API from "@/modules/api/vote/API";
+import { VoteSearchRequest } from "@/modules/api/vote/search/Request";
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export async function VoteSearch(req: VoteSearchRequest[]): Promise<VoteSearchResponse[]> {
   try {

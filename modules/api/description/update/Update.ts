@@ -1,6 +1,6 @@
-import API from '@/modules/api/description/API';
-import { DescriptionUpdateRequest } from '@/modules/api/description/update/Request';
-import { DescriptionUpdateResponse } from '@/modules/api/description/update/Response';
+import API from "@/modules/api/description/API";
+import { DescriptionUpdateRequest } from "@/modules/api/description/update/Request";
+import { DescriptionUpdateResponse } from "@/modules/api/description/update/Response";
 
 export async function DescriptionUpdate(req: DescriptionUpdateRequest[]): Promise<DescriptionUpdateResponse[]> {
   try {

@@ -1,6 +1,6 @@
-import API from '@/modules/api/user/API';
-import { UserSearchRequest } from '@/modules/api/user/search/Request';
-import { UserSearchResponse } from '@/modules/api/user/search/Response';
+import API from "@/modules/api/user/API";
+import { UserSearchRequest } from "@/modules/api/user/search/Request";
+import { UserSearchResponse } from "@/modules/api/user/search/Response";
 
 export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchResponse[]> {
   try {

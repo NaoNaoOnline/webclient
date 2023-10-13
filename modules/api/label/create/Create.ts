@@ -1,6 +1,6 @@
-import API from '@/modules/api/label/API';
-import { LabelCreateRequest } from '@/modules/api/label/create/Request';
-import { LabelCreateResponse } from '@/modules/api/label/create/Response';
+import API from "@/modules/api/label/API";
+import { LabelCreateRequest } from "@/modules/api/label/create/Request";
+import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 
 export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreateResponse[]> {
   try {

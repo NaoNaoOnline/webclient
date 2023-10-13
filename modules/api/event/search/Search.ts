@@ -1,6 +1,6 @@
-import API from '@/modules/api/event/API';
-import { EventSearchRequest } from '@/modules/api/event/search/Request';
-import { EventSearchResponse } from '@/modules/api/event/search/Response';
+import API from "@/modules/api/event/API";
+import { EventSearchRequest } from "@/modules/api/event/search/Request";
+import { EventSearchResponse } from "@/modules/api/event/search/Response";
 
 export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearchResponse[]> {
   try {

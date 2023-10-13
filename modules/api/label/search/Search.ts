@@ -1,6 +1,6 @@
-import API from '@/modules/api/label/API';
-import { LabelSearchRequest } from '@/modules/api/label/search/Request';
-import { LabelSearchResponse } from '@/modules/api/label/search/Response';
+import API from "@/modules/api/label/API";
+import { LabelSearchRequest } from "@/modules/api/label/search/Request";
+import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearchResponse[]> {
   try {

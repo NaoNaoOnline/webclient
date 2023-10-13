@@ -1,6 +1,6 @@
-import API from '@/modules/api/wallet/API';
-import { WalletSearchRequest } from '@/modules/api/wallet/search/Request';
-import { WalletSearchResponse } from '@/modules/api/wallet/search/Response';
+import API from "@/modules/api/wallet/API";
+import { WalletSearchRequest } from "@/modules/api/wallet/search/Request";
+import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSearchResponse[]> {
   try {

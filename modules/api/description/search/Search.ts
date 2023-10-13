@@ -1,6 +1,6 @@
-import API from '@/modules/api/description/API';
-import { DescriptionSearchRequest } from '@/modules/api/description/search/Request';
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import API from "@/modules/api/description/API";
+import { DescriptionSearchRequest } from "@/modules/api/description/search/Request";
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 
 export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promise<DescriptionSearchResponse[]> {
   try {

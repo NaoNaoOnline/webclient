@@ -1,5 +1,5 @@
 import { TwirpFetchTransport } from "@protobuf-ts/twirp-transport";
-import { APIClient } from '@naonaoonline/apitscode/src/event/api.client';
+import { APIClient } from "@naonaoonline/apitscode/src/event/api.client";
 import { RPCEndpoint, RPCSendJSON } from "@/modules/config/config";
 
 const API = new APIClient(new TwirpFetchTransport({
