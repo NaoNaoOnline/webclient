@@ -1,6 +1,6 @@
-import { DiscordLogoIcon } from '@radix-ui/react-icons'
-import { GitHubLogoIcon } from '@radix-ui/react-icons'
-import { TwitterLogoIcon } from '@radix-ui/react-icons'
+import { DiscordLogoIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { TwitterLogoIcon } from "@radix-ui/react-icons";
 
 export default function SocialButton() {
   return (

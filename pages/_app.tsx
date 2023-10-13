@@ -10,7 +10,8 @@ import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { Mode } from "connectkit/build/types";
 
-import { ThemeContext } from "@/components/app/theme/Theme";
+import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
+import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
 import Sidebar from "@/components/app/sidebar/Sidebar";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
@@ -27,19 +28,22 @@ const config = createConfig(
 );
 
 export default function App({ Component, pageProps: { ...pageProps } }: AppProps) {
-  const [them, setThem] = useState<string>("light");
+  const [manu, setManu] = useState<string>(getManual());
+  const [syst, setSyst] = useState<boolean>(getSystem());
 
   return (
     <UserProvider>
       <Toast.Provider>
-        <ThemeContext.Provider value={[them, setThem]}>
-          <WagmiConfig config={config}>
-            <ConnectKitProvider theme="auto" mode={them as Mode}>
-              <Sidebar />
-              <Component {...pageProps} />
-            </ConnectKitProvider>
-          </WagmiConfig>
-        </ThemeContext.Provider>
+        <ManualContext.Provider value={[manu, setManu]}>
+          <SystemContext.Provider value={[syst, setSyst]}>
+            <WagmiConfig config={config}>
+              <ConnectKitProvider theme="auto" mode={manu as Mode}>
+                <Sidebar />
+                <Component {...pageProps} />
+              </ConnectKitProvider>
+            </WagmiConfig>
+          </SystemContext.Provider>
+        </ManualContext.Provider>
       </Toast.Provider>
     </UserProvider>
   );

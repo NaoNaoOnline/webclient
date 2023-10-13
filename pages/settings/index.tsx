@@ -3,11 +3,12 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import Header from "@/components/app/layout/Header";
 
 import SettingsHeader from "@/components/app/settings/header/SettingsHeader";
+import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
 import InfoToast from "@/components/app/toast/InfoToast";
 
-import CacheAuthToken from '@/modules/cache/auth/Token';
+import CacheAuthToken from "@/modules/cache/auth/Token";
 
 export default function Page() {
   const { user, isLoading } = useUser();
@@ -27,6 +28,7 @@ export default function Page() {
             {!isLoading && user && (
               <>
                 <SettingsHeader />
+                <ThemeSection />
                 <WalletSection atkn={cat} />
               </>
             )}
