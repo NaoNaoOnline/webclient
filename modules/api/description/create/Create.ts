@@ -1,6 +1,6 @@
-import API from '@/modules/api/description/API';
-import { DescriptionCreateRequest } from '@/modules/api/description/create/Request';
-import { DescriptionCreateResponse } from '@/modules/api/description/create/Response';
+import API from "@/modules/api/description/API";
+import { DescriptionCreateRequest } from "@/modules/api/description/create/Request";
+import { DescriptionCreateResponse } from "@/modules/api/description/create/Response";
 
 export async function DescriptionCreate(req: DescriptionCreateRequest[]): Promise<DescriptionCreateResponse[]> {
   try {

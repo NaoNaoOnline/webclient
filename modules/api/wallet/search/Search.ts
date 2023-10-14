@@ -1,14 +1,14 @@
-import API from '@/modules/api/wallet/API';
-import { WalletSearchRequest } from '@/modules/api/wallet/search/Request';
-import { WalletSearchResponse } from '@/modules/api/wallet/search/Response';
+import API from "@/modules/api/wallet/API";
+import { WalletSearchRequest } from "@/modules/api/wallet/search/Request";
+import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSearchResponse[]> {
   try {
     const call = await API.search(
       {
         object: req.map((x) => {
-          if (x.wllt) return { intern: { wllt: x.wllt, } }
-          if (x.kind) return { public: { kind: x.kind, } }
+          if (x.wllt) return { intern: { wllt: x.wllt } }
+          if (x.kind) return { public: { kind: x.kind } }
           return {};
         }),
       },

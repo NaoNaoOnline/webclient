@@ -1,6 +1,6 @@
-import API from '@/modules/api/vote/API';
-import { VoteCreateRequest } from '@/modules/api/vote/create/Request';
-import { VoteCreateResponse } from '@/modules/api/vote/create/Response';
+import API from "@/modules/api/vote/API";
+import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 export async function VoteCreate(req: VoteCreateRequest[]): Promise<VoteCreateResponse[]> {
   try {

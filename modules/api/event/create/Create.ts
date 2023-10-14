@@ -1,6 +1,6 @@
-import API from '@/modules/api/event/API';
-import { EventCreateRequest } from '@/modules/api/event/create/Request';
-import { EventCreateResponse } from '@/modules/api/event/create/Response';
+import API from "@/modules/api/event/API";
+import { EventCreateRequest } from "@/modules/api/event/create/Request";
+import { EventCreateResponse } from "@/modules/api/event/create/Response";
 
 export async function EventCreate(req: EventCreateRequest[]): Promise<EventCreateResponse[]> {
   try {

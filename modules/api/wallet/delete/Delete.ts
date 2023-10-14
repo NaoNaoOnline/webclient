@@ -1,6 +1,6 @@
-import API from '@/modules/api/wallet/API';
-import { WalletDeleteRequest } from '@/modules/api/wallet/delete/Request';
-import { WalletDeleteResponse } from '@/modules/api/wallet/delete/Response';
+import API from "@/modules/api/wallet/API";
+import { WalletDeleteRequest } from "@/modules/api/wallet/delete/Request";
+import { WalletDeleteResponse } from "@/modules/api/wallet/delete/Response";
 
 export async function WalletDelete(req: WalletDeleteRequest[]): Promise<WalletDeleteResponse[]> {
   try {

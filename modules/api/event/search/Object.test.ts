@@ -1,5 +1,4 @@
 import EventSearchObject from "@/modules/api/event/search/Object";
-import { space } from "postcss/lib/list";
 import spacetime, { Spacetime } from "spacetime";
 
 describe("DateObject", () => {

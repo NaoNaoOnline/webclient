@@ -3,6 +3,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import Header from "@/components/app/layout/Header";
 
 import SettingsHeader from "@/components/app/settings/header/SettingsHeader";
+import PolicySection from "@/components/app/settings/policy/PolicySection";
 import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
@@ -30,6 +31,7 @@ export default function Page() {
                 <SettingsHeader />
                 <ThemeSection />
                 <WalletSection atkn={cat} />
+                <PolicySection />
               </>
             )}
             {!isLoading && !user && (

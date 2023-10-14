@@ -37,8 +37,9 @@ export default function WalletSection(props: Props) {
   // initially. If a user deletes all wallets then CacheApiWallet may still
   // provide locally cached wallet objects which should not be rendered anymore.
   // Below we work with the assumption that the uninitialized wllt value is
-  // null, so that once it is an array of length 0 wllt is not updated anymore,
-  // because we are then in the middle of the user experience.
+  // null, so that once it is an array of length 0, then setWllt is not being
+  // called anymore with the old state of caw, because we are then in the middle
+  // of the user experience.
   const caw: WalletSearchResponse[] = CacheApiWallet(props.atkn ? true : false, props.atkn);
   if (caw.length !== 0 && !wllt) {
     setWllt(caw);
@@ -126,13 +127,20 @@ export default function WalletSection(props: Props) {
         <>
           {sortWllt(wllt).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
-              <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="w-[20px]"></span>
-                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap">{truncateEthAddress(x.public.addr)}</span>
+              <li className={`flex items-center pl-3 py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <span className="w-[20px] text-center font-mono"></span>
               </li>
 
-              <li className={`flex items-center pl-6 p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="flex-1 w-[120px] ml-3 whitespace-nowrap text-right">{spacetime.now().since(spacetime(Number(x.intern.addr.time) * 1000, "GMT")).rounded}</span>
+              <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <span className="flex-1 w-[140px] text-center font-mono">{truncateEthAddress(x.public.addr)}</span>
+              </li>
+
+              <li className={`flex items-center py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <span className="w-[20px] text-center font-mono"></span>
+              </li>
+
+              <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
+                <span className="flex-1 w-[140px] text-right font-mono">{spacetime.now().since(spacetime(Number(x.intern.addr.time) * 1000, "GMT")).rounded}</span>
               </li>
 
               <li className={`flex relative w-full items-center p-3 ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>

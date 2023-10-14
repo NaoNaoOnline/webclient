@@ -1,15 +1,15 @@
-import API from '@/modules/api/user/API';
-import { UserSearchRequest } from '@/modules/api/user/search/Request';
-import { UserSearchResponse } from '@/modules/api/user/search/Response';
+import API from "@/modules/api/user/API";
+import { UserSearchRequest } from "@/modules/api/user/search/Request";
+import { UserSearchResponse } from "@/modules/api/user/search/Response";
 
 export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchResponse[]> {
   try {
     const cal = await API.search(
       {
         object: req.map((x) => {
-          if (x.user) return { intern: { user: x.user, } }
-          if (x.name) return { public: { name: x.name, } }
-          if (x.self) return { symbol: { user: "self", } }
+          if (x.user) return { intern: { user: x.user } }
+          if (x.name) return { public: { name: x.name } }
+          if (x.self) return { symbol: { user: "self" } }
           return {};
         }),
       },

@@ -1,6 +1,6 @@
-import API from '@/modules/api/user/API';
-import { UserCreateRequest } from '@/modules/api/user/create/Request';
-import { UserCreateResponse } from '@/modules/api/user/create/Response';
+import API from "@/modules/api/user/API";
+import { UserCreateRequest } from "@/modules/api/user/create/Request";
+import { UserCreateResponse } from "@/modules/api/user/create/Response";
 
 export async function UserCreate(req: UserCreateRequest[]): Promise<UserCreateResponse[]> {
   try {

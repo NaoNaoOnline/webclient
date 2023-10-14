@@ -392,10 +392,10 @@ function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: 
   });
 
   des.sort((x: DescriptionSearchResponse, y: DescriptionSearchResponse) => {
+    // Sort descriptions by cumulative vote count in descending order at first.
     const xam = cou[x.desc] || 0;
     const yam = cou[y.desc] || 0;
 
-    // Sort descriptions by cumulative vote count in descending order at first.
     if (yam !== xam) {
       return yam - xam;
     }
