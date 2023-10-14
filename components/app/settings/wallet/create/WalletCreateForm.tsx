@@ -15,6 +15,8 @@ import { WalletUpdate } from "@/modules/api/wallet/update/Update";
 
 import Errors from "@/modules/errors/Errors";
 
+import { truncateEthAddress } from "@/modules/wallet/Address";
+
 interface Props {
   atkn: string;
   done: (wal: WalletSearchResponse) => void;
@@ -177,18 +179,6 @@ export default function WalletCreateForm(props: Props) {
       )}
     </>
   );
-};
-
-// The below code is copied from the connectkit source code since it does not
-// look like they export the function to truncate addresses at this point.
-
-const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
-
-const truncateEthAddress = (address?: string, separator: string = '••••') => {
-  if (!address) return '';
-  const match = address.match(truncateRegex);
-  if (!match) return address;
-  return `${match[1]}${separator}${match[2]}`;
 };
 
 const rawMes = (add: string) => {
