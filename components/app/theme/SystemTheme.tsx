@@ -86,7 +86,7 @@ export function useSystem(): [boolean, (sys: boolean) => void] {
         document.removeEventListener("visibilitychange", onVisibilityChange);
       };
     }
-  }, [syst]);
+  }, [syst, setManu]);
 
   // Load the user's theme configuration from local storage when the component
   // mounts client-side.
