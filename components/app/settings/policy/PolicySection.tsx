@@ -11,6 +11,8 @@ import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCrea
 import CacheApiPolicy from "@/modules/cache/api/Policy";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 
+import { truncateEthAddress } from "@/modules/wallet/Address";
+
 interface Props { }
 
 // TODO fetch all cached policy records from apiserver
@@ -65,7 +67,7 @@ export default function PolicySection(props: Props) {
               </li>
 
               <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="flex-1 w-[140px] text-center font-mono">{truncateEthAddress(x.memb)}</span>
+                <span className="flex-1 w-[140px] font-mono">{truncateEthAddress(x.memb)}</span>
               </li>
 
               <li className="flex items-center py-3 rounded-lg text-gray-400 dark:text-gray-500">
@@ -92,18 +94,6 @@ export default function PolicySection(props: Props) {
       )}
     </>
   );
-};
-
-// The below code is copied from the connectkit source code since it does not
-// look like they export the function to truncate addresses at this point.
-
-const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
-
-const truncateEthAddress = (address?: string, separator: string = '••••') => {
-  if (!address) return '';
-  const match = address.match(truncateRegex);
-  if (!match) return address;
-  return `${match[1]}${separator}${match[2]}`;
 };
 
 const sortPlcy = (lis: PolicySearchResponse[]): PolicySearchResponse[] => {
