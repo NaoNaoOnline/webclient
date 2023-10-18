@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { recoverPublicKey } from "viem";
 import { hashMessage } from "viem";
 
