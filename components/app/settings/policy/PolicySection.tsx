@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { ConnectKitButton } from "connectkit";
-import spacetime from "spacetime";
 
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -10,22 +9,24 @@ import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCrea
 
 import CacheApiPolicy from "@/modules/cache/api/Policy";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+import { UserSearch } from "@/modules/api/user/search/Search";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
 interface Props { }
 
-// TODO fetch all cached policy records from apiserver
 // TODO add html form for contract interaction
 // TODO do only show policy section to policy members, also restrict in apiserver
-// TODO list deleted records separately at the end of the list
 // TODO enable policy deletion
 export default function PolicySection(props: Props) {
   const [plcy, setPlcy] = useState<PolicySearchResponse[] | null>(null);
 
+  const clld = useRef(false);
+
   const caw: PolicySearchResponse[] = CacheApiPolicy();
-  if (caw.length !== 0 && !plcy) {
-    setPlcy(caw);
+  if (!clld.current && caw.length !== 0 && !plcy) {
+    clld.current = true;
+    polUser(caw).then((x: PolicySearchResponse[]) => setPlcy((x)));
   }
 
   return (
@@ -75,7 +76,7 @@ export default function PolicySection(props: Props) {
               </li>
 
               <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="flex-1 w-[140px] text-right font-mono">{spacetime.now().since(spacetime(Number(x.extern[0].time) * 1000, "GMT")).rounded}</span>
+                <span className="flex-1 w-[140px] text-right font-mono">{x.name}</span>
               </li>
 
               <li className="flex relative w-full items-center p-3 text-gray-400 dark:text-gray-500">
@@ -94,6 +95,26 @@ export default function PolicySection(props: Props) {
       )}
     </>
   );
+};
+
+// polUser augments a list of policy records with user names, given their user
+// IDs, where available.
+const polUser = async (pol: PolicySearchResponse[]): Promise<PolicySearchResponse[]> => {
+  const usr = await UserSearch(uniUser(pol).map(x => ({ user: x, name: "", self: false })));
+
+  pol = pol.map(x => {
+    const u = usr.find(y => y.user === x.user);
+    if (u) {
+      return {
+        ...x,
+        name: u.name,
+      };
+    } else {
+      return x;
+    }
+  });
+
+  return pol;
 };
 
 const sortPlcy = (lis: PolicySearchResponse[]): PolicySearchResponse[] => {
@@ -123,3 +144,23 @@ const sortPlcy = (lis: PolicySearchResponse[]): PolicySearchResponse[] => {
 
   return lis;
 };
+
+// uniUser extracts unique user names from a list of policies and returns them
+// as a list of strings.
+function uniUser(des: PolicySearchResponse[]): string[] {
+  const usr: Record<string, boolean> = {};
+  const uni: string[] = [];
+
+  for (const x of des) {
+    if (!x || x.user === "") {
+      continue
+    }
+
+    if (!usr[x.user]) {
+      usr[x.user] = true;
+      uni.push(x.user);
+    }
+  }
+
+  return uni;
+}

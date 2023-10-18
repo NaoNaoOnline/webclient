@@ -54,6 +54,7 @@ export default function PolicyCreateForm(props: Props) {
     }
   };
 
+  // TODO policy creation should not solely be based on a wallet connecting
   useAccount({
     async onConnect({ isReconnected }) {
       if (clld.current || isReconnected) return;
