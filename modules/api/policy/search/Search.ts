@@ -16,18 +16,12 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
     return cal.response.object.map((x) => ({
       // local
       extern: x.extern.map((y) => ({
-        blck: y.blck,
         chid: y.chid,
-        from: y.from,
-        hash: y.hash,
-        time: y.time,
       })),
       // intern
-      crtd: x.intern?.crtd || "",
-      plcy: x.intern?.plcy || "",
+      user: x.intern?.user || "",
       // public
       acce: x.public?.acce || "",
-      kind: x.public?.kind || "",
       memb: x.public?.memb || "",
       syst: x.public?.syst || "",
     }));
