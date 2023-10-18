@@ -15,6 +15,8 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
 
     return cal.response.object.map((x) => ({
       // local
+      name: "", // will be augmented on demand
+      // extern
       extern: x.extern.map((y) => ({
         chid: y.chid,
       })),
