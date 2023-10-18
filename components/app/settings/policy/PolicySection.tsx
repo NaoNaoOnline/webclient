@@ -13,7 +13,9 @@ import { UserSearch } from "@/modules/api/user/search/Search";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
-interface Props { }
+interface Props {
+  atkn: string;
+}
 
 // TODO add html form for contract interaction
 // TODO do only show policy section to policy members, also restrict in apiserver
@@ -23,7 +25,7 @@ export default function PolicySection(props: Props) {
 
   const clld = useRef(false);
 
-  const caw: PolicySearchResponse[] = CacheApiPolicy();
+  const caw: PolicySearchResponse[] = CacheApiPolicy(props.atkn ? true : false, props.atkn);
   if (!clld.current && caw.length !== 0 && !plcy) {
     clld.current = true;
     polUser(caw).then((x: PolicySearchResponse[]) => setPlcy((x)));
@@ -31,36 +33,39 @@ export default function PolicySection(props: Props) {
 
   return (
     <>
-      <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
-        <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
-          <LockClosedIcon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
-          <span className="flex-1 ml-3 whitespace-nowrap">Platform Policies</span>
-        </li>
-
-        <li className="flex absolute right-0 items-center">
-          <ConnectKitButton.Custom>
-            {({ isConnected, show, ensName, truncatedAddress }) => {
-              return (
-                <button
-                  className="p-3 rounded-lg text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:pointer-events-none"
-                  onClick={show}
-                >
-                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
-                </button>
-              );
-            }}
-          </ConnectKitButton.Custom>
-
-          <PolicyCreateForm
-            done={(pol: PolicySearchResponse) => {
-              // TODO add new policy on success
-            }}
-          />
-        </li>
-      </ul>
-
+      {!plcy && (
+        <></>
+      )}
       {plcy && (
         <>
+          <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
+            <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
+              <LockClosedIcon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
+              <span className="flex-1 ml-3 whitespace-nowrap">Platform Policies</span>
+            </li>
+
+            <li className="flex absolute right-0 items-center">
+              <ConnectKitButton.Custom>
+                {({ isConnected, show, ensName, truncatedAddress }) => {
+                  return (
+                    <button
+                      className="p-3 rounded-lg text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:pointer-events-none"
+                      onClick={show}
+                    >
+                      {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+                    </button>
+                  );
+                }}
+              </ConnectKitButton.Custom>
+
+              <PolicyCreateForm
+                done={(pol: PolicySearchResponse) => {
+                  // TODO add new policy on success
+                }}
+              />
+            </li>
+          </ul>
+
           {sortPlcy(plcy).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
               <li className="flex items-center pl-3 py-3 rounded-lg text-gray-400 dark:text-gray-500">
@@ -94,7 +99,7 @@ export default function PolicySection(props: Props) {
         </>
       )}
     </>
-  );
+  )
 };
 
 // polUser augments a list of policy records with user names, given their user

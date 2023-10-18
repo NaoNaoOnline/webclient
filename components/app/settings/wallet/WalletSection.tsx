@@ -35,6 +35,7 @@ export default function WalletSection(props: Props) {
   const [sbmt, setSbmt] = useState<boolean[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
+
   // Setting the user's wallets based on the backend state should only happen
   // initially. If a user deletes all wallets then CacheApiWallet may still
   // provide locally cached wallet objects which should not be rendered anymore.

@@ -2,6 +2,8 @@ import API from "@/modules/api/policy/API";
 import { PolicySearchRequest } from "@/modules/api/policy/search/Request";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 
+import type { RpcError } from "@protobuf-ts/runtime-rpc";
+
 export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySearchResponse[]> {
   try {
     const cal = await API.search(
@@ -10,6 +12,11 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
           if (x.ltst) return { symbol: { ltst: x.ltst } }
           return {};
         }),
+      },
+      {
+        meta: {
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
+        },
       },
     );
 
@@ -28,6 +35,15 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
       syst: x.public?.syst || "",
     }));
   } catch (err) {
+    const b = isPolicyMember(err)
+    console.log(1, b)
+    if (b) return [];
+    console.log(2)
     return Promise.reject(err);
   }
+}
+
+const isPolicyMember = (err: any): boolean => {
+  const rpc: RpcError = err as RpcError;
+  return rpc && rpc.meta?.kind === "PolicyMemberError";
 }
