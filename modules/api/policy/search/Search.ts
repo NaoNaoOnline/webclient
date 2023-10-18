@@ -11,6 +11,11 @@ export async function PolicySearch(req: PolicySearchRequest[]): Promise<PolicySe
           return {};
         }),
       },
+      {
+        meta: {
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
+        },
+      },
     );
 
     return cal.response.object.map((x) => ({

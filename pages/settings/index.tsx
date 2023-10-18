@@ -33,7 +33,7 @@ export default function Page() {
                 <ThemeSection />
                 <NetworkSection />
                 <WalletSection atkn={cat} />
-                <PolicySection />
+                <PolicySection atkn={cat} />
               </>
             )}
             {!isLoading && !user && (
