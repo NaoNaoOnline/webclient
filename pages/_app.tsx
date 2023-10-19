@@ -50,7 +50,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
         const thr: boolean = str.includes("ensUniversalResolver");
 
         if (one && two && thr) {
-          if (args[0]?.name === "ChainDoesNotSupportContract") return;
+          return;
         }
       }
 
