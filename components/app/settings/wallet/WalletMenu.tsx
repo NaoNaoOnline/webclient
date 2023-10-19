@@ -5,6 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 interface MenuProps {
+  clck: () => void;
   delt: () => void;
 }
 
@@ -28,7 +29,10 @@ export default function Menu(props: MenuProps) {
                 <DropdownMenu.Item
                   className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer"
                   onSelect={() => {
-                    if (show) show();
+                    if (show) {
+                      props.clck();
+                      show();
+                    }
                   }}
                 >
                   <button>

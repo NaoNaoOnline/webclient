@@ -1,31 +1,31 @@
-import { useState, FormEvent, KeyboardEvent } from 'react'
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useState, FormEvent, KeyboardEvent } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import Header from '@/components/app/layout/Header'
+import Header from "@/components/app/layout/Header";
 
-import TextInput from '@/components/app/event/add/TextInput'
-import LabelInput from '@/components/app/event/add/LabelInput'
-import LinkInput from '@/components/app/event/add/LinkInput'
-import TimeBar from '@/components/app/event/add/TimeBar'
+import TextInput from "@/components/app/event/add/TextInput";
+import LabelInput from "@/components/app/event/add/LabelInput";
+import LinkInput from "@/components/app/event/add/LinkInput";
+import TimeBar from "@/components/app/event/add/TimeBar";
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-import InfoToast from '@/components/app/toast/InfoToast'
-import ProgressToast from '@/components/app/toast/ProgressToast'
-import SuccessToast from '@/components/app/toast/SuccessToast'
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import InfoToast from "@/components/app/toast/InfoToast";
+import ProgressToast from "@/components/app/toast/ProgressToast";
+import SuccessToast from "@/components/app/toast/SuccessToast";
 
-import { EventCreate } from '@/modules/api/event/create/Create'
-import { NewEventCreateRequest } from '@/modules/api/event/create/Request'
-import { DescriptionCreate } from '@/modules/api/description/create/Create'
-import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
-import { LabelCreate } from '@/modules/api/label/create/Create'
-import { LabelCreateRequest } from '@/modules/api/label/create/Request'
+import { EventCreate } from "@/modules/api/event/create/Create";
+import { NewEventCreateRequest } from "@/modules/api/event/create/Request";
+import { DescriptionCreate } from "@/modules/api/description/create/Create";
+import { NewDescriptionCreateRequestFromFormData } from "@/modules/api/description/create/Request";
+import { LabelCreate } from "@/modules/api/label/create/Create";
+import { LabelCreateRequest } from "@/modules/api/label/create/Request";
 import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
-import CacheApiLabel from '@/modules/cache/api/Label';
-import CacheAuthToken from '@/modules/cache/auth/Token';
+import CacheApiLabel from "@/modules/cache/api/Label";
+import CacheAuthToken from "@/modules/cache/auth/Token";
 
-import Errors from '@/modules/errors/Errors';
+import Errors from "@/modules/errors/Errors";
 
 export default function Page() {
   const { user, isLoading } = useUser();
@@ -165,6 +165,7 @@ export default function Page() {
                   />
 
                   <TextInput
+                    clss="mb-6"
                     desc="the short one-liner for what this event is about"
                     maxl={120}
                     minl={20}
@@ -234,7 +235,7 @@ export default function Page() {
 // part of the labels.
 function trmLab(str: string): string {
   // Replace multiple spaces with a single one.
-  str = str.replace(/\s+/g, ' ');
+  str = str.replace(/\s+/g, " ");
   // Remove leading and trailing spaces.
   str = str.trim();
 

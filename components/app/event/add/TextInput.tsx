@@ -1,4 +1,5 @@
 interface Props {
+  clss?: string;
   desc: string;
   maxl?: number;
   minl?: number;
@@ -6,11 +7,12 @@ interface Props {
   pldr: string;
   ptrn?: string;
   titl: string;
+  type?: string;
 }
 
 export default function TextInput(props: Props) {
   return (
-    <div className="relative z-0 w-full mb-6">
+    <div className={`relative z-0 w-full ${props.clss}`}>
       <label htmlFor={`${props.name}-input`} className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
         {ttlCas(props.name)}
         <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
@@ -18,7 +20,7 @@ export default function TextInput(props: Props) {
         </div>
       </label>
       <input
-        type="text"
+        type={props.type ? props.type : "text"}
         id={`${props.name}-input`}
         name={`${props.name}-input`}
         minLength={props.minl}
@@ -27,6 +29,7 @@ export default function TextInput(props: Props) {
         title={props.titl}
         className="block py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
         placeholder={props.pldr}
+        autoComplete="new-password"
         required
       />
     </div>

@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AppProps } from "next/app"
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
@@ -34,6 +34,29 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
       chains: getChain(netw),
     }),
   );
+
+  // Prevent loud errors due to unsupported contracts during development.
+  //
+  //     https://github.com/wagmi-dev/viem/discussions/781
+  //
+  useEffect(() => {
+    const orig = window.console.error;
+    window.console.error = function (...args) {
+      const str: string | null = args[0]?.toString();
+
+      if (str) {
+        const one: boolean = str.includes("ChainDoesNotSupportContract");
+        const two: boolean = str.includes("Hardhat");
+        const thr: boolean = str.includes("ensUniversalResolver");
+
+        if (one && two && thr) {
+          return;
+        }
+      }
+
+      orig.apply(window.console, args);
+    };
+  }, []);
 
   return (
     <UserProvider>
