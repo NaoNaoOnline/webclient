@@ -1,76 +1,132 @@
-import { useRef, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-import { useAccount, useDisconnect } from "wagmi";
+import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
+import { Hash, parseGwei } from "viem";
+
+import { getChain, useNetwork } from "@/components/app/network/Network";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
 import ProgressToast from "@/components/app/toast/ProgressToast";
 import SuccessToast from "@/components/app/toast/SuccessToast";
 
+import { PolicyABI } from "@/modules/abi/PolicyABI";
+
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+
+import { PolicyContract } from "@/modules/config/config";
 
 import Errors from "@/modules/errors/Errors";
 
 interface Props {
+  actv: boolean;
   done: (pol: PolicySearchResponse) => void;
+  form: MutableRefObject<HTMLFormElement | null>;
 }
 
 export default function PolicyCreateForm(props: Props) {
-  const { user } = useUser();
   const { disconnect } = useDisconnect();
+
+  const [netw, setNetw] = useNetwork();
 
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [wllt, setWllt] = useState<PolicySearchResponse | null>(null);
+  const [plcy, setPlcy] = useState<PolicySearchResponse | null>(null);
 
   const clld = useRef(false);
 
-  const policyCreate = async () => {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+  const chid = getChain(netw)[0].id;
 
-    try {
+  let sys = "";
+  let mem = "";
+  let acc = "";
+  if (props.form?.current) {
+    const form = new FormData(props.form?.current);
+
+    sys = form.get("system-input")?.toString() || "";
+    mem = form.get("member-input")?.toString() || "";
+    acc = form.get("access-input")?.toString() || "";
+  }
+
+  const { data, error: wriErr, write } = useContractWrite({
+    address: PolicyContract as Address,
+    abi: PolicyABI,
+    chainId: chid,
+    functionName: "createRecord",
+    maxFeePerGas: parseGwei("20"),
+  })
+
+  const { error: waiErr, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
+
+  useAccount({
+    async onConnect({ isReconnected }) {
+      if (!props.actv || !write || clld.current || isReconnected) return;
+
+      clld.current = true;
+
+      setCmpl(10);
+      setCncl(false);
+      setSbmt((old: boolean[]) => [...old, true]);
+
+      write({
+        args: [{ sys: sys, mem: mem, acc: acc }],
+      });
+
       setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
+    },
+  });
 
-      // TODO smart contract interaction
+  useEffect(() => {
+    let err: Error | null = null;
+    if (waiErr) {
+      err = waiErr;
+    }
+    if (wriErr) {
+      err = wriErr;
+    }
 
-      setCmpl(100);
-      await new Promise(r => setTimeout(r, 200));
-      disconnect();
-      clld.current = false;
-
-    } catch (err) {
+    if (err) {
       setCmpl(0);
       setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
       disconnect();
       clld.current = false;
     }
-  };
+  }, [waiErr, wriErr]);
 
-  // TODO policy creation should not solely be based on a wallet connecting
-  useAccount({
-    async onConnect({ isReconnected }) {
-      if (clld.current || isReconnected) return;
+  useEffect(() => {
+    if (isSuccess) {
+      setCmpl(100);
+      clld.current = false;
+    }
+  }, [isSuccess]);
 
-      try {
-        clld.current = true;
-
-        policyCreate();
-
-      } catch (err) {
-        setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
-        disconnect();
-        clld.current = false;
-      }
-    },
-  });
+  useEffect(() => {
+    // TODO fetch user info
+    if (isSuccess) {
+      setPlcy({
+        // local
+        name: "",
+        // extern
+        extern: [
+          { chid: String(chid) },
+        ],
+        // intern
+        user: "",
+        // public
+        acce: acc,
+        memb: mem,
+        syst: sys,
+      });
+      disconnect();
+    }
+  }, [isSuccess, chid, disconnect, setPlcy]);
 
   return (
     <>
@@ -81,7 +137,7 @@ export default function PolicyCreateForm(props: Props) {
           cncl={cncl}
           desc="Adding New Policy"
           done={() => {
-            if (wllt) props.done(wllt);
+            if (plcy) props.done(plcy);
           }}
         />
       ))}

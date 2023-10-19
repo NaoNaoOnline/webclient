@@ -1,6 +1,5 @@
 import { Chain } from "wagmi";
-import { useChains, ChainIcon } from "connectkit";
-import { useSwitchNetwork } from "wagmi";
+import { ChainIcon } from "connectkit";
 
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 
@@ -25,7 +24,7 @@ export default function NetworkSection() {
       </ul>
 
       <ToggleGroup.Root
-        className=""
+        className="mb-6"
         type="single"
         value={String(curr.id)}
         onValueChange={setNetw}

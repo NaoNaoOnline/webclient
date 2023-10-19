@@ -31,9 +31,9 @@ export default function Page() {
               <>
                 <SettingsHeader />
                 <ThemeSection />
-                <NetworkSection />
                 <WalletSection atkn={cat} />
                 <PolicySection atkn={cat} />
+                <NetworkSection />
               </>
             )}
             {!isLoading && !user && (

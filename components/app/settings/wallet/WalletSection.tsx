@@ -28,6 +28,7 @@ interface Props {
 
 export default function WalletSection(props: Props) {
   const [addr, setAddr] = useState<string>("");
+  const [clck, setClck] = useState<boolean>(false);
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [dltd, setDltd] = useState<WalletSearchResponse | null>(null);
@@ -66,6 +67,7 @@ export default function WalletSection(props: Props) {
       setDltd(wal);
 
     } catch (err) {
+      setClck(false);
       setCmpl(0);
       setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Outrage, and the beavers are plundering again out of town!", err as Error)]);
@@ -94,17 +96,21 @@ export default function WalletSection(props: Props) {
             {({ isConnected, show, ensName, truncatedAddress }) => {
               return (
                 <button
-                  className="p-3 rounded-lg text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:pointer-events-none"
+                  className="text-sm font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
                   disabled={wllt && wllt.length >= 5 ? true : false}
-                  onClick={show}
+                  onClick={() => {
+                    setClck(true);
+                    if (!isConnected && show) show();
+                  }}
                 >
-                  {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
+                  {clck && isConnected ? ensName ?? truncatedAddress : "Add Wallet"}
                 </button>
               );
             }}
           </ConnectKitButton.Custom>
 
           <WalletCreateForm
+            actv={clck}
             atkn={props.atkn}
             done={(wal: WalletSearchResponse) => {
               setWllt((old: WalletSearchResponse[] | null) => {

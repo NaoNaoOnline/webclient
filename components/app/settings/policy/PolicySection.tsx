@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import { ConnectKitButton } from "connectkit";
 
 import { LockClosedIcon } from "@radix-ui/react-icons";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 
 import CacheApiPolicy from "@/modules/cache/api/Policy";
@@ -17,19 +18,23 @@ interface Props {
   atkn: string;
 }
 
-// TODO add html form for contract interaction
-// TODO do only show policy section to policy members, also restrict in apiserver
 // TODO enable policy deletion
 export default function PolicySection(props: Props) {
+  const [clck, setClck] = useState<boolean>(false);
   const [plcy, setPlcy] = useState<PolicySearchResponse[] | null>(null);
 
-  const clld = useRef(false);
+  const clld = useRef<boolean>(false);
+  const form = useRef<HTMLFormElement | null>(null);
 
   const caw: PolicySearchResponse[] = CacheApiPolicy(props.atkn ? true : false, props.atkn);
   if (!clld.current && caw.length !== 0 && !plcy) {
     clld.current = true;
     polUser(caw).then((x: PolicySearchResponse[]) => setPlcy((x)));
   }
+
+  const handleSubmit = async (evn: FormEvent) => {
+    evn.preventDefault();
+  };
 
   return (
     <>
@@ -42,27 +47,6 @@ export default function PolicySection(props: Props) {
             <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
               <LockClosedIcon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
               <span className="flex-1 ml-3 whitespace-nowrap">Platform Policies</span>
-            </li>
-
-            <li className="flex absolute right-0 items-center">
-              <ConnectKitButton.Custom>
-                {({ isConnected, show, ensName, truncatedAddress }) => {
-                  return (
-                    <button
-                      className="p-3 rounded-lg text-gray-900 dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:pointer-events-none"
-                      onClick={show}
-                    >
-                      {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
-                    </button>
-                  );
-                }}
-              </ConnectKitButton.Custom>
-
-              <PolicyCreateForm
-                done={(pol: PolicySearchResponse) => {
-                  // TODO add new policy on success
-                }}
-              />
             </li>
           </ul>
 
@@ -96,6 +80,98 @@ export default function PolicySection(props: Props) {
               </li>
             </ul>
           ))}
+
+          <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
+            <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
+              <PlusIcon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
+              <span className="flex-1 ml-3 whitespace-nowrap">Add Policy</span>
+            </li>
+          </ul>
+
+          <ul className="flex flex-row w-full">
+            <li className="flex items-center px-3 py-3 rounded-lg text-gray-400 dark:text-gray-500">
+              <form ref={form} onSubmit={handleSubmit}>
+                <div className="grid gap-x-4 grid-cols-12">
+                  <TextInput
+                    clss="col-span-2"
+                    desc="the SMA system to add"
+                    maxl={10}
+                    minl={10}
+                    name="system"
+                    pldr="0"
+                    ptrn={`^[0-9]$`}
+                    titl="allowed is a single number"
+                    type="number"
+                  />
+
+                  <TextInput
+                    clss="col-span-8"
+                    desc="the SMA member to add"
+                    maxl={42}
+                    minl={42}
+                    name="member"
+                    pldr="0xf39F••••2266"
+                    ptrn={`^0x[A-Fa-f0-9]{40}$`}
+                    titl="allowed is a single Ethreum address"
+                  />
+
+                  <TextInput
+                    clss="col-span-2"
+                    desc="the SMA access to add"
+                    maxl={10}
+                    minl={10}
+                    name="access"
+                    pldr="1"
+                    ptrn={`^[0-9]$`}
+                    titl="allowed is a single number"
+                    type="number"
+                  />
+                </div>
+
+                <ConnectKitButton.Custom>
+                  {({ isConnected, show, ensName, truncatedAddress }) => {
+                    return (
+                      <button
+                        className="text-sm mt-3 font-medium rounded-lg w-full px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
+                        onClick={() => {
+                          setClck(true);
+
+                          if (form && form.current) {
+                            if (form.current.checkValidity()) {
+                              if (!isConnected && show) {
+                                show();
+                              }
+                            }
+                          }
+                        }}
+                      >
+                        {clck && isConnected ? ensName ?? truncatedAddress : "Add Policy"}
+                      </button>
+                    );
+                  }}
+                </ConnectKitButton.Custom>
+
+                <PolicyCreateForm
+                  actv={clck}
+                  done={(pol: PolicySearchResponse) => {
+                    setPlcy((old: PolicySearchResponse[] | null) => {
+                      if (old === null) return [pol];
+
+                      const ind = old.findIndex((x) => x.syst === pol.syst && x.memb === pol.memb && x.acce === pol.acce);
+
+                      if (ind === -1) return [...old, pol];
+
+                      const upd = [...old];
+                      upd[ind] = pol;
+                      return upd;
+                    });
+                  }}
+                  form={form}
+                />
+              </form>
+            </li>
+          </ul>
+
         </>
       )}
     </>

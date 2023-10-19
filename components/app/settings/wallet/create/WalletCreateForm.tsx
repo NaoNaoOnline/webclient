@@ -18,6 +18,7 @@ import Errors from "@/modules/errors/Errors";
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
 interface Props {
+  actv: boolean;
   atkn: string;
   done: (wal: WalletSearchResponse) => void;
   wllt: WalletSearchResponse[] | null;
@@ -122,7 +123,7 @@ export default function WalletCreateForm(props: Props) {
 
   useAccount({
     async onConnect({ address, isReconnected }) {
-      if (clld.current || isReconnected) return;
+      if (!props.actv || clld.current || isReconnected) return;
 
       const curr = props.wllt?.find((x) => x.public.addr === (address as string));
 
