@@ -32,7 +32,7 @@ export default function SettingsHeader() {
       </li>
 
       <li className="flex absolute right-0 items-center">
-        <span className="flex-1 ml-3 p-3 whitespace-nowrap rounded-lg text-gray-400 dark:text-gray-500">{user?.intern?.uuid}</span>
+        <span className="flex-1 ml-3 p-3 text-sm font-mono whitespace-nowrap rounded-lg text-gray-400 dark:text-gray-500">{user?.intern?.uuid}</span>
       </li>
     </ul>
   );

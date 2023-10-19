@@ -165,13 +165,13 @@ export default function Page() {
                   />
 
                   <TextInput
-                    clss="mb-6"
                     desc="the short one-liner for what this event is about"
                     maxl={120}
                     minl={20}
                     name="description"
                     pldr="dicussing how EIP-4844 will change L2 economics forever"
                     ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
+                    span="mb-6"
                     titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
                   />
 

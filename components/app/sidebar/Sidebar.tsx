@@ -1,20 +1,20 @@
-import "flowbite"
-import { useState, MouseEvent } from "react"
-import Link from "next/link"
-import { useUser } from "@auth0/nextjs-auth0/client"
+import "flowbite";
+import { useState, MouseEvent } from "react";
+import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { FaceSmileIcon } from "@heroicons/react/24/outline"
-import { HomeIcon } from "@heroicons/react/24/outline"
-import { ListBulletIcon } from "@heroicons/react/24/outline"
-import { PlusIcon } from "@heroicons/react/24/outline"
-import { TagIcon } from "@heroicons/react/24/outline"
+import { FaceSmileIcon } from "@heroicons/react/24/outline";
+import { HomeIcon } from "@heroicons/react/24/outline";
+import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { TagIcon } from "@heroicons/react/24/outline";
 
-import DarkMode from "@/components/app/sidebar/DarkMode"
-import AuthButtons from "@/components/app/sidebar/AuthButtons"
-import SocialButtons from "@/components/app/sidebar/SocialButtons"
-import UserButtons from "@/components/app/sidebar/UserButtons"
+import DarkMode from "@/components/app/sidebar/DarkMode";
+import AuthButtons from "@/components/app/sidebar/AuthButtons";
+import SocialButtons from "@/components/app/sidebar/SocialButtons";
+import UserButtons from "@/components/app/sidebar/UserButtons";
 
-import InfoToast from "@/components/app/toast/InfoToast"
+import InfoToast from "@/components/app/toast/InfoToast";
 
 export default function Sidebar() {
   const { user } = useUser();

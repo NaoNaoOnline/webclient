@@ -6,6 +6,8 @@ import { useAccount } from "wagmi";
 
 import { FaEthereum } from "react-icons/fa";
 
+import CopyButton from "@/components/app/button/CopyButton";
+
 import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 
@@ -28,12 +30,14 @@ interface Props {
 
 export default function WalletSection(props: Props) {
   const [addr, setAddr] = useState<string>("");
+  const [chck, setChck] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [dltd, setDltd] = useState<WalletSearchResponse | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
+  const [time, setTime] = useState<NodeJS.Timeout[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
   // Setting the user's wallets based on the backend state should only happen
@@ -47,6 +51,17 @@ export default function WalletSection(props: Props) {
   if (caw.length !== 0 && !wllt) {
     setWllt(caw);
   }
+
+  const handleCopy = (add: string) => {
+    time.forEach((timeout) => clearTimeout(timeout));
+
+    const tref = setTimeout(() => {
+      setChck("");
+    }, 3 * 1000); // 3 seconds
+
+    setChck(add);
+    setTime([tref]);
+  };
 
   const walletDelete = async function (wal: WalletSearchResponse) {
     setCmpl(10);
@@ -136,19 +151,25 @@ export default function WalletSection(props: Props) {
           {sortWllt(wllt).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
               <li className={`flex items-center pl-3 py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="w-[20px] text-center font-mono"></span>
+                <span className="w-[20px] text-center text-sm font-mono"></span>
               </li>
 
               <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="flex-1 w-[140px] font-mono">{truncateEthAddress(x.public.addr)}</span>
+                <span className="flex-1 w-[127px]">
+                  <CopyButton
+                    className="text-sm font-mono underline underline-offset-2 decoration-dashed"
+                    copy={x.public.addr}
+                    text={truncateEthAddress(x.public.addr)}
+                  />
+                </span>
               </li>
 
               <li className={`flex items-center py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="w-[20px] text-center font-mono"></span>
+                <span className="w-[20px] text-center text-sm font-mono"></span>
               </li>
 
               <li className={`flex items-center p-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
-                <span className="flex-1 w-[140px] text-right font-mono">{spacetime.now().since(spacetime(Number(x.intern.addr.time) * 1000, "GMT")).rounded}</span>
+                <span className="flex-1 w-[140px] text-right text-sm font-mono">{spacetime.now().since(spacetime(Number(x.intern.addr.time) * 1000, "GMT")).rounded}</span>
               </li>
 
               <li className={`flex relative w-full items-center p-3 ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
