@@ -30,14 +30,12 @@ interface Props {
 
 export default function WalletSection(props: Props) {
   const [addr, setAddr] = useState<string>("");
-  const [chck, setChck] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [dltd, setDltd] = useState<WalletSearchResponse | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [time, setTime] = useState<NodeJS.Timeout[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
   // Setting the user's wallets based on the backend state should only happen
@@ -51,17 +49,6 @@ export default function WalletSection(props: Props) {
   if (caw.length !== 0 && !wllt) {
     setWllt(caw);
   }
-
-  const handleCopy = (add: string) => {
-    time.forEach((timeout) => clearTimeout(timeout));
-
-    const tref = setTimeout(() => {
-      setChck("");
-    }, 3 * 1000); // 3 seconds
-
-    setChck(add);
-    setTime([tref]);
-  };
 
   const walletDelete = async function (wal: WalletSearchResponse) {
     setCmpl(10);
