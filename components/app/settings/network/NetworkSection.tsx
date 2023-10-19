@@ -36,15 +36,15 @@ export default function NetworkSection() {
             </li>
 
             <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-              <span className="flex-1 w-[140px] font-mono">{x.name}</span>
+              <span className="flex-1 w-[140px] text-sm font-mono">{x.name}</span>
             </li>
 
             <li className="flex items-center py-3 rounded-lg text-gray-400 dark:text-gray-500">
-              <span className="w-[20px] font-mono"></span>
+              <span className="w-[20px] text-sm font-mono"></span>
             </li>
 
             <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-              <span className="flex-1 w-[140px] text-right font-mono">{x.id}</span>
+              <span className="flex-1 w-[140px] text-right text-sm font-mono">{x.id}</span>
             </li>
 
             <li className="flex relative w-full items-center p-3 text-gray-400 dark:text-gray-500">

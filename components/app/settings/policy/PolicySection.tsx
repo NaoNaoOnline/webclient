@@ -5,6 +5,8 @@ import { ConnectKitButton } from "connectkit";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+import CopyButton from "@/components/app/button/CopyButton";
+
 import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 
@@ -53,19 +55,25 @@ export default function PolicySection(props: Props) {
           {sortPlcy(plcy).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
               <li className="flex items-center pl-3 py-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="w-[20px] text-center font-mono">{x.syst}</span>
+                <span className="w-[20px] text-center text-sm font-mono">{x.syst}</span>
               </li>
 
               <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="flex-1 w-[140px] font-mono">{truncateEthAddress(x.memb)}</span>
+                <span className="flex-1 w-[127px]">
+                  <CopyButton
+                    className="text-sm font-mono underline underline-offset-2 decoration-dashed"
+                    copy={x.memb}
+                    text={truncateEthAddress(x.memb)}
+                  />
+                </span>
               </li>
 
               <li className="flex items-center py-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="w-[20px] text-center font-mono">{x.acce}</span>
+                <span className="w-[20px] text-center text-sm font-mono">{x.acce}</span>
               </li>
 
               <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="flex-1 w-[140px] text-right font-mono">{x.name}</span>
+                <span className="flex-1 w-[140px] text-right text-sm font-mono">{x.name}</span>
               </li>
 
               <li className="flex relative w-full items-center p-3 text-gray-400 dark:text-gray-500">
@@ -93,36 +101,39 @@ export default function PolicySection(props: Props) {
               <form ref={form} onSubmit={handleSubmit}>
                 <div className="grid gap-x-4 grid-cols-12">
                   <TextInput
-                    clss="col-span-2"
                     desc="the SMA system to add"
                     maxl={10}
                     minl={10}
+                    mono="font-mono"
                     name="system"
                     pldr="0"
                     ptrn={`^[0-9]$`}
+                    span="col-span-2"
                     titl="allowed is a single number"
                     type="number"
                   />
 
                   <TextInput
-                    clss="col-span-8"
                     desc="the SMA member to add"
                     maxl={42}
                     minl={42}
+                    mono="font-mono"
                     name="member"
                     pldr="0xf39F••••2266"
                     ptrn={`^0x[A-Fa-f0-9]{40}$`}
+                    span="col-span-8"
                     titl="allowed is a single Ethreum address"
                   />
 
                   <TextInput
-                    clss="col-span-2"
                     desc="the SMA access to add"
                     maxl={10}
                     minl={10}
+                    mono="font-mono"
                     name="access"
                     pldr="1"
                     ptrn={`^[0-9]$`}
+                    span="col-span-2"
                     titl="allowed is a single number"
                     type="number"
                   />

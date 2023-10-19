@@ -98,7 +98,7 @@ export default function PolicyCreateForm(props: Props) {
       disconnect();
       clld.current = false;
     }
-  }, [waiErr, wriErr]);
+  }, [waiErr, wriErr, disconnect]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -126,7 +126,7 @@ export default function PolicyCreateForm(props: Props) {
       });
       disconnect();
     }
-  }, [isSuccess, chid, disconnect, setPlcy]);
+  }, [isSuccess, chid, sys, mem, acc, disconnect, setPlcy]);
 
   return (
     <>

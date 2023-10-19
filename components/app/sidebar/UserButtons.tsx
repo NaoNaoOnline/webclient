@@ -1,9 +1,9 @@
-import Image from "next/image"
-import Link from "next/link"
-import { useUser } from "@auth0/nextjs-auth0/client"
+import Image from "next/image";
+import Link from "next/link";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { Cog6ToothIcon } from "@heroicons/react/24/outline"
-import { UserIcon } from "@heroicons/react/24/outline"
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 export default function UserButtons() {
   const { user } = useUser();
