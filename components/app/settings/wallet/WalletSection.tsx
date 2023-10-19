@@ -154,6 +154,7 @@ export default function WalletSection(props: Props) {
               <li className={`flex relative w-full items-center p-3 ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <div className="flex-shrink-0 absolute right-0 mr-3">
                   <WalletMenu
+                    clck={() => setClck(true)}
                     delt={() => walletDelete(x)}
                   />
                 </div>
