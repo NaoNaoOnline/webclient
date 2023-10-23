@@ -12,10 +12,10 @@ import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCrea
 
 import CacheApiPolicy from "@/modules/cache/api/Policy";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+import { PolicyUpdate } from "@/modules/api/policy/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
-import { PolicyUpdate } from "@/modules/api/policy/update/Update";
 
 interface Props {
   atkn: string;

@@ -1,8 +1,7 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
-import { fetchBalance } from '@wagmi/core'
-
+import { fetchBalance } from "@wagmi/core";
 import { parseGwei } from "viem";
 
 import { getChain, useNetwork } from "@/components/app/network/Network";
