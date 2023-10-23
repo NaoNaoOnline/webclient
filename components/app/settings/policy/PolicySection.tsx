@@ -12,6 +12,7 @@ import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCrea
 
 import CacheApiPolicy from "@/modules/cache/api/Policy";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+import { PolicyUpdate } from "@/modules/api/policy/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
@@ -73,7 +74,7 @@ export default function PolicySection(props: Props) {
               </li>
 
               <li className="flex items-center p-3 rounded-lg text-gray-400 dark:text-gray-500">
-                <span className="flex-1 w-[140px] text-right text-sm font-mono">{x.name}</span>
+                <span className="flex-1 w-[140px] text-right text-sm font-mono">{x.name ? x.name : x.user ? x.user : "n/a"}</span>
               </li>
 
               <li className="flex relative w-full items-center p-3 text-gray-400 dark:text-gray-500">
@@ -165,6 +166,8 @@ export default function PolicySection(props: Props) {
                 <PolicyCreateForm
                   actv={clck}
                   done={(pol: PolicySearchResponse) => {
+                    form.current?.reset();
+
                     setPlcy((old: PolicySearchResponse[] | null) => {
                       if (old === null) return [pol];
 
@@ -176,6 +179,8 @@ export default function PolicySection(props: Props) {
                       upd[ind] = pol;
                       return upd;
                     });
+
+                    PolicyUpdate([{ atkn: props.atkn, sync: "default" }]);
                   }}
                   form={form}
                 />
