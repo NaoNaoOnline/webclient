@@ -24,6 +24,7 @@ export default function TextInput(props: Props) {
         type={props.type ? props.type : "text"}
         id={`${props.name}-input`}
         name={`${props.name}-input`}
+        min={0}
         minLength={props.minl}
         maxLength={props.maxl}
         pattern={props.ptrn}

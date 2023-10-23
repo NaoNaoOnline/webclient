@@ -1,11 +1,14 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
-import { Hash, parseGwei } from "viem";
+import { fetchBalance } from '@wagmi/core'
+
+import { parseGwei } from "viem";
 
 import { getChain, useNetwork } from "@/components/app/network/Network";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
+import InfoToast from "@/components/app/toast/InfoToast";
 import ProgressToast from "@/components/app/toast/ProgressToast";
 import SuccessToast from "@/components/app/toast/SuccessToast";
 
@@ -31,6 +34,7 @@ export default function PolicyCreateForm(props: Props) {
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
   const [erro, setErro] = useState<Errors[]>([]);
+  const [info, setInfo] = useState<boolean[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
   const [plcy, setPlcy] = useState<PolicySearchResponse | null>(null);
 
@@ -62,8 +66,18 @@ export default function PolicyCreateForm(props: Props) {
   })
 
   useAccount({
-    async onConnect({ isReconnected }) {
-      if (!props.actv || !write || clld.current || isReconnected) return;
+    async onConnect({ address, isReconnected }) {
+      if (!props.actv || !write || clld.current || !address || isReconnected) return;
+
+      const bal = await fetchBalance({
+        address: address,
+      });
+
+      if (bal.value === BigInt(0)) {
+        setInfo((old: boolean[]) => [...old, true]);
+        disconnect();
+        return;
+      }
 
       clld.current = true;
 
@@ -94,7 +108,7 @@ export default function PolicyCreateForm(props: Props) {
     if (err) {
       setCmpl(0);
       setCncl(true);
-      setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+      setErro((old: Errors[]) => [...old, new Errors("Couldn't fockin' doit, those bloody beavers I swear!", err as Error)]);
       disconnect();
       clld.current = false;
     }
@@ -108,7 +122,6 @@ export default function PolicyCreateForm(props: Props) {
   }, [isSuccess]);
 
   useEffect(() => {
-    // TODO fetch user info
     if (isSuccess) {
       setPlcy({
         // local
@@ -146,6 +159,13 @@ export default function PolicyCreateForm(props: Props) {
         <ErrorToast
           key={i}
           erro={x}
+        />
+      ))}
+
+      {info.map((x, i) => (
+        <InfoToast
+          key={i}
+          desc="Got 0 ETH in that wallet. Can't fucking do it mate!"
         />
       ))}
 
