@@ -101,8 +101,10 @@ export default function WalletSection(props: Props) {
                   className="text-sm font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
                   disabled={wllt && wllt.length >= 5 ? true : false}
                   onClick={() => {
-                    setClck(true);
-                    if (!isConnected && show) show();
+                    if (!isConnected && show) {
+                      setClck(true);
+                      show();
+                    }
                   }}
                 >
                   {clck && isConnected ? ensName ?? truncatedAddress : "Add Wallet"}
@@ -113,6 +115,9 @@ export default function WalletSection(props: Props) {
 
           <WalletCreateForm
             actv={clck}
+            cncl={() => {
+              setClck(false);
+            }}
             atkn={props.atkn}
             done={(wal: WalletSearchResponse) => {
               setWllt((old: WalletSearchResponse[] | null) => {
@@ -126,6 +131,8 @@ export default function WalletSection(props: Props) {
                 upd[ind] = wal;
                 return upd;
               });
+
+              setClck(false);
             }}
 
             wllt={wllt}

@@ -22,7 +22,8 @@ import Errors from "@/modules/errors/Errors";
 interface Props {
   actv: boolean;
   cncl: () => void;
-  done: (pol: PolicySearchResponse) => void;
+  dltd: PolicySearchResponse | null;
+  done: () => void;
   form: MutableRefObject<HTMLFormElement | null>;
 }
 
@@ -36,7 +37,6 @@ export default function PolicyCreateForm(props: Props) {
   const [erro, setErro] = useState<Errors[]>([]);
   const [info, setInfo] = useState<boolean[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [plcy, setPlcy] = useState<PolicySearchResponse | null>(null);
 
   const clld = useRef(false);
 
@@ -45,19 +45,17 @@ export default function PolicyCreateForm(props: Props) {
   let sys = "";
   let mem = "";
   let acc = "";
-  if (props.form?.current) {
-    const form = new FormData(props.form?.current);
-
-    sys = form.get("system-input")?.toString() || "";
-    mem = form.get("member-input")?.toString() || "";
-    acc = form.get("access-input")?.toString() || "";
+  if (props.dltd) {
+    sys = props.dltd.syst;
+    mem = props.dltd.memb;
+    acc = props.dltd.acce;
   }
 
   const { data, error: wriErr, write } = useContractWrite({
     address: PolicyContract as Address,
     abi: PolicyABI,
     chainId: chid,
-    functionName: "createRecord",
+    functionName: "deleteRecord",
     maxFeePerGas: parseGwei("20"),
   })
 
@@ -109,7 +107,7 @@ export default function PolicyCreateForm(props: Props) {
     if (err) {
       setCmpl(0);
       setCncl(true);
-      setErro((old: Errors[]) => [...old, new Errors("Couldn't fockin' doit, those bloody beavers I swear!", err as Error)]);
+      setErro((old: Errors[]) => [...old, new Errors("Runnin' out of luck lately, the dam's about to break!", err as Error)]);
       props.cncl();
       disconnect();
       clld.current = false;
@@ -124,25 +122,6 @@ export default function PolicyCreateForm(props: Props) {
     }
   }, [isSuccess, disconnect]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      setPlcy({
-        // local
-        name: "",
-        // extern
-        extern: [
-          { chid: String(chid) },
-        ],
-        // intern
-        user: "",
-        // public
-        acce: acc,
-        memb: mem,
-        syst: sys,
-      });
-    }
-  }, [isSuccess, chid, sys, mem, acc, setPlcy]);
-
   return (
     <>
       {sbmt.map((x, i) => (
@@ -150,9 +129,9 @@ export default function PolicyCreateForm(props: Props) {
           key={i}
           cmpl={cmpl}
           cncl={cncl}
-          desc="Adding New Policy"
+          desc="Removing Policy"
           done={() => {
-            if (plcy) props.done(plcy);
+            if (props.dltd) props.done();
           }}
         />
       ))}
@@ -173,7 +152,7 @@ export default function PolicyCreateForm(props: Props) {
 
       {cmpl >= 100 && (
         <SuccessToast
-          desc="Locked and loaded Mr. Smith, the policy's onchain!"
+          desc="Shnitty shnitty bang bang, the policy is gone!"
         />
       )}
     </>

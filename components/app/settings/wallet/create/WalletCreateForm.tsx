@@ -20,6 +20,7 @@ import { truncateEthAddress } from "@/modules/wallet/Address";
 interface Props {
   actv: boolean;
   atkn: string;
+  cncl: () => void;
   done: (wal: WalletSearchResponse) => void;
   wllt: WalletSearchResponse[] | null;
 }
@@ -74,6 +75,7 @@ export default function WalletCreateForm(props: Props) {
       setCmpl(0);
       setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+      props.cncl();
       disconnect();
       clld.current = false;
     }
@@ -116,6 +118,7 @@ export default function WalletCreateForm(props: Props) {
       setCmpl(0);
       setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+      props.cncl();
       disconnect();
       clld.current = false;
     }
@@ -146,6 +149,7 @@ export default function WalletCreateForm(props: Props) {
         }
       } catch (err) {
         setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+        props.cncl();
         disconnect();
         clld.current = false;
       }
