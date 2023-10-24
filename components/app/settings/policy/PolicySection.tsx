@@ -9,6 +9,7 @@ import CopyButton from "@/components/app/button/CopyButton";
 
 import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
+import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 
 import CacheApiPolicy from "@/modules/cache/api/Policy";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
@@ -21,9 +22,10 @@ interface Props {
   atkn: string;
 }
 
-// TODO enable policy deletion
 export default function PolicySection(props: Props) {
-  const [clck, setClck] = useState<boolean>(false);
+  const [crea, setCrea] = useState<boolean>(false);
+  const [dele, setDele] = useState<boolean>(false);
+  const [dltd, setDltd] = useState<PolicySearchResponse | null>(null);
   const [plcy, setPlcy] = useState<PolicySearchResponse[] | null>(null);
 
   const clld = useRef<boolean>(false);
@@ -79,12 +81,24 @@ export default function PolicySection(props: Props) {
 
               <li className="flex relative w-full items-center p-3 text-gray-400 dark:text-gray-500">
                 <div className="flex-shrink-0 absolute right-0 mr-3">
-                  <button className="py-3 outline-none group" type="button">
-                    <TrashIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
-                  </button>
-                  {/* <WalletMenu
-                    delt={() => walletDelete(x)}
-                  /> */}
+                  <ConnectKitButton.Custom>
+                    {({ isConnected, show }) => {
+                      return (
+                        <button
+                          className="py-3 outline-none group" type="button"
+                          onClick={() => {
+                            if (!isConnected && show) {
+                              setDele(true);
+                              setDltd(x);
+                              show();
+                            }
+                          }}
+                        >
+                          <TrashIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
+                        </button>
+                      );
+                    }}
+                  </ConnectKitButton.Custom>
                 </div>
               </li>
             </ul>
@@ -146,25 +160,27 @@ export default function PolicySection(props: Props) {
                       <button
                         className="text-sm mt-3 font-medium rounded-lg w-full px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
                         onClick={() => {
-                          setClck(true);
-
                           if (form && form.current) {
                             if (form.current.checkValidity()) {
                               if (!isConnected && show) {
+                                setCrea(true);
                                 show();
                               }
                             }
                           }
                         }}
                       >
-                        {clck && isConnected ? ensName ?? truncatedAddress : "Add Policy"}
+                        {crea && isConnected ? ensName ?? truncatedAddress : "Add Policy"}
                       </button>
                     );
                   }}
                 </ConnectKitButton.Custom>
 
                 <PolicyCreateForm
-                  actv={clck}
+                  actv={crea}
+                  cncl={() => {
+                    setCrea(false);
+                  }}
                   done={(pol: PolicySearchResponse) => {
                     form.current?.reset();
 
@@ -180,7 +196,32 @@ export default function PolicySection(props: Props) {
                       return upd;
                     });
 
+                    setCrea(false);
+
                     PolicyUpdate([{ atkn: props.atkn, sync: "default" }]);
+                  }}
+                  form={form}
+                />
+
+                <PolicyDeleteForm
+                  actv={dele}
+                  cncl={() => {
+                    setDele(false);
+                    setDltd(null);
+                  }}
+                  dltd={dltd}
+                  done={() => {
+                    if (plcy && dltd) {
+                      setPlcy((old: PolicySearchResponse[] | null) => {
+                        if (old) return old.filter((x) => !(x.syst === dltd.syst && x.memb === dltd.memb && x.acce === dltd.acce));
+                        return old;
+                      });
+
+                      setDele(false);
+                      setDltd(null);
+
+                      PolicyUpdate([{ atkn: props.atkn, sync: "default" }]);
+                    }
                   }}
                   form={form}
                 />
