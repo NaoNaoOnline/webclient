@@ -93,7 +93,7 @@ export default function Footer(props: Props) {
       </div>
 
       <EventMenu
-        cadd={ownr && !hpnd}
+        cadd={!hpnd}
         crem={ownr && !hpnd}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}

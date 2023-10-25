@@ -9,10 +9,10 @@ function onItemClick(e: MouseEvent<HTMLDivElement>) {
 }
 
 interface Props {
-  cadd: boolean;
-  crem: boolean;
-  dadd: () => void;
-  erem: () => void;
+  cadd: boolean;    // can add description
+  crem: boolean;    // can remove event
+  dadd: () => void; // description add callback
+  erem: () => void; // event remove callback
 }
 
 export default function EventMenu(props: Props) {
