@@ -11,29 +11,23 @@ import ProgressToast from "@/components/app/toast/ProgressToast";
 import SuccessToast from "@/components/app/toast/SuccessToast";
 
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
+import { DescriptionUpdate } from "@/modules/api/description/update/Update";
+import { DescriptionUpdateResponse } from "@/modules/api/description/update/Response";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
-import { VoteCreate } from "@/modules/api/vote/create/Create";
-import { VoteDelete } from "@/modules/api/vote/delete/Delete";
-import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { VoteDeleteResponse } from "@/modules/api/vote/delete/Response";
 
 import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
   cncl: () => void;
-  dadd: (des: DescriptionSearchResponse) => void;
-  drem: (des: DescriptionSearchResponse) => void;
+  dadd: (des: DescriptionSearchObject) => void;
+  drem: (des: DescriptionSearchObject) => void;
   evnt: EventSearchObject;
-  desc: DescriptionSearchResponse[];
+  desc: DescriptionSearchObject[];
   form: boolean;
   labl: LabelSearchResponse[];
-  rctn: ReactionSearchResponse[];
-  vote: VoteSearchResponse[];
   xpnd: boolean;
 }
 
@@ -43,12 +37,11 @@ export default function Content(props: Props) {
   const [auth, setAuth] = useState<boolean[]>([]);
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
-  const [dltd, setDltd] = useState<DescriptionSearchResponse | null>(null);
+  const [dltd, setDltd] = useState<DescriptionSearchObject | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [vote, setVote] = useState<VoteSearchResponse[]>(props.vote);
 
-  const descriptionDelete = async function (des: DescriptionSearchResponse) {
+  const descriptionDelete = async function (des: DescriptionSearchObject) {
     setCmpl(10);
     setCncl(false);
     setSbmt((old: boolean[]) => [...old, true]);
@@ -59,7 +52,7 @@ export default function Content(props: Props) {
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [del] = await DescriptionDelete([{ atkn: props.atkn, desc: des.desc }]);
+      const [del] = await DescriptionDelete([{ atkn: props.atkn, desc: des.desc() }]);
 
       setCmpl(100);
       await new Promise(r => setTimeout(r, 200));
@@ -73,21 +66,20 @@ export default function Content(props: Props) {
     }
   };
 
-  const voteCreate = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteCreateResponse> {
+  const voteCreate = async function (des: DescriptionSearchObject): Promise<DescriptionUpdateResponse> {
     try {
-      const [vot] = await VoteCreate([{ atkn: props.atkn, desc: des.desc, rctn: rct.rctn }]);
-      return vot;
+      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "add", text: "" }]);
+      return upd;
     } catch (err) {
       setErro((old: Errors[]) => [...old, new Errors("Darn it, the beavers don't want you to push that button right now!", err as Error)]);
       return Promise.reject(err);
     }
   };
 
-  const voteDelete = async function (des: DescriptionSearchResponse, rct: ReactionSearchResponse): Promise<VoteDeleteResponse> {
+  const voteDelete = async function (des: DescriptionSearchObject): Promise<DescriptionUpdateResponse> {
     try {
-      const vid = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid)?.vote || "";
-      const [vot] = await VoteDelete([{ atkn: props.atkn, vote: vid }]);
-      return vot;
+      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "rem", text: "" }]);
+      return upd;
     } catch (err) {
       setErro((old: Errors[]) => [...old, new Errors("Oh no, the beavers don't want you to take it back like that!", err as Error)]);
       return Promise.reject(err);
@@ -99,86 +91,45 @@ export default function Content(props: Props) {
   //
   // radd is called as "on picker add" callback, which is the event invoked when
   // the user clicks on a reaction icon in the reaction picker component.
-  const radd = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
+  const radd = (des: DescriptionSearchObject, use: boolean) => {
     if (props.atkn == "") {
       return setAuth((old: boolean[]) => [...old, true]);
     }
 
     // If the user clicked on the reaction already, the button is not allowed to
     // have any effect anymore.
-    if (rct.clck) return;
+    if (use) return;
 
-    const tmp: VoteSearchResponse = {
-      // intern
-      crtd: "tmp",
-      user: user?.intern?.uuid || "",
-      vote: "tmp",
-      // public
-      desc: des.desc,
-      rctn: rct.rctn,
-    };
+    // TODO increment like in local state optimistically
 
-    // For an optimistic UI approach we add a new temporary vote object right
-    // away in order for the user to get instant feedback on adding their
-    // reaction. Below the temporary copy will be filled with actual resource
-    // data once the backend processed our request.
-    vote.push(tmp)
-    setVote([...vote])
-
-    voteCreate(des, rct).then(
-      // onfulfilled receives the actual resource data and replaces the tmp
-      // placeholders in the user's local copy.
-      (vot: VoteCreateResponse) => {
-        setVote([...vote.map((x: VoteSearchResponse) => {
-          if (x === tmp) {
-            return {
-              // intern
-              crtd: vot.crtd, // replace "tmp"
-              user: x.user,
-              vote: vot.vote, // replace "tmp"
-              // public
-              desc: x.desc,
-              rctn: x.rctn,
-            };
-          } else {
-            return x;
-          }
-        })]);
-      },
+    voteCreate(des).then(
+      (upd: DescriptionUpdateResponse) => { },
       // onrejected removes the temporary vote object from the user's local copy
       // since the backend could not process our request successfully.
       (rsn: any) => {
-        setVote([...vote.filter((x: VoteSearchResponse) => x !== tmp)]);
+        // TODO decrement like in local state on failure
       },
     );
   };
 
   // rrem is called as "on button remove" callback, which is the event invoked when
   // the user clicks on a reaction icon in the reaction button component.
-  const rrem = (des: DescriptionSearchResponse, rct: ReactionSearchResponse) => {
+  const rrem = (des: DescriptionSearchObject, use: boolean) => {
     if (props.atkn == "") {
       return setAuth((old: boolean[]) => [...old, true]);
     }
 
     // If the user did not click on the reaction already, the button is not
     // allowed to have any effect at all.
-    if (!rct.clck) return;
+    if (!use) return;
 
-    const rem = vote.find((x: VoteSearchResponse) => x.desc === des.desc && x.rctn === rct.rctn && x.user === user?.intern?.uuid);
+    // TODO decrement like in local state optimistically
 
-    // For an optimistic UI approach we remove the vote object right away in
-    // order for the user to get instant feedback on removing their reaction.
-    // Below the removed copy will be added back into the local state again if
-    // the backend failed to process our request successfully.
-    const lis: VoteSearchResponse[] = vote.filter((x: VoteSearchResponse) => x !== rem);
-    setVote([...lis]);
-
-    voteDelete(des, rct).catch(() => {
+    voteDelete(des).catch(() => {
       // catch adds the removed vote object back into the user's local copy
       // since the backend could not process our request successfully.
-      if (rem) {
-        setVote([...lis, rem]);
-      }
+
+      // TODO increment like in local state on failure
     });
   };
 
@@ -190,11 +141,10 @@ export default function Content(props: Props) {
             amnt={props.desc.length}
             atkn={props.atkn}
             desc={props.desc[0]}
-            drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
+            drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
             evnt={props.evnt}
             radd={radd}
             rrem={rrem}
-            rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((x) => x.desc === props.desc[0].desc))}
           />
         )}
         {props.xpnd && (
@@ -205,11 +155,10 @@ export default function Content(props: Props) {
                 amnt={props.desc.length}
                 atkn={props.atkn}
                 desc={x}
-                drem={(des: DescriptionSearchResponse) => descriptionDelete(des)}
+                drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
                 evnt={props.evnt}
                 radd={radd}
                 rrem={rrem}
-                rctn={fltr(user?.intern?.uuid || "", [...props.rctn], vote.filter((y) => y.desc === x.desc))}
               />
             ))}
           </>
@@ -295,37 +244,6 @@ export default function Content(props: Props) {
     </>
   );
 };
-
-function fltr(usr: string, rct: ReactionSearchResponse[], vot: VoteSearchResponse[]): ReactionSearchResponse[] {
-  const cou: Record<string, number> = {};
-  const clc: Record<string, boolean> = {};
-
-  vot.forEach((x: VoteSearchResponse) => {
-    if (cou[x.rctn] === undefined) {
-      cou[x.rctn] = 0;
-    }
-    cou[x.rctn]++;
-
-    if (x.user === usr) {
-      clc[x.rctn] = true;
-    }
-  });
-
-  // Create a new array to store the modified reactions for each description
-  // component without causing side effects when looping over all of them.
-  const lis: ReactionSearchResponse[] = [];
-
-  rct.forEach((x: ReactionSearchResponse) => {
-    const y = { ...x };
-
-    y.amnt = cou[x.rctn] || 0;
-    y.clck = clc[x.rctn] || false;
-
-    lis.push(y);
-  });
-
-  return lis;
-}
 
 function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
   evn.stopPropagation();

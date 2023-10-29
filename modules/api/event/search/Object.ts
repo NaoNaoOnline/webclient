@@ -63,6 +63,30 @@ export default class EventSearchObject {
   }
 
   //
+  // extern
+  //
+
+  linkAmnt(): number {
+    for (let i = 0; i < this.res.extern.length; i++) {
+      if (this.res.extern[i].kind == "link") {
+        return Number(this.res.extern[i].amnt);
+      }
+    }
+
+    return 0;
+  }
+
+  linkUser(): boolean {
+    for (let i = 0; i < this.res.extern.length; i++) {
+      if (this.res.extern[i].kind == "link") {
+        return this.res.extern[i].user;
+      }
+    }
+
+    return false;
+  }
+
+  //
   // time
   //
 
@@ -82,6 +106,11 @@ export default class EventSearchObject {
   // start time.
   upcm(now: Spacetime): boolean {
     return now.isBetween(this.time().subtract(1, "hour"), this.time().subtract(1, "second"), true);
+  }
+
+  // crtd returns the spacetime of event creation in UTC.
+  unix(): string {
+    return this.res.crtd;
   }
 
   //

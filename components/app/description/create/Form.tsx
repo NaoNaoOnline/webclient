@@ -7,14 +7,14 @@ import ErrorToast from '@/components/app/toast/ErrorToast'
 import ProgressToast from '@/components/app/toast/ProgressToast'
 import SuccessToast from '@/components/app/toast/SuccessToast'
 
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
 
 import Errors from '@/modules/errors/Errors';
 
 interface Props {
   atkn: string;
   cncl: () => void;
-  done: (des: DescriptionSearchResponse) => void;
+  done: (des: DescriptionSearchObject) => void;
   evnt: string;
 }
 
@@ -23,7 +23,7 @@ export default function Form(props: Props) {
 
   const [cmpl, setCmpl] = useState<number>(0);
   const [cncl, setCncl] = useState<boolean>(false);
-  const [desc, setDesc] = useState<DescriptionSearchResponse | null>(null);
+  const [desc, setDesc] = useState<DescriptionSearchObject | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
   const [sbmt, setSbmt] = useState<boolean[]>([]);
 
@@ -43,10 +43,12 @@ export default function Form(props: Props) {
 
       const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, props.atkn, props.evnt));
 
-      setDesc({
+      setDesc(new DescriptionSearchObject({
         // local
         imag: "",
         name: "",
+        // extern
+        extern: [],
         // intern
         crtd: des.crtd,
         desc: des.desc,
@@ -54,7 +56,7 @@ export default function Form(props: Props) {
         // public
         evnt: props.evnt,
         text: frm.get("description-input")?.toString() || "",
-      });
+      }));
 
       setCmpl(100);
       await new Promise(r => setTimeout(r, 200));

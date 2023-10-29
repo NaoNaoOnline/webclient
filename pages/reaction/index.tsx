@@ -14,10 +14,6 @@ export default function Page() {
     <>
       <Header titl="Latest Events" />
 
-      {!cat && (
-        <></>
-      )}
-
       {cat && (
         <div className="px-2 mt-4 md:ml-64">
           <div className="px-2 flex grid justify-items-center">

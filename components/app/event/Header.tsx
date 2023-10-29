@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 import Link from '@/components/app/event/Link'
 
-import { DescriptionSearchResponse } from '@/modules/api/description/search/Response';
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
@@ -15,7 +15,7 @@ function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
 
 interface Props {
   evnt: EventSearchObject;
-  desc: DescriptionSearchResponse[];
+  desc: DescriptionSearchObject[];
   labl: LabelSearchResponse[];
   xpnd: () => void;
 }

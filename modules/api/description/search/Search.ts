@@ -11,9 +11,20 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
           return {};
         }),
       },
+      {
+        meta: {
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
+        },
+      },
     );
 
     return cal.response.object.map((x) => ({
+      // extern
+      extern: x.extern.map((y) => ({
+        amnt: y.amnt,
+        kind: y.kind,
+        user: y.user,
+      })),
       // local
       imag: "",
       name: "",

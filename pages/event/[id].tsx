@@ -25,11 +25,7 @@ export default function Page() {
     <>
       <Header titl="Event" />
 
-      {!router.isReady && !evnt && (
-        <></>
-      )}
-
-      {router.isReady && evnt && (
+      {router.isReady && cat && evnt && (
         <div className="px-2 mt-4 md:ml-64">
           <div className="px-2 flex grid justify-items-center">
             <div className="w-full max-w-xl dark:text-gray-50">

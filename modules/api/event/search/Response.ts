@@ -1,4 +1,6 @@
 export interface EventSearchResponse {
+  // extern
+  extern: EventSearchResponseExtern[]
   // intern
   crtd: string;
   evnt: string;
@@ -9,4 +11,10 @@ export interface EventSearchResponse {
   host: string;
   link: string;
   time: string;
+}
+
+export interface EventSearchResponseExtern {
+  amnt: string;
+  kind: string;
+  user: boolean;
 }

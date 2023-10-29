@@ -5,4 +5,6 @@ export interface DescriptionUpdateRequest {
   desc: string;
   // public
   text: string;
+  // symbol
+  like: string;
 }

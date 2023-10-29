@@ -9,21 +9,18 @@ import ErrorToast from "@/components/app/toast/ErrorToast";
 import InfoToast from "@/components/app/toast/InfoToast";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventSearch } from "@/modules/api/event/search/Search";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-import { ReactionSearchResponse } from "@/modules/api/reaction/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
-import { VoteSearch } from "@/modules/api/vote/search/Search";
-import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 import CacheApiLabel from "@/modules/cache/api/Label";
-import CacheApiReaction from "@/modules/cache/api/Reaction";
 
 import Errors from "@/modules/errors/Errors";
 import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import spacetime, { Spacetime } from "spacetime";
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 
 interface Props {
   atkn: string;
@@ -43,14 +40,12 @@ export default function Event(props: Props) {
   const { user } = useUser();
 
   const [auth, setAuth] = useState<boolean[]>([]);
-  const [desc, setDesc] = useState<DescriptionSearchResponse[] | null>(null);
+  const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
   const [erro, setErro] = useState<Errors | null>(null);
   const [form, setForm] = useState<ToggleState>({});
   const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
-  const [rctn, setRctn] = useState<ReactionSearchResponse[] | null>(null);
-  const [vote, setVote] = useState<VoteSearchResponse[] | null>(null);
   const [xpnd, setXpnd] = useState<ToggleState>({});
 
   const clld = useRef(false);
@@ -60,31 +55,28 @@ export default function Event(props: Props) {
     setLabl(cal);
   }
 
-  const car: ReactionSearchResponse[] = CacheApiReaction();
-  if (car && car.length !== 0 && (!rctn || rctn.length === 0)) {
-    setRctn(car);
-  }
-
-  const addDesc = (des: DescriptionSearchResponse) => {
-    setDesc((old: DescriptionSearchResponse[] | null) => {
-      if (old) return [...old, {
+  const addDesc = (des: DescriptionSearchObject) => {
+    setDesc((old: DescriptionSearchObject[] | null) => {
+      if (old) return [...old, new DescriptionSearchObject({
         // local
         imag: user?.picture || "",
         name: user?.public?.name || "",
+        // extern
+        extern: [],
         // intern
-        crtd: des.crtd,
-        desc: des.desc,
+        crtd: des.unix(),
+        desc: des.desc(),
         user: user?.intern?.uuid || "",
         // public
-        evnt: des.evnt,
-        text: des.text,
-      }];
+        evnt: des.evnt(),
+        text: des.text(),
+      })];
       return old;
     });
   };
 
-  const remDesc = (des: DescriptionSearchResponse) => {
-    setDesc((old: DescriptionSearchResponse[] | null) => {
+  const remDesc = (des: DescriptionSearchObject) => {
+    setDesc((old: DescriptionSearchObject[] | null) => {
       if (old) return old.filter((x) => des.desc !== x.desc);
       return old;
     });
@@ -111,9 +103,9 @@ export default function Event(props: Props) {
     }));
   };
 
-  let fltr: Record<string, DescriptionSearchResponse[]> = {};
-  if (evnt && desc && vote) {
-    evnt.forEach((x: EventSearchObject) => fltr[x.evnt()] = filDesc(x, [...desc], vote));
+  let fltr: Record<string, DescriptionSearchObject[]> = {};
+  if (evnt && desc) {
+    evnt.forEach((x: EventSearchObject) => fltr[x.evnt()] = filDesc(x, [...desc]));
   }
 
   let ltst: EventSearchObject[] = evnt || [];
@@ -136,6 +128,7 @@ export default function Event(props: Props) {
             cate: getLabl(labl, props.cate),
             evnt: "",
             host: getLabl(labl, props.host),
+            list: "",
             ltst: "",
             rctn: "",
             user: "",
@@ -148,6 +141,7 @@ export default function Event(props: Props) {
             cate: "",
             evnt: x,
             host: "",
+            list: "",
             ltst: "",
             rctn: "",
             user: "",
@@ -160,6 +154,7 @@ export default function Event(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            list: "",
             ltst: props.ltst,
             rctn: "",
             user: "",
@@ -172,6 +167,7 @@ export default function Event(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            list: "",
             ltst: "",
             rctn: props.rctn,
             user: "",
@@ -185,6 +181,7 @@ export default function Event(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            list: "",
             ltst: "",
             rctn: "",
             user: usr[0].user,
@@ -198,24 +195,22 @@ export default function Event(props: Props) {
           return;
         }
 
-        const des = await DescriptionSearch(evn.map(x => ({ evnt: x.evnt })));
-        const vot = await VoteSearch(des.map(x => ({ desc: x.desc })));
+        const des = await DescriptionSearch(evn.map(x => ({ atkn: props.atkn, evnt: x.evnt })));
         const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
 
-        setEvnt(evn.map(x => new EventSearchObject(x)));
-        setDesc(des.map(x => {
+        setEvnt(evn.map((x) => new EventSearchObject(x)));
+        setDesc(des.map((x) => {
           const u = usr.find(y => y.user === x.user);
           if (u) {
-            return {
+            return new DescriptionSearchObject({
               ...x,
               imag: u.imag,
               name: u.name,
-            };
+            });
           } else {
-            return x;
+            return new DescriptionSearchObject(x);
           }
         }));
-        setVote(vot);
 
         setLdng(false);
       } catch (err) {
@@ -239,7 +234,7 @@ export default function Event(props: Props) {
         <>
           {ltst.length !== 0 && (
             <>
-              {desc && Object.keys(fltr).length !== 0 && labl && rctn && vote && (
+              {desc && Object.keys(fltr).length !== 0 && labl && (
                 <ul>
                   {ltst.map((x, i) => (
                     <li key={i}>
@@ -254,7 +249,7 @@ export default function Event(props: Props) {
                         atkn={props.atkn}
                         cncl={() => tglForm(x.evnt())}
                         desc={fltr[x.evnt()]}
-                        dadd={(des: DescriptionSearchResponse) => {
+                        dadd={(des: DescriptionSearchObject) => {
                           if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
                           addDesc(des);
                         }}
@@ -262,8 +257,6 @@ export default function Event(props: Props) {
                         evnt={x}
                         form={form[x.evnt()]}
                         labl={labl}
-                        rctn={rctn}
-                        vote={vote}
                         xpnd={xpnd[x.evnt()]}
                       />
 
@@ -296,7 +289,7 @@ export default function Event(props: Props) {
               </div>
             </>
           )}
-          {!props.evnt && past.length !== 0 && desc && Object.keys(fltr).length !== 0 && labl && rctn && vote && (
+          {!props.evnt && past.length !== 0 && desc && Object.keys(fltr).length !== 0 && labl && (
             <>
               <h3 className="text-3xl mb-4 text-gray-400 dark:text-gray-500">
                 Already Happened
@@ -315,7 +308,7 @@ export default function Event(props: Props) {
                       atkn={props.atkn}
                       cncl={() => tglForm(x.evnt())}
                       desc={fltr[x.evnt()]}
-                      dadd={(des: DescriptionSearchResponse) => {
+                      dadd={(des: DescriptionSearchObject) => {
                         if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
                         addDesc(des);
                       }}
@@ -323,8 +316,6 @@ export default function Event(props: Props) {
                       evnt={x}
                       form={form[x.evnt()]}
                       labl={labl}
-                      rctn={rctn}
-                      vote={vote}
                       xpnd={xpnd[x.evnt()]}
                     />
 
@@ -379,22 +370,11 @@ function getLabl(lab: LabelSearchResponse[], nam: string[] | undefined): string 
   return ids.join(",");
 }
 
-function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: VoteSearchResponse[]): DescriptionSearchResponse[] {
-  // Create a lookup table to store the vote counts for each description.
-  const cou: Record<string, number> = {};
-
-  vot.forEach((x: VoteSearchResponse) => {
-    if (cou[x.desc] === undefined) {
-      cou[x.desc] = 0;
-    }
-
-    cou[x.desc]++;
-  });
-
-  des.sort((x: DescriptionSearchResponse, y: DescriptionSearchResponse) => {
-    // Sort descriptions by cumulative vote count in descending order at first.
-    const xam = cou[x.desc] || 0;
-    const yam = cou[y.desc] || 0;
+function filDesc(evn: EventSearchObject, des: DescriptionSearchObject[]): DescriptionSearchObject[] {
+  des.sort((x: DescriptionSearchObject, y: DescriptionSearchObject) => {
+    // Sort descriptions by cumulative like count in descending order at first.
+    const xam = x.likeAmnt();
+    const yam = y.likeAmnt();
 
     if (yam !== xam) {
       return yam - xam;
@@ -402,13 +382,13 @@ function filDesc(evn: EventSearchObject, des: DescriptionSearchResponse[], vot: 
 
     // Sort descriptions by creation time in ascending order as secondary
     // measure.
-    const xti = parseInt(x.crtd, 10);
-    const yti = parseInt(y.crtd, 10);
+    const xti = Number(x.unix());
+    const yti = Number(y.unix());
 
     return xti - yti;
   });
 
-  return des.filter((y: DescriptionSearchResponse) => y.evnt === evn.evnt())
+  return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt())
 }
 
 

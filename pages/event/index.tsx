@@ -42,7 +42,7 @@ export default function Page() {
         <></>
       )}
 
-      {nxtrtr.isReady && (cate || host || user) && (
+      {nxtrtr.isReady && cat && (cate || host || user) && (
         <div className="px-2 mt-4 md:ml-64">
           <div className="px-2 flex grid justify-items-center">
             <div className="w-full max-w-xl dark:text-gray-50">

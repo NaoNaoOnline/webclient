@@ -1,19 +1,19 @@
-import API from "@/modules/api/description/API";
-import { DescriptionUpdateRequest } from "@/modules/api/description/update/Request";
-import { DescriptionUpdateResponse } from "@/modules/api/description/update/Response";
+import API from "@/modules/api/event/API";
+import { EventUpdateRequest } from "@/modules/api/event/update/Request";
+import { EventUpdateResponse } from "@/modules/api/event/update/Response";
 
-export async function DescriptionUpdate(req: DescriptionUpdateRequest[]): Promise<DescriptionUpdateResponse[]> {
+export async function EventUpdate(req: EventUpdateRequest[]): Promise<EventUpdateResponse[]> {
   try {
     const cal = await API.update(
       {
         object: req.map((x) => ({
           intern: {
-            desc: x.desc,
+            evnt: x.evnt,
           },
           public: {},
-          update: (x.text ? [{ ope: "replace", pat: "/text", val: x.text }] : []),
+          update: [],
           symbol: {
-            like: x.like,
+            link: x.link,
           },
         })),
       },

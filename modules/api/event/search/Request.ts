@@ -8,6 +8,7 @@ export interface EventSearchRequest {
   cate: string;
   host: string;
   // symbol
+  list: string;
   ltst: string;
   rctn: string;
 }
