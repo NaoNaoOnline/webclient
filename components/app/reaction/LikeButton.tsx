@@ -1,11 +1,11 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
 
 interface ReactionButtonProps {
-  amnt: number;                // can update
-  cupd: boolean;               // can update
+  amnt: number;                 // can update
+  cupd: boolean;                // can update
   radd: (use: boolean) => void; // callback for adding a reaction
   rrem: (use: boolean) => void; // callback for removing a reaction
-  user: boolean;               // whether the current user clicked the button
+  user: boolean;                // whether the current user clicked the button
 }
 
 export default function ReactionButton(props: ReactionButtonProps) {
@@ -35,7 +35,6 @@ export default function ReactionButton(props: ReactionButtonProps) {
           `}
         />
       </button>
-      {/* <div className={`text-xs ${props.user ? "text-gray-900 dark:text-gray-50" : "text-gray-400 dark:text-gray-500"} ${props.cupd ? "group-hover:text-gray-900 dark:group-hover:text-gray-50" : ""}`}> */}
       <div className="text-xs text-gray-400 dark:text-gray-500">
         {fmtNum(props.amnt)}
       </div>
