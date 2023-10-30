@@ -9,7 +9,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
         object: req.map((x) => {
           if (x.evnt || x.user) return { intern: { evnt: x.evnt, user: x.user } }
           if (x.cate || x.host) return { public: { cate: x.cate, host: x.host } }
-          if (x.ltst || x.rctn) return { symbol: { ltst: x.ltst, rctn: x.rctn } }
+          if (x.list || x.ltst || x.rctn) return { symbol: { list: x.list, ltst: x.ltst, rctn: x.rctn } }
           return {};
         }),
       },
@@ -21,6 +21,12 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
     );
 
     return cal.response.object.map((x) => ({
+      // extern
+      extern: x.extern.map((y) => ({
+        amnt: y.amnt,
+        kind: y.kind,
+        user: y.user,
+      })),
       // intern
       crtd: x.intern?.crtd || "",
       evnt: x.intern?.evnt || "",

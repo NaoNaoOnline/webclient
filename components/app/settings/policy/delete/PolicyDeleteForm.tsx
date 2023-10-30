@@ -112,7 +112,7 @@ export default function PolicyCreateForm(props: Props) {
       disconnect();
       clld.current = false;
     }
-  }, [waiErr, wriErr, disconnect]);
+  }, [props, waiErr, wriErr, disconnect]);
 
   useEffect(() => {
     if (isSuccess) {

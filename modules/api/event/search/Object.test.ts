@@ -4,6 +4,8 @@ import spacetime, { Spacetime } from "spacetime";
 describe("DateObject", () => {
   describe("display", () => {
     const obj: EventSearchObject = new EventSearchObject({
+      // extern
+      extern: [],
       // intern
       crtd: uni("2023-09-11T00:00:00.000Z"),
       evnt: "0",
@@ -223,6 +225,8 @@ describe("DateObject", () => {
 
   describe("time", () => {
     const obj: EventSearchObject = new EventSearchObject({
+      // extern
+      extern: [],
       // intern
       crtd: uni("2023-09-11T00:00:00.000Z"),
       evnt: "0",

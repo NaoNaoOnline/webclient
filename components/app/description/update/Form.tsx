@@ -46,7 +46,7 @@ export default function Form(props: Props) {
       setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [des] = await DescriptionUpdate([{ atkn: props.atkn, desc: props.desc, text: txt }]);
+      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: props.desc, like: "", text: txt }]);
 
       setText(txt);
 
