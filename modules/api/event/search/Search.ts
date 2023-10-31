@@ -6,10 +6,16 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
   try {
     const cal = await API.search(
       {
+        filter: {
+          paging: {
+            strt: req[0].strt,
+            stop: req[0].stop,
+          },
+        },
         object: req.map((x) => {
           if (x.evnt || x.user) return { intern: { evnt: x.evnt, user: x.user } }
           if (x.cate || x.host) return { public: { cate: x.cate, host: x.host } }
-          if (x.list || x.ltst || x.rctn) return { symbol: { list: x.list, ltst: x.ltst, rctn: x.rctn } }
+          if (x.list || x.rctn || x.time) return { symbol: { list: x.list, rctn: x.rctn, time: x.time } }
           return {};
         }),
       },

@@ -1,6 +1,9 @@
 export interface EventSearchRequest {
   // local
   atkn: string;
+  // filter
+  strt: string;
+  stop: string;
   // intern
   evnt: string;
   user: string;
@@ -9,6 +12,6 @@ export interface EventSearchRequest {
   host: string;
   // symbol
   list: string;
-  ltst: string;
   rctn: string;
+  time: string;
 }
