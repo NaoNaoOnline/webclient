@@ -24,6 +24,7 @@ interface Props {
   cncl: () => void;
   dadd: (des: DescriptionSearchObject) => void;
   drem: (des: DescriptionSearchObject) => void;
+  dupd: (des: DescriptionSearchObject) => void;
   evnt: EventSearchObject;
   desc: DescriptionSearchObject[];
   form: boolean;
@@ -100,14 +101,19 @@ export default function Content(props: Props) {
     // have any effect anymore.
     if (use) return;
 
-    // TODO increment like in local state optimistically
+    // Add the like to the user's local copy optimistically.
+    des.likeUpdt(true);
+    props.dupd(des);
 
     voteCreate(des).then(
       (upd: DescriptionUpdateResponse) => { },
       // onrejected removes the temporary vote object from the user's local copy
       // since the backend could not process our request successfully.
       (rsn: any) => {
-        // TODO decrement like in local state on failure
+        // catch removes the added like from the user's local copy since the
+        // backend could not process our request successfully.
+        des.likeUpdt(false);
+        props.dupd(des);
       },
     );
   };
@@ -123,13 +129,15 @@ export default function Content(props: Props) {
     // allowed to have any effect at all.
     if (!use) return;
 
-    // TODO decrement like in local state optimistically
+    // Remove the like from the user's local copy optimistically.
+    des.likeUpdt(false);
+    props.dupd(des);
 
     voteDelete(des).catch(() => {
-      // catch adds the removed vote object back into the user's local copy
-      // since the backend could not process our request successfully.
-
-      // TODO increment like in local state on failure
+      // catch adds the removed like back to the user's local copy since the
+      // backend could not process our request successfully.
+      des.likeUpdt(true);
+      props.dupd(des);
     });
   };
 

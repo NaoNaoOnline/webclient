@@ -2,7 +2,7 @@ import { DescriptionSearchResponse } from "@/modules/api/description/search/Resp
 import { UserProfile } from "@auth0/nextjs-auth0/dist/client";
 import spacetime, { Spacetime } from "spacetime";
 
-export default class EventSearchObject {
+export default class DescriptionSearchObject {
   private res: DescriptionSearchResponse;
 
   constructor(res: DescriptionSearchResponse) {
@@ -56,6 +56,24 @@ export default class EventSearchObject {
     }
 
     return 0;
+  }
+
+  likeUpdt(lik: boolean) {
+    for (let i = 0; i < this.res.extern.length; i++) {
+      if (this.res.extern[i].kind == "like") {
+        if (lik) {
+          this.res.extern[i].amnt = String(Number(this.res.extern[i].amnt) + 1);
+          this.res.extern[i].user = true;
+        } else {
+          this.res.extern[i].amnt = String(Number(this.res.extern[i].amnt) - 1);
+          this.res.extern[i].user = false;
+        }
+
+        {
+          break
+        }
+      }
+    }
   }
 
   likeUser(): boolean {
