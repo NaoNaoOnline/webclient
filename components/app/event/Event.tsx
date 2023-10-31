@@ -277,6 +277,7 @@ export default function Event(props: Props) {
                             tglForm(x.evnt());
                           }
                         }}
+                        desc={fltr[x.evnt()]}
                         erem={remEvnt}
                         evnt={x}
                         labl={labl}
@@ -337,6 +338,7 @@ export default function Event(props: Props) {
                           tglForm(x.evnt());
                         }
                       }}
+                      desc={fltr[x.evnt()]}
                       erem={remEvnt}
                       evnt={x}
                       labl={labl}
