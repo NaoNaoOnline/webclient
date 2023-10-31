@@ -27,8 +27,10 @@ interface Props {
   cate?: string[];
   evnt?: string[];
   host?: string[];
-  ltst?: string;
   rctn?: string;
+  strt?: string;
+  stop?: string;
+  time?: string;
   user?: string;
 }
 
@@ -136,8 +138,10 @@ export default function Event(props: Props) {
             evnt: "",
             host: getLabl(labl, props.host),
             list: "",
-            ltst: "",
             rctn: "",
+            strt: "",
+            stop: "",
+            time: "",
             user: "",
           }];
         }
@@ -149,34 +153,40 @@ export default function Event(props: Props) {
             evnt: x,
             host: "",
             list: "",
-            ltst: "",
             rctn: "",
+            strt: "",
+            stop: "",
+            time: "",
             user: "",
           }));
         }
 
-        if (props.ltst) {
+        if (props.strt && props.stop && props.time) {
           req = [{
             atkn: "",
             cate: "",
             evnt: "",
             host: "",
             list: "",
-            ltst: props.ltst,
             rctn: "",
+            strt: props.strt,
+            stop: props.stop,
+            time: props.time,
             user: "",
           }];
         }
 
-        if (props.rctn) {
+        if (props.strt && props.stop && props.rctn) {
           req = [{
             atkn: props.atkn,
             cate: "",
             evnt: "",
             host: "",
             list: "",
-            ltst: "",
             rctn: props.rctn,
+            strt: props.strt,
+            stop: props.stop,
+            time: "",
             user: "",
           }];
         }
@@ -189,8 +199,10 @@ export default function Event(props: Props) {
             evnt: "",
             host: "",
             list: "",
-            ltst: "",
             rctn: "",
+            strt: "",
+            stop: "",
+            time: "",
             user: usr[0].user,
           }];
         }
@@ -230,7 +242,7 @@ export default function Event(props: Props) {
       clld.current = true;
       getData();
     }
-  }, [props.atkn, props.cate, props.evnt, props.host, props.ltst, props.rctn, props.user, labl]);
+  }, [props.atkn, props.cate, props.evnt, props.host, props.time, props.rctn, props.user, labl]);
 
   return (
     <>

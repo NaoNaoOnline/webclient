@@ -5,11 +5,15 @@ import Event from "@/components/app/event/Event"
 import Header from "@/components/app/layout/Header"
 
 import CacheAuthToken from "@/modules/cache/auth/Token";
+import spacetime from "spacetime";
 
 export default memo(function Page() {
   const usrctx = useUser();
 
   const cat: string = CacheAuthToken(usrctx.user ? true : false);
+
+  const sta: string = String(Math.floor(spacetime.now().goto("GMT").subtract(1, "week").epoch / 1000));
+  const sto: string = String(Math.ceil(spacetime.now().goto("GMT").add(1, "week").epoch / 1000));
 
   return (
     <>
@@ -21,13 +25,17 @@ export default memo(function Page() {
             {(!usrctx.isLoading && !usrctx.user && !cat &&
               <Event
                 atkn={""}
-                ltst="default"
+                strt={sta}
+                stop={sto}
+                time="page"
               />
             )}
             {(!usrctx.isLoading && usrctx.user && cat &&
               <Event
                 atkn={cat}
-                ltst="default"
+                strt={sta}
+                stop={sto}
+                time="page"
               />
             )}
           </div>

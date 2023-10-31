@@ -21,13 +21,17 @@ export default function Page() {
               {(!usrctx.isLoading && !usrctx.user && !cat &&
                 <Event
                   atkn={""}
-                  rctn="default"
+                  rctn="page"
+                  strt={"0"}
+                  stop={"-1"}
                 />
               )}
               {(!usrctx.isLoading && usrctx.user && cat &&
                 <Event
                   atkn={cat}
-                  rctn="default"
+                  rctn="page"
+                  strt={"0"}
+                  stop={"-1"}
                 />
               )}
             </div>
