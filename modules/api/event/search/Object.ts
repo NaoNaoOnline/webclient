@@ -1,5 +1,8 @@
+import { UserProfile } from "@auth0/nextjs-auth0/dist/client";
+
 import { EventSearchResponse } from "@/modules/api/event/search/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+
 import spacetime, { Spacetime } from "spacetime";
 
 export default class EventSearchObject {
@@ -85,6 +88,16 @@ export default class EventSearchObject {
 
     return false;
   }
+
+  //
+  // ownership
+  //
+
+  // ownr expresses whether the given user is the owner of this event.
+  ownr(use: UserProfile | undefined): boolean {
+    return this.user() === use?.intern?.uuid;
+  }
+
 
   //
   // time

@@ -1,6 +1,8 @@
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 import { UserProfile } from "@auth0/nextjs-auth0/dist/client";
+
 import spacetime, { Spacetime } from "spacetime";
+
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 
 export default class DescriptionSearchObject {
   private res: DescriptionSearchResponse;

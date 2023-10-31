@@ -9,6 +9,7 @@ import ErrorToast from "@/components/app/toast/ErrorToast";
 import ProgressToast from "@/components/app/toast/ProgressToast";
 import SuccessToast from "@/components/app/toast/SuccessToast";
 
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
@@ -22,6 +23,7 @@ function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
 interface Props {
   atkn: string;
   dadd: () => void;
+  desc: DescriptionSearchObject[];
   erem: (eve: EventSearchObject) => void;
   evnt: EventSearchObject;
   labl: LabelSearchResponse[];
@@ -38,8 +40,9 @@ export default function Footer(props: Props) {
 
   const now: Spacetime = spacetime.now();
 
-  const ownr: boolean = props.evnt.user() === user?.intern?.uuid; // current user is event owner
-  const hpnd: boolean = props.evnt.hpnd(now); // event already happened
+  const dmax: boolean = props.desc.length >= 50; // description limit per event
+  const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
+  const hpnd: boolean = props.evnt.hpnd(now);    // event already happened
 
   const eventDelete = async function (eve: EventSearchObject) {
     setCmpl(10);
@@ -93,7 +96,7 @@ export default function Footer(props: Props) {
       </div>
 
       <EventMenu
-        cadd={!hpnd}
+        cadd={!dmax && !hpnd}
         crem={ownr && !hpnd}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
