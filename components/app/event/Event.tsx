@@ -77,7 +77,14 @@ export default function Event(props: Props) {
 
   const remDesc = (des: DescriptionSearchObject) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
-      if (old) return old.filter((x) => des.desc !== x.desc);
+      if (old) return old.filter((x) => des.desc() !== x.desc());
+      return old;
+    });
+  };
+
+  const updDesc = (des: DescriptionSearchObject) => {
+    setDesc((old: DescriptionSearchObject[] | null) => {
+      if (old) return old.map((x) => (des.desc() === x.desc() ? des : x));
       return old;
     });
   };
@@ -254,6 +261,7 @@ export default function Event(props: Props) {
                           addDesc(des);
                         }}
                         drem={remDesc}
+                        dupd={updDesc}
                         evnt={x}
                         form={form[x.evnt()]}
                         labl={labl}
@@ -313,6 +321,7 @@ export default function Event(props: Props) {
                         addDesc(des);
                       }}
                       drem={remDesc}
+                      dupd={updDesc}
                       evnt={x}
                       form={form[x.evnt()]}
                       labl={labl}

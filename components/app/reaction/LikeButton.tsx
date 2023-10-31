@@ -23,14 +23,14 @@ export default function ReactionButton(props: ReactionButtonProps) {
     <li className="flex flex-row min-w-[70px] items-center">
       <button
         onClick={onClck}
-        className={`${!props.cupd ? "opacity-50 cursor-default" : ""}  p-2 py-3`}
+        className={`${!props.cupd ? "cursor-default" : ""}  p-2 py-3`}
         type="button"
       >
         <HeartIcon
           className={`
             text-lg w-5 h-5 text-gray-400 dark:text-gray-500
-            ${props.cupd && props.user ? "fill-red-500 text-red-500  dark:text-red-500  hover:fill-transparent hover:text-gray-400 dark:hover:text-gray-500" : ""}
-            ${props.cupd && !props.user ? "            text-gray-400 dark:text-gray-500 hover:fill-red-500     hover:text-red-500  dark:hover:text-red-500" : ""}
+            ${props.cupd && props.user ? " fill-red-500 text-red-500  dark:text-red-500 " : ""}
+            ${props.cupd && !props.user ? "             text-gray-400 dark:text-gray-500" : ""}
             ${!props.cupd && props.user ? "fill-gray-400 dark:fill-gray-500" : ""}
           `}
         />
