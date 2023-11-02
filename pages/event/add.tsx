@@ -41,7 +41,6 @@ export default function Page() {
   const cate: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
   const host: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Oh snap, the beavers don't want you to tell the world right now!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("Hooray, event addedd milady!");
 
@@ -127,8 +126,7 @@ export default function Page() {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Oh snap, the beavers don't want you to tell the world right now!", err as Error));
     }
   };
 

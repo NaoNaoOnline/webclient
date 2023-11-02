@@ -36,7 +36,6 @@ export default function PolicyCreateForm(props: Props) {
 
   const chid = getChain(netw)[0].id;
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Policy");
   const scss: SuccessPropsObject = new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!");
 
@@ -101,8 +100,7 @@ export default function PolicyCreateForm(props: Props) {
     }
 
     if (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;

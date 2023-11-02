@@ -51,7 +51,6 @@ export default function Event(props: Props) {
 
   const clld = useRef(false);
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("By Zeus' beard, the beavers built a dam and all the events got stuck!");
   const info: InfoPropsObject = new InfoPropsObject("The beavers need you to login if you want to add a new description.");
 
   const cal: LabelSearchResponse[] = CacheApiLabel();
@@ -235,8 +234,7 @@ export default function Event(props: Props) {
 
         setLdng(false);
       } catch (err) {
-        erro.setTech(err as Error);
-        addErro(erro);
+        addErro(new ErrorPropsObject("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
         setLdng(false);
       }
     };

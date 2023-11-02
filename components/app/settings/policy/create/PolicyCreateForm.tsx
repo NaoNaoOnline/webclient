@@ -35,7 +35,6 @@ export default function PolicyCreateForm(props: Props) {
 
   const chid = getChain(netw)[0].id;
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Can't fockin' doit mate, those bloody beavers I swear!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
   const scss: SuccessPropsObject = new SuccessPropsObject("Locked and loaded Mr. Smith, the policy's onchain!");
 
@@ -102,8 +101,7 @@ export default function PolicyCreateForm(props: Props) {
     }
 
     if (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Can't fockin' doit mate, those bloody beavers I swear!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;

@@ -17,9 +17,9 @@ export interface ErrorProps {
 export class ErrorPropsObject {
   private props: ErrorProps;
 
-  constructor(user: string) {
+  constructor(user: string, tech: Error | null) {
     this.props = {
-      tech: null,
+      tech: tech,
       user: user,
     };
   }
@@ -34,14 +34,6 @@ export class ErrorPropsObject {
 
   getUser(): string {
     return this.props.user;
-  }
-
-  //
-  // setter
-  //
-
-  setTech(val: Error) {
-    this.props.tech = val;
   }
 }
 

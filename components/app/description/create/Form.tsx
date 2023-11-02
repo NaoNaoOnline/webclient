@@ -22,7 +22,6 @@ export default function Form(props: Props) {
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Ay papi, the beavers don't want you to say that just yet!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Description");
   const scss: SuccessPropsObject = new SuccessPropsObject("Huzzah, description addedd my lord!");
 
@@ -65,8 +64,7 @@ export default function Form(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Ay papi, the beavers don't want you to say that just yet!", err as Error));
     }
   };
 

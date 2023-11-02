@@ -35,7 +35,6 @@ export default function Content(props: Props) {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user } = useUser();
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Fog mey, it's even more over than we thought it was!");
   const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Description");
   const scss: SuccessPropsObject = new SuccessPropsObject("Bye bye baby, no more descriptions like that!");
@@ -59,8 +58,7 @@ export default function Content(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Fog mey, it's even more over than we thought it was!", err as Error));
     }
   };
 
@@ -69,9 +67,7 @@ export default function Content(props: Props) {
       const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "add", text: "" }]);
       return upd;
     } catch (err) {
-      const erro: ErrorPropsObject = new ErrorPropsObject("Darn it, the beavers don't want you to push that button right now!");
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Darn it, the beavers don't want you to push that button right now!", err as Error));
       return Promise.reject(err);
     }
   };
@@ -81,9 +77,7 @@ export default function Content(props: Props) {
       const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "rem", text: "" }]);
       return upd;
     } catch (err) {
-      const erro: ErrorPropsObject = new ErrorPropsObject("Oh no, the beavers don't want you to take it back like that!");
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Oh no, the beavers don't want you to take it back like that!", err as Error));
       return Promise.reject(err);
     }
   };

@@ -46,7 +46,6 @@ export default function Footer(props: Props) {
   const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
   const hpnd: boolean = props.evnt.hpnd(now);    // event already happened
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("The beavers are sick of it, no more carpin' all them diems!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");
 
@@ -70,8 +69,7 @@ export default function Footer(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("The beavers are sick of it, no more carpin' all them diems!", err as Error));
     }
   };
 

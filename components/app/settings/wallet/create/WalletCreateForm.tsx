@@ -33,7 +33,6 @@ export default function WalletCreateForm(props: Props) {
   const clld = useRef(false);
 
   const walletCreate = async (mess: string, pubk: string, sign: string, addr: string) => {
-    const erro: ErrorPropsObject = new ErrorPropsObject("Holy moly, some things ain't right around the dam!");
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Wallet");
     const scss: SuccessPropsObject = new SuccessPropsObject("Lecko Mio, the wallet's in pirate!");
 
@@ -73,8 +72,7 @@ export default function WalletCreateForm(props: Props) {
       clld.current = false;
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;
@@ -82,7 +80,6 @@ export default function WalletCreateForm(props: Props) {
   };
 
   const walletUpdate = async (mess: string, pubk: string, sign: string, addr: string, curr: WalletSearchResponse) => {
-    const erro: ErrorPropsObject = new ErrorPropsObject("Holy moly, some things ain't right around the dam!");
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Wallet");
     const scss: SuccessPropsObject = new SuccessPropsObject("Lecko Mio, the wallet's in pirate!");
 
@@ -121,8 +118,7 @@ export default function WalletCreateForm(props: Props) {
       clld.current = false;
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;
@@ -153,9 +149,7 @@ export default function WalletCreateForm(props: Props) {
           walletUpdate(mess, pubk, sign, address as string, curr);
         }
       } catch (err) {
-        const erro: ErrorPropsObject = new ErrorPropsObject("Holy moly, some things ain't right around the dam!");
-        erro.setTech(err as Error);
-        addErro(erro);
+        addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
         props.cncl();
         disconnect();
         clld.current = false;

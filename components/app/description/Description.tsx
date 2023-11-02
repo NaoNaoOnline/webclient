@@ -42,8 +42,6 @@ export default function Description(props: Props) {
   const told: boolean = props.desc.cupd(now);  // description is too old
   const hpnd: boolean = props.evnt.hpnd(now);  // event already happened
 
-  const info: InfoPropsObject = new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!");
-
   return (
     <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
       <div className="flex justify-between">
@@ -105,7 +103,7 @@ export default function Description(props: Props) {
           desc={props.desc.desc()}
           done={(txt: string) => {
             if (txt === text) {
-              addInfo(info);
+              addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
             } else {
               setText(txt);
             }

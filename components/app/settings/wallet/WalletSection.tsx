@@ -46,7 +46,6 @@ export default function WalletSection(props: Props) {
     setWllt(caw);
   }
 
-  const erro: ErrorPropsObject = new ErrorPropsObject("Outrage, and the beavers are plundering again out of town!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
   const scss: SuccessPropsObject = new SuccessPropsObject("We trashed it Pinky, that wallet's dust!");
 
@@ -72,8 +71,7 @@ export default function WalletSection(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      erro.setTech(err as Error);
-      addErro(erro);
+      addErro(new ErrorPropsObject("Outrage, and the beavers are plundering again out of town!", err as Error));
       setClck(false);
     }
   };
