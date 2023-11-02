@@ -1,28 +1,52 @@
-import * as React from 'react';
-import * as Toast from '@radix-ui/react-toast';
+import * as React from "react";
+import * as Toast from "@radix-ui/react-toast";
 
 import type { RpcError } from "@protobuf-ts/runtime-rpc";
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import Errors from '@/modules/errors/Errors';
-
-interface Props {
-  erro: Errors | null;
+export interface ErrorProps {
+  // tech is an engineering specific error instance intended to inform technical
+  // support about symptoms and/or root causes of application malfunction.
+  tech: Error | null;
+  // user is a UI/UX specific error message intended to address the user when an
+  // intended action failed to execute. This error message is user friendly.
+  user: string;
 }
 
-export default function ErrorToast(props: Props) {
-  if (!props.erro) return <></>;
+export class ErrorPropsObject {
+  private props: ErrorProps;
 
-  const rpce: RpcError = props.erro.tech as RpcError;
+  constructor(user: string, tech: Error | null) {
+    this.props = {
+      tech: tech,
+      user: user,
+    };
+  }
 
-  let desc: string = props.erro.user;
+  //
+  // getter
+  //
+
+  getTech(): Error | null {
+    return this.props.tech;
+  }
+
+  getUser(): string {
+    return this.props.user;
+  }
+}
+
+export function ErrorToast(props: { obj: ErrorPropsObject }) {
+  const rpce: RpcError = props.obj.getTech() as RpcError;
+
+  let desc: string = props.obj.getUser();
   if (rpce && rpce.meta?.desc) {
     desc = rpce.meta.desc.toString();
   } else if (rpce && rpce.message !== "Failed to fetch") {
     desc = rpce.message
   } else if (!rpce) {
-    desc = props.erro.tech.message
+    desc = props.obj.getTech()?.message || "";
   }
 
   return (

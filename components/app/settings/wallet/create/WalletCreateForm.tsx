@@ -5,7 +5,7 @@ import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { recoverPublicKey } from "viem";
 import { hashMessage } from "viem";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
@@ -13,8 +13,6 @@ import { useToast } from "@/components/app/toast/ToastContext";
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { WalletUpdate } from "@/modules/api/wallet/update/Update";
-
-import Errors from "@/modules/errors/Errors";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
@@ -30,9 +28,7 @@ export default function WalletCreateForm(props: Props) {
   const { user } = useUser();
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
-  const { addPgrs, addScss } = useToast();
-
-  const [erro, setErro] = useState<Errors[]>([]);
+  const { addErro, addPgrs, addScss } = useToast();
 
   const clld = useRef(false);
 
@@ -76,7 +72,7 @@ export default function WalletCreateForm(props: Props) {
       clld.current = false;
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+      addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;
@@ -122,7 +118,7 @@ export default function WalletCreateForm(props: Props) {
       clld.current = false;
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+      addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;
@@ -153,7 +149,7 @@ export default function WalletCreateForm(props: Props) {
           walletUpdate(mess, pubk, sign, address as string, curr);
         }
       } catch (err) {
-        setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
+        addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
         props.cncl();
         disconnect();
         clld.current = false;
@@ -161,16 +157,7 @@ export default function WalletCreateForm(props: Props) {
     },
   });
 
-  return (
-    <>
-      {erro.map((x, i) => (
-        <ErrorToast
-          key={i}
-          erro={x}
-        />
-      ))}
-    </>
-  );
+  return (<></>);
 };
 
 const rawMes = (add: string) => {

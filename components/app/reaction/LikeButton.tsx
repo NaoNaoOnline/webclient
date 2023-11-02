@@ -28,10 +28,11 @@ export default function ReactionButton(props: ReactionButtonProps) {
       >
         <HeartIcon
           className={`
-            text-lg w-5 h-5 text-gray-400 dark:text-gray-500
+            text-lg w-5 h-5
             ${props.cupd && props.user ? " fill-red-500 text-red-500  dark:text-red-500 " : ""}
             ${props.cupd && !props.user ? "             text-gray-400 dark:text-gray-500" : ""}
-            ${!props.cupd && props.user ? "fill-gray-400 dark:fill-gray-500" : ""}
+            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700 fill-gray-200 dark:fill-gray-700" : ""}
+            ${!props.cupd && !props.user ? "text-gray-200 dark:text-gray-700" : ""}
           `}
         />
       </button>

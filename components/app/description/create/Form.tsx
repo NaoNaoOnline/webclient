@@ -3,14 +3,12 @@ import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from 'react';
 import { DescriptionCreate } from '@/modules/api/description/create/Create'
 import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
-
-import Errors from '@/modules/errors/Errors';
 
 interface Props {
   atkn: string;
@@ -20,9 +18,7 @@ interface Props {
 }
 
 export default function Form(props: Props) {
-  const { addPgrs, addScss } = useToast();
-
-  const [erro, setErro] = useState<Errors[]>([]);
+  const { addErro, addPgrs, addScss } = useToast();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
@@ -68,7 +64,7 @@ export default function Form(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error)]);
+      addErro(new ErrorPropsObject("Ay papi, the beavers don't want you to say that just yet!", err as Error));
     }
   };
 
@@ -123,13 +119,6 @@ export default function Form(props: Props) {
             Cancel
           </button>
         </div>
-
-        {erro.map((x, i) => (
-          <ErrorToast
-            key={i}
-            erro={x}
-          />
-        ))}
       </form>
     </>
   );

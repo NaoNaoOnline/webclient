@@ -1,12 +1,12 @@
-import { useState, MouseEvent } from "react";
+import { MouseEvent } from "react";
 import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import Form from "@/components/app/description/create/Form";
 import Description from "@/components/app/description/Description";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
-import InfoToast from "@/components/app/toast/InfoToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
@@ -17,8 +17,6 @@ import { DescriptionUpdate } from "@/modules/api/description/update/Update";
 import { DescriptionUpdateResponse } from "@/modules/api/description/update/Response";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-
-import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
@@ -34,12 +32,10 @@ interface Props {
 }
 
 export default function Content(props: Props) {
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user } = useUser();
 
-  const [auth, setAuth] = useState<boolean[]>([]);
-  const [erro, setErro] = useState<Errors[]>([]);
-
+  const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Description");
   const scss: SuccessPropsObject = new SuccessPropsObject("Bye bye baby, no more descriptions like that!");
 
@@ -62,7 +58,7 @@ export default function Content(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Fog mey, it's even more over than we thought it was!", err as Error)]);
+      addErro(new ErrorPropsObject("Fog mey, it's even more over than we thought it was!", err as Error));
     }
   };
 
@@ -71,7 +67,7 @@ export default function Content(props: Props) {
       const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "add", text: "" }]);
       return upd;
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Darn it, the beavers don't want you to push that button right now!", err as Error)]);
+      addErro(new ErrorPropsObject("Darn it, the beavers don't want you to push that button right now!", err as Error));
       return Promise.reject(err);
     }
   };
@@ -81,7 +77,7 @@ export default function Content(props: Props) {
       const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "rem", text: "" }]);
       return upd;
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Oh no, the beavers don't want you to take it back like that!", err as Error)]);
+      addErro(new ErrorPropsObject("Oh no, the beavers don't want you to take it back like that!", err as Error));
       return Promise.reject(err);
     }
   };
@@ -93,7 +89,8 @@ export default function Content(props: Props) {
   // the user clicks on a reaction icon in the reaction picker component.
   const radd = (des: DescriptionSearchObject, use: boolean) => {
     if (props.atkn == "") {
-      return setAuth((old: boolean[]) => [...old, true]);
+      addInfo(info);
+      return;
     }
 
     // If the user clicked on the reaction already, the button is not allowed to
@@ -121,7 +118,8 @@ export default function Content(props: Props) {
   // the user clicks on a reaction icon in the reaction button component.
   const rrem = (des: DescriptionSearchObject, use: boolean) => {
     if (props.atkn == "") {
-      return setAuth((old: boolean[]) => [...old, true]);
+      addInfo(info);
+      return;
     }
 
     // If the user did not click on the reaction already, the button is not
@@ -213,20 +211,6 @@ export default function Content(props: Props) {
           </div>
         )}
       </div>
-
-      {erro.map((x, i) => (
-        <ErrorToast
-          key={i}
-          erro={x}
-        />
-      ))}
-
-      {auth.map((x, i) => (
-        <InfoToast
-          key={i}
-          desc="Please login to add your reaction, or the beavers will build a dam."
-        />
-      ))}
     </>
   );
 };

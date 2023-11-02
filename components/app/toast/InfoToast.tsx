@@ -1,13 +1,31 @@
-import * as React from 'react';
-import * as Toast from '@radix-ui/react-toast';
+import * as React from "react";
+import * as Toast from "@radix-ui/react-toast";
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-interface Props {
+export interface InfoProps {
   desc: string;
 }
 
-export default function InfoToast(props: Props) {
+export class InfoPropsObject {
+  private props: InfoProps;
+
+  constructor(desc: string) {
+    this.props = {
+      desc: desc,
+    };
+  }
+
+  //
+  // getter
+  //
+
+  getDesc(): string {
+    return this.props.desc;
+  }
+}
+
+export function InfoToast(props: { obj: InfoPropsObject }) {
   return (
     <>
       <Toast.Root
@@ -28,7 +46,7 @@ export default function InfoToast(props: Props) {
 
         <Toast.Description className="[grid-area:_description]">
           <span className="text-sm text-gray-900">
-            {props.desc}
+            {props.obj.getDesc()}
           </span>
         </Toast.Description>
 

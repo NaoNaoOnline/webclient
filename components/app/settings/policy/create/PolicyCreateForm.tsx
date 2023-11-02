@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 
 import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
@@ -6,8 +6,8 @@ import { parseGwei } from "viem";
 
 import { getChain, useNetwork } from "@/components/app/network/Network";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
-import InfoToast from "@/components/app/toast/InfoToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
@@ -18,8 +18,6 @@ import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 
 import { PolicyContract } from "@/modules/config/config";
 
-import Errors from "@/modules/errors/Errors";
-
 interface Props {
   actv: boolean;
   cncl: () => void;
@@ -29,16 +27,16 @@ interface Props {
 
 export default function PolicyCreateForm(props: Props) {
   const { disconnect } = useDisconnect();
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
-
-  const [erro, setErro] = useState<Errors[]>([]);
-  const [info, setInfo] = useState<boolean[]>([]);
 
   const clld = useRef(false);
 
   const chid = getChain(netw)[0].id;
+
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Locked and loaded Mr. Smith, the policy's onchain!");
 
   let sys = "";
   let mem = "";
@@ -63,9 +61,6 @@ export default function PolicyCreateForm(props: Props) {
     hash: data?.hash,
   })
 
-  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
-  const scss: SuccessPropsObject = new SuccessPropsObject("Locked and loaded Mr. Smith, the policy's onchain!");
-
   useAccount({
     async onConnect({ address, isReconnected }) {
       if (!props.actv || !write || clld.current || !address || isReconnected) return;
@@ -75,7 +70,7 @@ export default function PolicyCreateForm(props: Props) {
       });
 
       if (bal.value === BigInt(0)) {
-        setInfo((old: boolean[]) => [...old, true]);
+        addInfo(new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!"));
         props.cncl();
         disconnect();
         return;
@@ -106,7 +101,7 @@ export default function PolicyCreateForm(props: Props) {
     }
 
     if (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Couldn't fockin' doit mate, those bloody beavers I swear!", err as Error)]);
+      addErro(new ErrorPropsObject("Can't fockin' doit mate, those bloody beavers I swear!", err as Error));
       props.cncl();
       disconnect();
       clld.current = false;
@@ -141,21 +136,5 @@ export default function PolicyCreateForm(props: Props) {
     }
   }, [disconnect, isSuccess, chid, sys, mem, acc]);
 
-  return (
-    <>
-      {erro.map((x, i) => (
-        <ErrorToast
-          key={i}
-          erro={x}
-        />
-      ))}
-
-      {info.map((x, i) => (
-        <InfoToast
-          key={i}
-          desc="Got 0 ETH in that wallet. Can't fucking do it mate!"
-        />
-      ))}
-    </>
-  );
+  return <></>;
 };

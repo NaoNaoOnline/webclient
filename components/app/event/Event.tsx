@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
+import spacetime, { Spacetime } from "spacetime";
+
 import Content from "@/components/app/event/Content";
 import Footer from "@/components/app/event/Footer";
 import Header from "@/components/app/event/Header";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
-import InfoToast from "@/components/app/toast/InfoToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
+import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 import { EventSearch } from "@/modules/api/event/search/Search";
 import EventSearchObject from "@/modules/api/event/search/Object";
+import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 import CacheApiLabel from "@/modules/cache/api/Label";
-
-import Errors from "@/modules/errors/Errors";
-import { EventSearchRequest } from "@/modules/api/event/search/Request";
-import spacetime, { Spacetime } from "spacetime";
-import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
 
 interface Props {
   atkn: string;
@@ -39,18 +39,19 @@ interface ToggleState {
 }
 
 export default function Event(props: Props) {
+  const { addErro, addInfo } = useToast();
   const { user } = useUser();
 
-  const [auth, setAuth] = useState<boolean[]>([]);
   const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
-  const [erro, setErro] = useState<Errors | null>(null);
   const [form, setForm] = useState<ToggleState>({});
   const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
   const [xpnd, setXpnd] = useState<ToggleState>({});
 
   const clld = useRef(false);
+
+  const info: InfoPropsObject = new InfoPropsObject("The beavers need you to login if you want to add a new description.");
 
   const cal: LabelSearchResponse[] = CacheApiLabel();
   if (cal && cal.length !== 0 && (!labl || labl.length === 0)) {
@@ -233,7 +234,7 @@ export default function Event(props: Props) {
 
         setLdng(false);
       } catch (err) {
-        setErro(new Errors("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
+        addErro(new ErrorPropsObject("By Zeus' beard, the beavers built a dam and all the events got stuck!", err as Error));
         setLdng(false);
       }
     };
@@ -281,7 +282,7 @@ export default function Event(props: Props) {
                         atkn={props.atkn}
                         dadd={() => {
                           if (props.atkn == "") {
-                            setAuth((old: boolean[]) => [...old, true]);
+                            addInfo(info);
                           } else {
                             tglForm(x.evnt());
                           }
@@ -342,7 +343,7 @@ export default function Event(props: Props) {
                       atkn={props.atkn}
                       dadd={() => {
                         if (props.atkn == "") {
-                          setAuth((old: boolean[]) => [...old, true]);
+                          addInfo(info);
                         } else {
                           tglForm(x.evnt());
                         }
@@ -359,15 +360,6 @@ export default function Event(props: Props) {
           )}
         </>
       )}
-      {erro && (
-        <ErrorToast erro={erro} />
-      )}
-      {auth.map((x, i) => (
-        <InfoToast
-          key={i}
-          desc="The beavers need you to login if you want to add a new description."
-        />
-      ))}
     </>
   );
 };
