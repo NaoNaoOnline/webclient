@@ -8,8 +8,9 @@ import { getChain, useNetwork } from "@/components/app/network/Network";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
 import InfoToast from "@/components/app/toast/InfoToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { PolicyABI } from "@/modules/abi/PolicyABI";
 
@@ -29,14 +30,12 @@ interface Props {
 
 export default function PolicyCreateForm(props: Props) {
   const { disconnect } = useDisconnect();
+  const { addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
 
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
   const [erro, setErro] = useState<Errors[]>([]);
   const [info, setInfo] = useState<boolean[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const clld = useRef(false);
 
@@ -63,6 +62,9 @@ export default function PolicyCreateForm(props: Props) {
     hash: data?.hash,
   })
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Policy");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!");
+
   useAccount({
     async onConnect({ address, isReconnected }) {
       if (!props.actv || !write || clld.current || !address || isReconnected) return;
@@ -80,17 +82,15 @@ export default function PolicyCreateForm(props: Props) {
 
       clld.current = true;
 
-      setCmpl(10);
-      setCncl(false);
-      setSbmt((old: boolean[]) => [...old, true]);
+      addPgrs(pgrs);
 
       write({
         args: [{ sys: sys, mem: mem, acc: acc }],
       });
 
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
     },
   });
@@ -105,9 +105,7 @@ export default function PolicyCreateForm(props: Props) {
     }
 
     if (err) {
-      setCmpl(0);
-      setCncl(true);
-      setErro((old: Errors[]) => [...old, new Errors("Runnin' out of luck lately, the dam's about to break!", err as Error)]);
+      setErro((old: Errors[]) => [...old, new Errors("Runnin' out of luck lately, the dam's about to burst!", err as Error)]);
       props.cncl();
       disconnect();
       clld.current = false;
@@ -116,26 +114,19 @@ export default function PolicyCreateForm(props: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-      setCmpl(100);
+      pgrs.setDone(() => {
+        if (props.dltd) props.done();
+      });
+
+      addScss(scss);
+
       clld.current = false;
       disconnect();
     }
-  }, [isSuccess, disconnect]);
+  }, [isSuccess, disconnect, props.dltd]);
 
   return (
     <>
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Removing Policy"
-          done={() => {
-            if (props.dltd) props.done();
-          }}
-        />
-      ))}
-
       {erro.map((x, i) => (
         <ErrorToast
           key={i}
@@ -149,12 +140,6 @@ export default function PolicyCreateForm(props: Props) {
           desc="Got 0 ETH in that wallet. Can't fucking do it mate!"
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="Shnitty shnitty bang bang, the policy is gone!"
-        />
-      )}
     </>
   );
 };

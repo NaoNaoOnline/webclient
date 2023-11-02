@@ -4,8 +4,9 @@ import { DescriptionCreate } from '@/modules/api/description/create/Create'
 import { NewDescriptionCreateRequestFromFormData } from '@/modules/api/description/create/Request'
 
 import ErrorToast from '@/components/app/toast/ErrorToast'
-import ProgressToast from '@/components/app/toast/ProgressToast'
-import SuccessToast from '@/components/app/toast/SuccessToast'
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 
@@ -19,31 +20,31 @@ interface Props {
 }
 
 export default function Form(props: Props) {
+  const { addPgrs, addScss } = useToast();
+
+  const [erro, setErro] = useState<Errors[]>([]);
+
   const inpt = useRef<HTMLInputElement | null>(null);
 
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
-  const [desc, setDesc] = useState<DescriptionSearchObject | null>(null);
-  const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Description");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Huzzah, description addedd my lord!");
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+
+    addPgrs(pgrs);
 
     const frm = new FormData(evn.target as HTMLFormElement);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, props.atkn, props.evnt));
 
-      setDesc(new DescriptionSearchObject({
+      const newDesc = new DescriptionSearchObject({
         // local
         imag: "",
         name: "",
@@ -56,14 +57,17 @@ export default function Form(props: Props) {
         // public
         evnt: props.evnt,
         text: frm.get("description-input")?.toString() || "",
-      }));
+      });
 
-      setCmpl(100);
+      pgrs.setDone(() => {
+        props.cncl();
+        props.done(newDesc);
+      });
+
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error)]);
     }
   };
@@ -103,7 +107,7 @@ export default function Form(props: Props) {
         <div className="flex flex-row pt-2">
           <button
             type="submit"
-            disabled={cmpl !== 0}
+            disabled={pgrs.getCmpl() !== 0}
             className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
             onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
           >
@@ -120,31 +124,12 @@ export default function Form(props: Props) {
           </button>
         </div>
 
-        {sbmt.map((x, i) => (
-          <ProgressToast
-            key={i}
-            cmpl={cmpl}
-            cncl={cncl}
-            desc="Adding New Description"
-            done={() => {
-              props.cncl();
-              if (desc) props.done(desc);
-            }}
-          />
-        ))}
-
         {erro.map((x, i) => (
           <ErrorToast
             key={i}
             erro={x}
           />
         ))}
-
-        {cmpl >= 100 && (
-          <SuccessToast
-            desc="Huzzah, description addedd my lord!"
-          />
-        )}
       </form>
     </>
   );

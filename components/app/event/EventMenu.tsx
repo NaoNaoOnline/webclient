@@ -13,6 +13,7 @@ interface Props {
   crem: boolean;    // can remove event
   dadd: () => void; // description add callback
   erem: () => void; // event remove callback
+  slis: () => void; // manage lists callback
 }
 
 export default function EventMenu(props: Props) {
@@ -30,6 +31,15 @@ export default function EventMenu(props: Props) {
           className="min-w-[220px] bg-gray-50 dark:bg-gray-700 rounded-md p-[5px] shadow-gray-400 dark:shadow-black shadow-[0_0_2px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
           loop
         >
+
+          <DropdownMenu.Item
+            onSelect={props.slis}
+            className="text-gray-900 dark:text-gray-50 text-sm rounded-md items-center p-2 select-none outline-none data-[disabled]:text-gray-400 dark:data-[disabled]:text-gray-400 data-[disabled]:pointer-events-none data-[highlighted]:bg-gray-200 data-[highlighted]:text-gray-900 dark:data-[highlighted]:bg-gray-800 dark:data-[highlighted]:text-gray-50 cursor-pointer"
+          >
+            Manage Lists
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Separator className="h-[1px] bg-gray-200 dark:bg-gray-800 my-[5px]" />
 
           <DropdownMenu.Item
             disabled={!props.cadd}

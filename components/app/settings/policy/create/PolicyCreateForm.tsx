@@ -8,8 +8,9 @@ import { getChain, useNetwork } from "@/components/app/network/Network";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
 import InfoToast from "@/components/app/toast/InfoToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { PolicyABI } from "@/modules/abi/PolicyABI";
 
@@ -28,15 +29,12 @@ interface Props {
 
 export default function PolicyCreateForm(props: Props) {
   const { disconnect } = useDisconnect();
+  const { addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
 
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
   const [erro, setErro] = useState<Errors[]>([]);
   const [info, setInfo] = useState<boolean[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [plcy, setPlcy] = useState<PolicySearchResponse | null>(null);
 
   const clld = useRef(false);
 
@@ -65,6 +63,9 @@ export default function PolicyCreateForm(props: Props) {
     hash: data?.hash,
   })
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Locked and loaded Mr. Smith, the policy's onchain!");
+
   useAccount({
     async onConnect({ address, isReconnected }) {
       if (!props.actv || !write || clld.current || !address || isReconnected) return;
@@ -82,17 +83,15 @@ export default function PolicyCreateForm(props: Props) {
 
       clld.current = true;
 
-      setCmpl(10);
-      setCncl(false);
-      setSbmt((old: boolean[]) => [...old, true]);
+      addPgrs(pgrs);
 
       write({
         args: [{ sys: sys, mem: mem, acc: acc }],
       });
 
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
     },
   });
@@ -107,9 +106,7 @@ export default function PolicyCreateForm(props: Props) {
     }
 
     if (err) {
-      setCmpl(0);
-      setCncl(true);
-      setErro((old: Errors[]) => [...old, new Errors("Couldn't fockin' doit, those bloody beavers I swear!", err as Error)]);
+      setErro((old: Errors[]) => [...old, new Errors("Couldn't fockin' doit mate, those bloody beavers I swear!", err as Error)]);
       props.cncl();
       disconnect();
       clld.current = false;
@@ -118,15 +115,7 @@ export default function PolicyCreateForm(props: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-      setCmpl(100);
-      clld.current = false;
-      disconnect();
-    }
-  }, [isSuccess, disconnect]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setPlcy({
+      const newPlcy = {
         // local
         name: "",
         // extern
@@ -139,24 +128,21 @@ export default function PolicyCreateForm(props: Props) {
         acce: acc,
         memb: mem,
         syst: sys,
+      };
+
+      pgrs.setDone(() => {
+        props.done(newPlcy);
       });
+
+      addScss(scss);
+
+      clld.current = false;
+      disconnect();
     }
-  }, [isSuccess, chid, sys, mem, acc, setPlcy]);
+  }, [disconnect, isSuccess, chid, sys, mem, acc]);
 
   return (
     <>
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Adding New Policy"
-          done={() => {
-            if (plcy) props.done(plcy);
-          }}
-        />
-      ))}
-
       {erro.map((x, i) => (
         <ErrorToast
           key={i}
@@ -170,12 +156,6 @@ export default function PolicyCreateForm(props: Props) {
           desc="Got 0 ETH in that wallet. Can't fucking do it mate!"
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="Locked and loaded Mr. Smith, the policy's onchain!"
-        />
-      )}
     </>
   );
 };

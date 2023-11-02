@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from "react";
 
-import { DescriptionUpdate } from '@/modules/api/description/update/Update'
+import { DescriptionUpdate } from "@/modules/api/description/update/Update";
 
-import ErrorToast from '@/components/app/toast/ErrorToast'
-import ProgressToast from '@/components/app/toast/ProgressToast'
-import SuccessToast from '@/components/app/toast/SuccessToast'
+import ErrorToast from "@/components/app/toast/ErrorToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
-import Errors from '@/modules/errors/Errors';
+import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
@@ -17,19 +18,18 @@ interface Props {
 }
 
 export default function Form(props: Props) {
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
+  const { addPgrs, addScss } = useToast();
+
   const [text, setText] = useState<string>(props.text);
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Description");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Bloody hell, that description got proper updated!");
+
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
 
     const frm: FormData = new FormData(evn.target as HTMLFormElement);
     const txt: string = frm.get("description-input")?.toString() || "";
@@ -40,22 +40,28 @@ export default function Form(props: Props) {
       return;
     }
 
+
+    addPgrs(pgrs);
+
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: props.desc, like: "", text: txt }]);
 
       setText(txt);
 
-      setCmpl(100);
+      pgrs.setDone(() => {
+        props.cncl();
+        props.done(txt);
+      });
+
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error)]);
     }
   };
@@ -95,7 +101,7 @@ export default function Form(props: Props) {
         <div className="flex flex-row pt-2">
           <button
             type="submit"
-            disabled={cmpl !== 0}
+            disabled={pgrs.getCmpl() !== 0}
             className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
             onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
           >
@@ -112,31 +118,12 @@ export default function Form(props: Props) {
           </button>
         </div>
 
-        {sbmt.map((x, i) => (
-          <ProgressToast
-            key={i}
-            cmpl={cmpl}
-            cncl={cncl}
-            desc="Updating Description"
-            done={() => {
-              props.cncl();
-              props.done(text);
-            }}
-          />
-        ))}
-
         {erro.map((x, i) => (
           <ErrorToast
             key={i}
             erro={x}
           />
         ))}
-
-        {cmpl >= 100 && (
-          <SuccessToast
-            desc="Bloody hell, that description got proper updated!"
-          />
-        )}
       </form>
     </>
   );

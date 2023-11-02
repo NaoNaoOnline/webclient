@@ -7,8 +7,9 @@ import Description from "@/components/app/description/Description";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
 import InfoToast from "@/components/app/toast/InfoToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -33,36 +34,34 @@ interface Props {
 }
 
 export default function Content(props: Props) {
+  const { addPgrs, addScss } = useToast();
   const { user } = useUser();
 
   const [auth, setAuth] = useState<boolean[]>([]);
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
-  const [dltd, setDltd] = useState<DescriptionSearchObject | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
+
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Description");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Bye bye baby, no more descriptions like that!");
 
   const descriptionDelete = async function (des: DescriptionSearchObject) {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+    addPgrs(pgrs);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [del] = await DescriptionDelete([{ atkn: props.atkn, desc: des.desc() }]);
 
-      setCmpl(100);
+      pgrs.setDone(() => {
+        props.drem(des);
+      });
+
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
 
-      setDltd(des);
-
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Fog mey, it's even more over than we thought it was!", err as Error)]);
     }
   };
@@ -215,33 +214,12 @@ export default function Content(props: Props) {
         )}
       </div>
 
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Removing Description"
-          done={() => {
-            if (dltd) {
-              props.drem(dltd);
-              setDltd(null);
-            }
-          }}
-        />
-      ))}
-
       {erro.map((x, i) => (
         <ErrorToast
           key={i}
           erro={x}
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="Bye bye baby, no more descriptions like that!"
-        />
-      )}
 
       {auth.map((x, i) => (
         <InfoToast

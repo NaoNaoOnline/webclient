@@ -246,9 +246,6 @@ export default function Event(props: Props) {
 
   return (
     <>
-      {ldng && (
-        <></>
-      )}
       {!ldng && (
         <>
           {ltst.length !== 0 && (
@@ -300,7 +297,7 @@ export default function Event(props: Props) {
               )}
             </>
           )}
-          {ltst.length === 0 && (
+          {props.evnt?.length !== 1 && ltst.length === 0 && (
             <>
               <div className="flex my-4 w-full text-4xl justify-center">
                 <span>🤨</span>
