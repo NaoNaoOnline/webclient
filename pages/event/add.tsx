@@ -9,8 +9,8 @@ import LabelInput from "@/components/app/event/add/LabelInput";
 import LinkInput from "@/components/app/event/add/LinkInput";
 import TimeBar from "@/components/app/event/add/TimeBar";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
-import InfoToast from "@/components/app/toast/InfoToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
@@ -27,15 +27,12 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import CacheApiLabel from "@/modules/cache/api/Label";
 import CacheAuthToken from "@/modules/cache/auth/Token";
 
-import Errors from "@/modules/errors/Errors";
-
 export default function Page() {
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user, isLoading } = useUser();
   const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);
-  const [erro, setErro] = useState<Errors[]>([]);
 
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
@@ -44,6 +41,7 @@ export default function Page() {
   const cate: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
   const host: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
 
+  const erro: ErrorPropsObject = new ErrorPropsObject("Oh snap, the beavers don't want you to tell the world right now!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("Hooray, event addedd milady!");
 
@@ -129,9 +127,15 @@ export default function Page() {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error)]);
+      erro.setTech(err as Error);
+      addErro(erro);
     }
   };
+
+  if (!isLoading && !user) {
+    addInfo(new InfoPropsObject("Join the beavers and login for adding a new event. Or else!"));
+    return <></>;
+  }
 
   return (
     <>
@@ -192,19 +196,7 @@ export default function Page() {
                 >
                   Submit
                 </button>
-
-                {erro.map((x, i) => (
-                  <ErrorToast
-                    key={i}
-                    erro={x}
-                  />
-                ))}
               </form>
-            )}
-            {!isLoading && !user && (
-              <InfoToast
-                desc="Join the beavers and login for adding a new event. Or else!"
-              />
             )}
           </div>
         </div>

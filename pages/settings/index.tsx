@@ -8,14 +8,21 @@ import PolicySection from "@/components/app/settings/policy/PolicySection";
 import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
-import InfoToast from "@/components/app/toast/InfoToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import CacheAuthToken from "@/modules/cache/auth/Token";
 
 export default function Page() {
+  const { addInfo } = useToast();
   const { user, isLoading } = useUser();
 
   const cat: string = CacheAuthToken(user ? true : false);
+
+  if (!isLoading && !user) {
+    addInfo(new InfoPropsObject("Join the beavers and login for accessing your settings. Or else!"));
+    return <></>;
+  }
 
   return (
     <>
@@ -24,10 +31,7 @@ export default function Page() {
       <div className="px-2 mt-4 md:ml-64">
         <div className="px-2 flex grid justify-items-center">
           <div className="w-full max-w-xl dark:text-gray-50">
-            {isLoading && (
-              <></>
-            )}
-            {!isLoading && user && (
+            {!isLoading && user && cat && (
               <>
                 <SettingsHeader />
                 <ThemeSection />
@@ -35,11 +39,6 @@ export default function Page() {
                 <PolicySection atkn={cat} />
                 <NetworkSection />
               </>
-            )}
-            {!isLoading && !user && (
-              <InfoToast
-                desc="Join the beavers and login for accessing your settings. Or else!"
-              />
             )}
           </div>
         </div>

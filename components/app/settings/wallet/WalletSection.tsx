@@ -11,7 +11,7 @@ import CopyButton from "@/components/app/button/CopyButton";
 import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
@@ -21,8 +21,6 @@ import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 import CacheApiWallet from "@/modules/cache/api/Wallet";
 
-import Errors from "@/modules/errors/Errors";
-
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
 interface Props {
@@ -30,11 +28,10 @@ interface Props {
 }
 
 export default function WalletSection(props: Props) {
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addPgrs, addScss } = useToast();
 
   const [addr, setAddr] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);
-  const [erro, setErro] = useState<Errors[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
   // Setting the user's wallets based on the backend state should only happen
@@ -49,6 +46,7 @@ export default function WalletSection(props: Props) {
     setWllt(caw);
   }
 
+  const erro: ErrorPropsObject = new ErrorPropsObject("Outrage, and the beavers are plundering again out of town!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
   const scss: SuccessPropsObject = new SuccessPropsObject("We trashed it Pinky, that wallet's dust!");
 
@@ -74,8 +72,9 @@ export default function WalletSection(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
+      erro.setTech(err as Error);
+      addErro(erro);
       setClck(false);
-      setErro((old: Errors[]) => [...old, new Errors("Outrage, and the beavers are plundering again out of town!", err as Error)]);
     }
   };
 
@@ -181,13 +180,6 @@ export default function WalletSection(props: Props) {
           ))}
         </>
       )}
-
-      {erro.map((x, i) => (
-        <ErrorToast
-          key={i}
-          erro={x}
-        />
-      ))}
     </>
   );
 };

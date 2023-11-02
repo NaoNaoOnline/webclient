@@ -8,7 +8,8 @@ import ReactionBar from "@/components/app/reaction/ReactionBar";
 import Form from "@/components/app/description/update/Form";
 import DescriptionMenu from "@/components/app/description/DescriptionMenu";
 
-import InfoToast from "@/components/app/toast/InfoToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
@@ -28,9 +29,9 @@ interface Props {
 }
 
 export default function Description(props: Props) {
+  const { addInfo } = useToast();
   const { user } = useUser();
 
-  const [equl, setEqul] = useState<boolean[]>([]);
   const [form, setForm] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.desc.text());
 
@@ -40,6 +41,8 @@ export default function Description(props: Props) {
   const ownr: boolean = props.desc.ownr(user); // current user is description owner
   const told: boolean = props.desc.cupd(now);  // description is too old
   const hpnd: boolean = props.evnt.hpnd(now);  // event already happened
+
+  const info: InfoPropsObject = new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!");
 
   return (
     <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
@@ -102,7 +105,7 @@ export default function Description(props: Props) {
           desc={props.desc.desc()}
           done={(txt: string) => {
             if (txt === text) {
-              setEqul((old: boolean[]) => [...old, true]);
+              addInfo(info);
             } else {
               setText(txt);
             }
@@ -115,12 +118,6 @@ export default function Description(props: Props) {
           {text}
         </p>
       )}
-      {equl.map((x, i) => (
-        <InfoToast
-          key={i}
-          desc="Nothing to change here, don't worry mate. No biggie at all!"
-        />
-      ))}
     </div>
   );
 };

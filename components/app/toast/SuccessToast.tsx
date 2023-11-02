@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as Toast from '@radix-ui/react-toast';
+import * as React from "react";
+import * as Toast from "@radix-ui/react-toast";
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export interface SuccessProps {
   desc: string;

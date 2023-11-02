@@ -2,12 +2,10 @@ import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from "react";
 
 import { DescriptionUpdate } from "@/modules/api/description/update/Update";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
-
-import Errors from "@/modules/errors/Errors";
 
 interface Props {
   atkn: string;
@@ -18,13 +16,13 @@ interface Props {
 }
 
 export default function Form(props: Props) {
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addPgrs, addScss } = useToast();
 
   const [text, setText] = useState<string>(props.text);
-  const [erro, setErro] = useState<Errors[]>([]);
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
+  const erro: ErrorPropsObject = new ErrorPropsObject("Ay papi, the beavers don't want you to say that just yet!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Description");
   const scss: SuccessPropsObject = new SuccessPropsObject("Bloody hell, that description got proper updated!");
 
@@ -62,7 +60,8 @@ export default function Form(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("Ay papi, the beavers don't want you to say that just yet!", err as Error)]);
+      erro.setTech(err as Error);
+      addErro(erro);
     }
   };
 
@@ -117,13 +116,6 @@ export default function Form(props: Props) {
             Cancel
           </button>
         </div>
-
-        {erro.map((x, i) => (
-          <ErrorToast
-            key={i}
-            erro={x}
-          />
-        ))}
       </form>
     </>
   );

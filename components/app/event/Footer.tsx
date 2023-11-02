@@ -8,17 +8,15 @@ import EventMenu from "@/components/app/event/EventMenu";
 
 import ListDialog from "@/components/app/list/ListDialog";
 
-import ErrorToast from "@/components/app/toast/ErrorToast";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
+import { EventDelete } from "@/modules/api/event/delete/Delete";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-
-import Errors from "@/modules/errors/Errors";
-import { EventDelete } from "@/modules/api/event/delete/Delete";
 
 function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
   e.stopPropagation();
@@ -37,10 +35,9 @@ export default function Footer(props: Props) {
   const patnam = usePathname();
   const nxtrtr = useRouter();
 
-  const { addPgrs, addScss } = useToast();
+  const { addErro, addPgrs, addScss } = useToast();
   const { user } = useUser();
 
-  const [erro, setErro] = useState<Errors[]>([]);
   const [show, setShow] = useState<boolean>(false); // show list dialog
 
   const now: Spacetime = spacetime.now();
@@ -49,6 +46,7 @@ export default function Footer(props: Props) {
   const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
   const hpnd: boolean = props.evnt.hpnd(now);    // event already happened
 
+  const erro: ErrorPropsObject = new ErrorPropsObject("The beavers are sick of it, no more carpin' all them diems!");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");
 
@@ -72,7 +70,8 @@ export default function Footer(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      setErro((old: Errors[]) => [...old, new Errors("The beavers are sick of it, no more carpin' all them diems!", err as Error)]);
+      erro.setTech(err as Error);
+      addErro(erro);
     }
   };
 
@@ -114,13 +113,6 @@ export default function Footer(props: Props) {
         clos={() => setShow(false)}
         show={show}
       />
-
-      {erro.map((x, i) => (
-        <ErrorToast
-          key={i}
-          erro={x}
-        />
-      ))}
     </div>
   );
 };
