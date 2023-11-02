@@ -1,9 +1,9 @@
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from "react";
+import { useRouter } from "next/navigation";
 
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
-// import { UserIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import Link from '@/components/app/event/Link'
+import Link from "@/components/app/event/Link";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
@@ -21,6 +21,8 @@ interface Props {
 }
 
 export default function Event(props: Props) {
+  const nxtrtr = useRouter();
+
   const [xpnd, setXpnd] = useState<boolean>(false);
 
   return (
@@ -29,22 +31,12 @@ export default function Event(props: Props) {
         if (e.metaKey || e.ctrlKey) {
           window.open("/event/" + props.evnt.evnt(), '_blank');
         } else {
-          window.location.href = "/event/" + props.evnt.evnt();
+          nxtrtr.push("/event/" + props.evnt.evnt());
         }
       }}
       className="relative rounded-t-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-hidden cursor-pointer"
     >
       <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">
-        {/* {props.labl && (
-          <a
-            href={`/host/${props.evnt?.host(props.labl)[0]}`}
-            onClick={onLinkClick}
-            className="flex items-center pl-2"
-          >
-            <UserIcon className="w-7 h-7 p-1 text-gray-50 bg-blue-600 rounded-full" />
-          </a>
-        )} */}
-
         <div className="flex flex-row w-full">
           {props.labl && (
             props.evnt?.host(props.labl).map((x, i) => (

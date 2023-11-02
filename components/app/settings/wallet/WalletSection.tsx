@@ -12,8 +12,9 @@ import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
@@ -29,13 +30,11 @@ interface Props {
 }
 
 export default function WalletSection(props: Props) {
+  const { addPgrs, addScss } = useToast();
+
   const [addr, setAddr] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
-  const [dltd, setDltd] = useState<WalletSearchResponse | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
 
   // Setting the user's wallets based on the backend state should only happen
@@ -50,28 +49,32 @@ export default function WalletSection(props: Props) {
     setWllt(caw);
   }
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
+  const scss: SuccessPropsObject = new SuccessPropsObject("We trashed it Pinky, that wallet's dust!");
+
   const walletDelete = async function (wal: WalletSearchResponse) {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+    addPgrs(pgrs);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [del] = await WalletDelete([{ atkn: props.atkn, wllt: wal.intern.wllt }]);
 
-      setCmpl(100);
-      await new Promise(r => setTimeout(r, 200));
+      pgrs.setDone(() => {
+        setWllt((old: WalletSearchResponse[] | null) => {
+          if (old) return old.filter((x) => wal.intern.wllt !== x.intern.wllt);
+          return old;
+        });
+      });
 
-      setDltd(wal);
+      addScss(scss);
+      await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
       setClck(false);
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Outrage, and the beavers are plundering again out of town!", err as Error)]);
     }
   };
@@ -179,36 +182,12 @@ export default function WalletSection(props: Props) {
         </>
       )}
 
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Removing Wallet"
-          done={() => {
-            if (wllt && dltd) {
-              setWllt((old: WalletSearchResponse[] | null) => {
-                if (old) return old.filter((x) => dltd.intern.wllt !== x.intern.wllt);
-                return old;
-              });
-              setDltd(null);
-            }
-          }}
-        />
-      ))}
-
       {erro.map((x, i) => (
         <ErrorToast
           key={i}
           erro={x}
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="We trashed it Pinky, that wallet's dust!"
-        />
-      )}
     </>
   );
 };

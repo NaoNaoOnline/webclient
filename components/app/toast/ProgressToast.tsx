@@ -1,17 +1,77 @@
-import * as React from 'react';
+import { useEffect, useState } from "react";
 import * as Toast from '@radix-ui/react-toast';
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-interface Props {
+export interface ProgressProps {
   cmpl: number;
   cncl: boolean;
   desc: string;
   done: () => void;
 }
 
-export default function ProgressToast(props: Props) {
-  const [open, setOpen] = React.useState<boolean>(true);
+export class ProgressPropsObject {
+  private props: ProgressProps;
+  private rndr: () => void;
+
+  constructor(desc: string) {
+    this.props = {
+      cmpl: 0,
+      cncl: false,
+      desc: desc,
+      done: () => { },
+    };
+
+    this.rndr = () => { };
+  }
+
+  //
+  // getter
+  //
+
+  getCmpl(): number {
+    return this.props.cmpl;
+  }
+
+  getCncl(): boolean {
+    return this.props.cncl;
+  }
+
+  getDesc(): string {
+    return this.props.desc;
+  }
+
+  getDone(): () => void {
+    return this.props.done;
+  }
+
+  //
+  // setter
+  //
+
+  setCmpl(val: number) {
+    this.props.cmpl = val;
+    this.rndr();
+  }
+
+  setCncl(val: boolean) {
+    this.props.cncl = val;
+    this.rndr();
+  }
+
+  setDone(val: () => void) {
+    this.setCmpl(100);
+    this.props.done = val;
+  }
+
+  setRndr(val: () => void) {
+    this.rndr = val;
+  }
+}
+
+
+export function ProgressToast(props: { obj: ProgressPropsObject }) {
+  const [open, setOpen] = useState<boolean>(true);
   // We render potentially multiple progress toasts if the action which requires
   // progress bars fails. Each of the rendered progress toasts may call the done
   // callback, potentially affecting the timing of the others. For an orderly
@@ -19,34 +79,31 @@ export default function ProgressToast(props: Props) {
   // the done callback, preventing the progress toasts of failed actions to rug
   // the progress toast instance that is supposed to finalize the action that
   // eventually succeeded.
-  const [term, setTerm] = React.useState<boolean>(false);
+  const [term, setTerm] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    if (props.cmpl >= 100) {
+  useEffect(() => {
+    if (props.obj.getCmpl() >= 100) {
       setTimeout(() => {
         setOpen(false);
       }, 3000); // 3 seconds
     }
-  }, [props.cmpl]);
+  }, [props.obj.getCmpl()]);
 
-  React.useEffect(() => {
-    if (props.cncl && open) {
+  useEffect(() => {
+    if (props.obj.getCncl() && open) {
       setTimeout(() => {
         setOpen(false);
         setTerm(true);
       }, 3000); // 3 seconds
     }
-  }, [props.cncl, open]);
+  }, [props.obj.getCncl(), open]);
 
-  {
-    const { cmpl, done } = props;
-    React.useEffect(() => {
-      if (cmpl >= 100 && !open && !term) {
-        done();
-        setTerm(true);
-      }
-    }, [cmpl, done, open, term]);
-  }
+  useEffect(() => {
+    if (props.obj.getCmpl() >= 100 && !term) {
+      props.obj.getDone()();
+      setTerm(true);
+    }
+  }, [props.obj.getCmpl(), props.obj.getDone(), term]);
 
   return (
     <>
@@ -69,10 +126,10 @@ export default function ProgressToast(props: Props) {
 
         <Toast.Description className="[grid-area:_description]">
           <span className="text-sm text-gray-900">
-            {props.desc}
+            {props.obj.getDesc()}
           </span>
           <div className="mt-4 w-full rounded-full h-2 bg-gray-200">
-            <div style={{ width: `${props.cmpl}%` }} className={`bg-blue-600 h-2 rounded-full transition-width duration-1000 ease-in-out`}></div>
+            <div style={{ width: `${props.obj.getCmpl()}%` }} className={`bg-blue-600 h-2 rounded-full transition-width duration-1000 ease-in-out`}></div>
           </div>
         </Toast.Description>
 

@@ -4,16 +4,15 @@ import { useEffect, useState } from "react";
 import type { AppProps } from "next/app"
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
-import * as Toast from "@radix-ui/react-toast";
-
 import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { Mode } from "connectkit/build/types";
 
-import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
 import { NetworkContext, getChain, getNetwork } from "@/components/app/network/Network";
-import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
 import Sidebar from "@/components/app/sidebar/Sidebar";
+import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
+import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
+import { ToastProvider } from "@/components/app/toast/ToastContext";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
@@ -60,7 +59,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
 
   return (
     <UserProvider>
-      <Toast.Provider>
+      <ToastProvider>
         <ManualContext.Provider value={[manu, setManu]}>
           <SystemContext.Provider value={[syst, setSyst]}>
             <NetworkContext.Provider value={[netw, setNetw]}>
@@ -73,7 +72,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
             </NetworkContext.Provider>
           </SystemContext.Provider>
         </ManualContext.Provider>
-      </Toast.Provider>
+      </ToastProvider>
     </UserProvider>
   );
 }

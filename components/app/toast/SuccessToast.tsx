@@ -3,11 +3,29 @@ import * as Toast from '@radix-ui/react-toast';
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-interface Props {
+export interface SuccessProps {
   desc: string;
 }
 
-export default function SuccessToast(props: Props) {
+export class SuccessPropsObject {
+  private props: SuccessProps;
+
+  constructor(desc: string) {
+    this.props = {
+      desc: desc,
+    };
+  }
+
+  //
+  // getter
+  //
+
+  getDesc(): string {
+    return this.props.desc;
+  }
+}
+
+export function SuccessToast(props: { obj: SuccessPropsObject }) {
   return (
     <>
       <Toast.Root
@@ -28,7 +46,7 @@ export default function SuccessToast(props: Props) {
 
         <Toast.Description className="[grid-area:_description]">
           <span className="text-sm text-gray-900">
-            {props.desc}
+            {props.obj.getDesc()}
           </span>
         </Toast.Description>
 

@@ -1,13 +1,17 @@
 import { useState, MouseEvent } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
 import EventMenu from "@/components/app/event/EventMenu";
 
+import ListDialog from "@/components/app/list/ListDialog";
+
 import ErrorToast from "@/components/app/toast/ErrorToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
@@ -30,13 +34,14 @@ interface Props {
 }
 
 export default function Footer(props: Props) {
+  const patnam = usePathname();
+  const nxtrtr = useRouter();
+
+  const { addPgrs, addScss } = useToast();
   const { user } = useUser();
 
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
-  const [dltd, setDltd] = useState<EventSearchObject | null>(null);
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
+  const [show, setShow] = useState<boolean>(false); // show list dialog
 
   const now: Spacetime = spacetime.now();
 
@@ -44,27 +49,29 @@ export default function Footer(props: Props) {
   const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
   const hpnd: boolean = props.evnt.hpnd(now);    // event already happened
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
+  const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");
+
   const eventDelete = async function (eve: EventSearchObject) {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+    addPgrs(pgrs);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [del] = await EventDelete([{ atkn: props.atkn, evnt: eve.evnt() }]);
 
-      setCmpl(100);
+      pgrs.setDone(() => {
+        props.erem(eve);
+        if (indPag(patnam)) nxtrtr.push("/");
+      });
+
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
 
-      setDltd(eve);
-
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("The beavers are sick of it, no more carpin' all them diems!", err as Error)]);
     }
   };
@@ -75,7 +82,7 @@ export default function Footer(props: Props) {
         if (e.metaKey || e.ctrlKey) {
           window.open("/event/" + props.evnt.evnt(), '_blank');
         } else {
-          window.location.href = "/event/" + props.evnt.evnt();
+          nxtrtr.push("/event/" + props.evnt.evnt());
         }
       }}
       className="flex flex-1 mb-4 rounded-b-md dark:bg-gray-700 items-center justify-between bg-white shadow-gray-400 dark:shadow-black shadow-[0_0_2px] outline-none cursor-pointer"
@@ -100,22 +107,13 @@ export default function Footer(props: Props) {
         crem={ownr && !hpnd}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
+        slis={() => setShow(true)}
       />
 
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Removing Event"
-          done={() => {
-            if (dltd) {
-              props.erem(dltd);
-              setDltd(null);
-            }
-          }}
-        />
-      ))}
+      <ListDialog
+        clos={() => setShow(false)}
+        show={show}
+      />
 
       {erro.map((x, i) => (
         <ErrorToast
@@ -123,12 +121,21 @@ export default function Footer(props: Props) {
           erro={x}
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="You are crushing it bb, that event's gone for good!"
-        />
-      )}
     </div>
   );
 };
+
+// indPag expressed whether the URL path of the current page complies with the
+// URL format of the event page as shown below.
+//
+//     /event/1698943315449571
+//
+const indPag = function (str: string): boolean {
+  const spl = str.split('/');
+
+  if (spl.length >= 2 && spl[spl.length - 2] === "event") {
+    return !isNaN(Number(spl[spl.length - 1]))
+  }
+
+  return false;
+}

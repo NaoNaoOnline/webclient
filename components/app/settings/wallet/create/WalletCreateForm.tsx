@@ -6,8 +6,9 @@ import { recoverPublicKey } from "viem";
 import { hashMessage } from "viem";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
@@ -29,29 +30,27 @@ export default function WalletCreateForm(props: Props) {
   const { user } = useUser();
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
+  const { addPgrs, addScss } = useToast();
 
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
-  const [wllt, setWllt] = useState<WalletSearchResponse | null>(null);
 
   const clld = useRef(false);
 
   const walletCreate = async (mess: string, pubk: string, sign: string, addr: string) => {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Wallet");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Lecko Mio, the wallet's in pirate!");
+
+    addPgrs(pgrs);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [wal] = await WalletCreate([{ atkn: props.atkn, kind: "eth", mess: mess, pubk: pubk, sign: sign }]);
 
-      setWllt({
+      const newWllt = {
         intern: {
           addr: {
             time: wal.crtd,
@@ -64,16 +63,19 @@ export default function WalletCreateForm(props: Props) {
           addr: addr,
           kind: "eth",
         },
+      };
+
+      pgrs.setDone(() => {
+        props.done(newWllt);
       });
 
-      setCmpl(100);
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
+
       disconnect();
       clld.current = false;
 
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
       props.cncl();
       disconnect();
@@ -82,19 +84,20 @@ export default function WalletCreateForm(props: Props) {
   };
 
   const walletUpdate = async (mess: string, pubk: string, sign: string, addr: string, curr: WalletSearchResponse) => {
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Wallet");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Lecko Mio, the wallet's in pirate!");
+
+    addPgrs(pgrs);
 
     try {
-      setCmpl(25);
+      pgrs.setCmpl(25);
       await new Promise(r => setTimeout(r, 200));
-      setCmpl(50);
+      pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
       const [wal] = await WalletUpdate([{ atkn: props.atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.intern.wllt }]);
 
-      setWllt({
+      const newWllt = {
         intern: {
           addr: {
             time: wal.intern.addr.time,
@@ -107,16 +110,18 @@ export default function WalletCreateForm(props: Props) {
           addr: curr.public.addr,
           kind: curr.public.kind,
         },
+      };
+
+      pgrs.setDone(() => {
+        props.done(newWllt);
       });
 
-      setCmpl(100);
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
       disconnect();
       clld.current = false;
 
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Holy moly, some things ain't right around the dam!", err as Error)]);
       props.cncl();
       disconnect();
@@ -158,30 +163,12 @@ export default function WalletCreateForm(props: Props) {
 
   return (
     <>
-      {sbmt.map((x, i) => (
-        <ProgressToast
-          key={i}
-          cmpl={cmpl}
-          cncl={cncl}
-          desc="Adding New Wallet"
-          done={() => {
-            if (wllt) props.done(wllt);
-          }}
-        />
-      ))}
-
       {erro.map((x, i) => (
         <ErrorToast
           key={i}
           erro={x}
         />
       ))}
-
-      {cmpl >= 100 && (
-        <SuccessToast
-          desc="Lecko Mio, the wallet's in pirate!"
-        />
-      )}
     </>
   );
 };

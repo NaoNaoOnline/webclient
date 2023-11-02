@@ -1,4 +1,5 @@
 import { useState, FormEvent, KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import Header from "@/components/app/layout/Header";
@@ -10,8 +11,9 @@ import TimeBar from "@/components/app/event/add/TimeBar";
 
 import ErrorToast from "@/components/app/toast/ErrorToast";
 import InfoToast from "@/components/app/toast/InfoToast";
-import ProgressToast from "@/components/app/toast/ProgressToast";
-import SuccessToast from "@/components/app/toast/SuccessToast";
+import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
+import { useToast } from "@/components/app/toast/ToastContext";
 
 import { EventCreate } from "@/modules/api/event/create/Create";
 import { NewEventCreateRequest } from "@/modules/api/event/create/Request";
@@ -28,14 +30,12 @@ import CacheAuthToken from "@/modules/cache/auth/Token";
 import Errors from "@/modules/errors/Errors";
 
 export default function Page() {
+  const { addPgrs, addScss } = useToast();
   const { user, isLoading } = useUser();
+  const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);
-  const [cmpl, setCmpl] = useState<number>(0);
-  const [cncl, setCncl] = useState<boolean>(false);
-  const [evnt, setEvnt] = useState<string>("");
   const [erro, setErro] = useState<Errors[]>([]);
-  const [sbmt, setSbmt] = useState<boolean[]>([]);
 
   const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
@@ -44,11 +44,13 @@ export default function Page() {
   const cate: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
   const host: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
 
+  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Event");
+  const scss: SuccessPropsObject = new SuccessPropsObject("Hooray, event addedd milady!");
+
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
-    setCmpl(10);
-    setCncl(false);
-    setSbmt((old: boolean[]) => [...old, true]);
+
+    addPgrs(pgrs);
 
     const frm = new FormData(evn.target as HTMLFormElement);
 
@@ -76,7 +78,7 @@ export default function Page() {
           cal.push({ labl: nci[i], kind: "cate", name: dcn[i] });
         }
 
-        setCmpl(25);
+        pgrs.setCmpl(25);
         await new Promise(r => setTimeout(r, 200));
       }
 
@@ -94,7 +96,7 @@ export default function Page() {
           cal.push({ labl: nhi[i], kind: "host", name: dhn[i] });
         }
 
-        setCmpl(50);
+        pgrs.setCmpl(50);
         await new Promise(r => setTimeout(r, 200));
       }
 
@@ -113,18 +115,20 @@ export default function Page() {
       // Create the event resource in the backend, now that we ensured our label
       // ids.
       const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, cci, chi)]);
-      setEvnt(evn.evnt);
-      setCmpl(75);
 
+      pgrs.setCmpl(75);
       await new Promise(r => setTimeout(r, 400));
 
-      const des = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, evn.evnt));
-      setCmpl(100);
+      const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, evn.evnt));
 
+      pgrs.setDone(() => {
+        nxtrtr.push("/event/" + evn.evnt);
+      });
+
+      addScss(scss);
       await new Promise(r => setTimeout(r, 200));
+
     } catch (err) {
-      setCmpl(0);
-      setCncl(true);
       setErro((old: Errors[]) => [...old, new Errors("Oh snap, the beavers don't want you to tell the world right now!", err as Error)]);
     }
   };
@@ -136,9 +140,6 @@ export default function Page() {
       <div className="px-2 mt-4 md:ml-64">
         <div className="px-2 flex grid justify-items-center">
           <div className="w-full max-w-xl dark:text-gray-50">
-            {isLoading && (
-              <></>
-            )}
             {!isLoading && user && (
               <form onSubmit={handleSubmit}>
                 <div className="grid">
@@ -185,24 +186,12 @@ export default function Page() {
 
                 <button
                   type="submit"
-                  disabled={cmpl !== 0}
+                  disabled={pgrs.getCmpl() !== 0}
                   className="text-sm mb-6 font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
                   onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
                 >
                   Submit
                 </button>
-
-                {sbmt.map((x, i) => (
-                  <ProgressToast
-                    key={i}
-                    cmpl={cmpl}
-                    cncl={cncl}
-                    desc="Adding New Event"
-                    done={() => {
-                      window.location.href = "/event/" + evnt;
-                    }}
-                  />
-                ))}
 
                 {erro.map((x, i) => (
                   <ErrorToast
@@ -210,12 +199,6 @@ export default function Page() {
                     erro={x}
                   />
                 ))}
-
-                {cmpl >= 100 && (
-                  <SuccessToast
-                    desc="Hooray, event addedd milady!"
-                  />
-                )}
               </form>
             )}
             {!isLoading && !user && (
