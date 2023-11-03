@@ -1,8 +1,32 @@
 import { ReactNode, createContext, useContext } from "react";
+import useSWR from "swr";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-import { CacheAuthToken } from "@/modules/cache/auth/CacheAuthToken";
+const fetcher = async (url: string): Promise<string> => {
+  const res = await fetch(url);
+  const dat = await res.clone().json();
+
+  return dat;
+};
+
+// fetchAuthToken is a SWR Module maintaining the user's session based short
+// lived OAuth access token. Since access tokens ought to change very
+// frequently, data is automatically refreshed every minute. The SWR hook can be
+// deactivated if act is false.
+const fetchAuthToken = (act: boolean): string => {
+  const { data, error } = useSWR(
+    act ? "/api/auth/token" : null, // nodejs server url
+    fetcher,
+    {
+      refreshInterval: 60 * 1000, // every minute
+    },
+  )
+
+  if (error || !data) return "";
+
+  return data;
+};
 
 const defaultContextValue = {
   atkn: "",
@@ -15,17 +39,21 @@ const TokenContext = createContext(defaultContextValue);
 export const TokenProvider = ({ children }: { children: ReactNode }) => {
   const usrctx = useUser();
 
-  const cat: string = CacheAuthToken(usrctx.user ? true : false);
+  if (usrctx.isLoading) {
+    return <></>;
+  }
+
+  const atkn: string = fetchAuthToken(usrctx.user ? true : false);
 
   return (
     <>
-      {(!usrctx.isLoading && !usrctx.user && !cat &&
+      {(!usrctx.user && !atkn &&
         <TokenContext.Provider value={{ atkn: "", auth: false, uuid: "" }}>
           {children}
         </TokenContext.Provider>
       )}
-      {(!usrctx.isLoading && usrctx.user && cat &&
-        <TokenContext.Provider value={{ atkn: cat, auth: true, uuid: usrctx.user.intern?.uuid || "" }}>
+      {(usrctx.user && atkn &&
+        <TokenContext.Provider value={{ atkn: atkn, auth: true, uuid: usrctx.user.intern?.uuid || "" }}>
           {children}
         </TokenContext.Provider>
       )}
