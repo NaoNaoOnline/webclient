@@ -108,6 +108,7 @@ export default function Footer(props: Props) {
       />
 
       <ListDialog
+        atkn={props.atkn}
         clos={() => setShow(false)}
         show={show}
       />

@@ -15,6 +15,8 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { EventCreate } from "@/modules/api/event/create/Create";
 import { NewEventCreateRequest } from "@/modules/api/event/create/Request";
 import { DescriptionCreate } from "@/modules/api/description/create/Create";
@@ -25,16 +27,15 @@ import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 import CacheApiLabel from "@/modules/cache/api/Label";
-import CacheAuthToken from "@/modules/cache/auth/Token";
 
 export default function Page() {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user, isLoading } = useUser();
+  const { atkn } = useToken();
   const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);
 
-  const cat: string = CacheAuthToken(user ? true : false);
   const cal: LabelSearchResponse[] = CacheApiLabel();
 
   const bltn: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "bltn").map((y) => y.name), ...blck]
@@ -64,7 +65,7 @@ export default function Page() {
       // Create the category labels in the backend, if any.
       let nci: string[] = [];
       if (dcn.length > 0) {
-        const res = await LabelCreate(LabelCreateRequest(cat, "cate", dcn));
+        const res = await LabelCreate(LabelCreateRequest(atkn, "cate", dcn));
         nci = res.map((x: LabelCreateResponse) => x.labl);
 
         // Add the created category labels to the local copy of cashed API
@@ -82,7 +83,7 @@ export default function Page() {
       // Create the host labels in the backend, if any.
       let nhi: string[] = [];
       if (dhn.length > 0) {
-        const res = await LabelCreate(LabelCreateRequest(cat, "host", dhn));
+        const res = await LabelCreate(LabelCreateRequest(atkn, "host", dhn));
         nhi = res.map((x: LabelCreateResponse) => x.labl);
 
         // Add the created host labels to the local copy of cashed API
@@ -111,12 +112,12 @@ export default function Page() {
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.
-      const [evn] = await EventCreate([NewEventCreateRequest(frm, cat, cci, chi)]);
+      const [evn] = await EventCreate([NewEventCreateRequest(frm, atkn, cci, chi)]);
 
       pgrs.setCmpl(75);
       await new Promise(r => setTimeout(r, 400));
 
-      const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, cat, evn.evnt));
+      const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atkn, evn.evnt));
 
       pgrs.setDone(() => {
         nxtrtr.push("/event/" + evn.evnt);

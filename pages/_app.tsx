@@ -13,6 +13,7 @@ import Sidebar from "@/components/app/sidebar/Sidebar";
 import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
 import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
 import { ToastProvider } from "@/components/app/toast/ToastContext";
+import { TokenProvider } from "@/components/app/token/TokenContext";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
@@ -59,20 +60,22 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
 
   return (
     <UserProvider>
-      <ToastProvider>
-        <ManualContext.Provider value={[manu, setManu]}>
-          <SystemContext.Provider value={[syst, setSyst]}>
-            <NetworkContext.Provider value={[netw, setNetw]}>
-              <WagmiConfig config={config}>
-                <ConnectKitProvider theme="auto" mode={manu as Mode}>
-                  <Sidebar />
-                  <Component {...pageProps} />
-                </ConnectKitProvider>
-              </WagmiConfig>
-            </NetworkContext.Provider>
-          </SystemContext.Provider>
-        </ManualContext.Provider>
-      </ToastProvider>
+      <TokenProvider>
+        <ToastProvider>
+          <ManualContext.Provider value={[manu, setManu]}>
+            <SystemContext.Provider value={[syst, setSyst]}>
+              <NetworkContext.Provider value={[netw, setNetw]}>
+                <WagmiConfig config={config}>
+                  <ConnectKitProvider theme="auto" mode={manu as Mode}>
+                    <Sidebar />
+                    <Component {...pageProps} />
+                  </ConnectKitProvider>
+                </WagmiConfig>
+              </NetworkContext.Provider>
+            </SystemContext.Provider>
+          </ManualContext.Provider>
+        </ToastProvider>
+      </TokenProvider>
     </UserProvider>
   );
 }

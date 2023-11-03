@@ -3,13 +3,16 @@ import { KeyboardEvent, MouseEvent } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import ListSearch from "./ListSearch";
+
+import { ListCreateForm } from "@/components/app/list/create/ListCreateForm";
+import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
 function onItemClick(e: MouseEvent<HTMLDivElement>) {
   e.stopPropagation();
 }
 
 interface Props {
+  atkn: string;
   clos: () => void; // close dialog callback
   show: boolean;    // show dialog
 }
@@ -52,16 +55,17 @@ export default function ListDialog(props: Props) {
             <div className="absolute w-[1px] top-[13%] right-[50%] h-[70%] bg-gray-300 dark:bg-gray-600"></div>
 
             <div className="relative w-full max-h-[340px] px-2 mb-6 col-span-5">
-              <ListSearch
-                clis={(lis: string) => console.log("create", lis)}
+              <ListCreateForm
+                atkn={props.atkn}
+                done={(lis: ListSearchResponse) => console.log("TODO add created list to local copy")}
+                fail={(des: string) => console.log("TODO rem failed description from local copy")}
                 list={[
-                  { list: "1", name: "one" },
-                  { list: "2", name: "two" },
-                  { list: "3", name: "three" },
-                  { list: "4", name: "four" },
-                  { list: "5", name: "five" },
+                  { crtd: "", list: "1", user: "", desc: "one" },
+                  { crtd: "", list: "2", user: "", desc: "two" },
+                  { crtd: "", list: "3", user: "", desc: "three" },
+                  { crtd: "", list: "4", user: "", desc: "four" },
+                  { crtd: "", list: "5", user: "", desc: "five" },
                 ]}
-                slct={(lis) => console.log("selected", lis)}
               />
             </div>
           </div>

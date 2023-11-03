@@ -6,31 +6,28 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 
 import { CheckIcon } from "@heroicons/react/24/outline";
 
-interface List {
-  list: string; // list ID
-  name: string; // list name
-}
+import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
 interface Props {
-  clis: (lis: string) => void;
-  list: List[];
-  slct: (lis: List[]) => void;
+  clis: (lis: string) => void;               // create list callback
+  list: ListSearchResponse[];                // existing user lists
+  slct: (lis: ListSearchResponse[]) => void; // selected lists
 }
 
 export default function ListSearch(props: Props) {
-  const [list, setList] = useState<List[]>(props.list);
-  const [slct, setSlct] = useState<List[] | null>(null);
+  const [list, setList] = useState<ListSearchResponse[]>(props.list);
+  const [slct, setSlct] = useState<ListSearchResponse[] | null>(null);
   const [srch, setSrch] = useState<string>("");
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
   const srtd = list
     .filter((x) => {
-      return x.name.includes(srch);
+      return x.desc.includes(srch);
     })
-    .sort((x: List, y: List) => {
-      if (x.name < y.name) return -1;
-      if (x.name > y.name) return 1;
+    .sort((x: ListSearchResponse, y: ListSearchResponse) => {
+      if (x.desc < y.desc) return -1;
+      if (x.desc > y.desc) return 1;
 
       return 0;
     });
@@ -44,7 +41,7 @@ export default function ListSearch(props: Props) {
     let chck: boolean = slct && slct.includes(x) ? true : false;
 
     const onSelect = () => {
-      setSlct((old: List[] | null) => {
+      setSlct((old: ListSearchResponse[] | null) => {
         if (old && chck === false) return [...old, x];
         if (!old && chck === false) return [x];
         if (old && chck === true) return old.filter((y) => x.list !== y.list);
@@ -63,7 +60,7 @@ export default function ListSearch(props: Props) {
         chck = false;
       }
 
-      setSlct((old: List[] | null) => {
+      setSlct((old: ListSearchResponse[] | null) => {
         if (old && che === true && !old.includes(x)) return [...old, x];
         if (!old && che === true) return [x];
         if (old && che === false) return old.filter((y) => x.list !== y.list);
@@ -89,7 +86,7 @@ export default function ListSearch(props: Props) {
           </Checkbox.Indicator>
         </Checkbox.Root>
         <label className="col-span-9 text-sm leading-none truncate cursor-pointer" htmlFor={String(i)}>
-          {x.name}
+          {x.desc}
         </label>
       </Command.Item >
     );
@@ -97,8 +94,8 @@ export default function ListSearch(props: Props) {
 
   const onCreate = (val: string) => {
     props.clis(val);
-    setList((old: List[]) => {
-      return [...old, { name: val, list: "tmp" }];
+    setList((old: ListSearchResponse[]) => {
+      return [...old, { crtd: "", list: "", user: "", desc: val, }];
     });
     setSrch("");
   };

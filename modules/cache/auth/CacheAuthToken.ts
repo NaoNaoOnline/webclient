@@ -1,4 +1,4 @@
-import useSWR from "swr"
+import useSWR from "swr";
 
 const fetcher = async (url: string): Promise<string> => {
   const res = await fetch(url);
@@ -11,7 +11,7 @@ const fetcher = async (url: string): Promise<string> => {
 // lived OAuth access token. Since access tokens ought to change very
 // frequently, data is automatically refreshed every minute. The SWR hook can be
 // deactivated if act is false.
-export default function CacheAuthToken(act: boolean): string {
+export function CacheAuthToken(act: boolean): string {
   const { data, error } = useSWR(
     act ? "/api/auth/token" : null, // nodejs server url
     fetcher,
