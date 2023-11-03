@@ -12,7 +12,7 @@ import { useToken } from "@/components/app/token/TokenContext";
 
 export default function Page() {
   const nxtrtr = useRouter();
-  const { atkn, auth } = useToken();
+  const { auth } = useToken();
 
   // In case unauthenticated users try to access a page that is meant to only
   // render content for authenticated users, we redirect to the generic login
@@ -31,8 +31,8 @@ export default function Page() {
           <div className="w-full max-w-xl dark:text-gray-50">
             <SettingsHeader />
             <ThemeSection />
-            <WalletSection atkn={atkn} />
-            <PolicySection atkn={atkn} />
+            <WalletSection />
+            <PolicySection />
             <NetworkSection />
           </div>
         </div>
