@@ -162,15 +162,13 @@ export default function PolicySection(props: Props) {
                         onClick={() => {
                           if (form && form.current) {
                             if (form.current.checkValidity()) {
-                              if (!isConnected && show) {
-                                setCrea(true);
-                                show();
-                              }
+                              if (!isConnected) setCrea(true);
+                              if (show) show();
                             }
                           }
                         }}
                       >
-                        {crea && isConnected ? ensName ?? truncatedAddress : "Add Policy"}
+                        {isConnected ? ensName ?? truncatedAddress : "Add Policy"}
                       </button>
                     );
                   }}
