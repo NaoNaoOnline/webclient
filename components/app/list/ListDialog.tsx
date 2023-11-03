@@ -4,6 +4,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
+import { useCache } from "@/components/app/cache/CacheContext";
+
 import { ListCreateForm } from "@/components/app/list/create/ListCreateForm";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
@@ -12,12 +14,13 @@ function onItemClick(e: MouseEvent<HTMLDivElement>) {
 }
 
 interface Props {
-  atkn: string;
   clos: () => void; // close dialog callback
   show: boolean;    // show dialog
 }
 
 export default function ListDialog(props: Props) {
+  const { list, addList, remList } = useCache();
+
   return (
     <Dialog.Root
       open={props.show}
@@ -56,16 +59,9 @@ export default function ListDialog(props: Props) {
 
             <div className="relative w-full max-h-[340px] px-2 mb-6 col-span-5">
               <ListCreateForm
-                atkn={props.atkn}
-                done={(lis: ListSearchResponse) => console.log("TODO add created list to local copy")}
-                fail={(des: string) => console.log("TODO rem failed description from local copy")}
-                list={[
-                  { crtd: "", list: "1", user: "", desc: "one" },
-                  { crtd: "", list: "2", user: "", desc: "two" },
-                  { crtd: "", list: "3", user: "", desc: "three" },
-                  { crtd: "", list: "4", user: "", desc: "four" },
-                  { crtd: "", list: "5", user: "", desc: "five" },
-                ]}
+                done={(lis: ListSearchResponse) => addList(lis)}
+                fail={(lis: ListSearchResponse) => remList(lis)}
+                list={list}
               />
             </div>
           </div>

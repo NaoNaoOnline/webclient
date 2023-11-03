@@ -15,7 +15,7 @@ const fetcher = (atk: string) => {
 // valid access token must be provided with atk for making the RPC work
 // triggered by the custom fetcher. The SWR hook can be deactivated if act is
 // false.
-export default function CacheApiPolicy(act: boolean, atk: string): PolicySearchResponse[] {
+export function CacheApiPolicy(act: boolean, atk: string): PolicySearchResponse[] {
   const { data, error } = useSWR(
     act ? "policy.API/Cache" : null, // static cache key
     fetcher(atk),

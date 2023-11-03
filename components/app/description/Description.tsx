@@ -20,7 +20,6 @@ function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
 
 interface Props {
   amnt: number;
-  atkn: string;
   drem: (des: DescriptionSearchObject) => void;
   desc: DescriptionSearchObject;
   evnt: EventSearchObject;
@@ -98,7 +97,6 @@ export default function Description(props: Props) {
 
       {form && (
         <Form
-          atkn={props.atkn}
           cncl={() => setForm(false)}
           desc={props.desc.desc()}
           done={(txt: string) => {

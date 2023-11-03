@@ -9,9 +9,12 @@ import EventMenu from "@/components/app/event/EventMenu";
 import ListDialog from "@/components/app/list/ListDialog";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
+
+import { useToken } from "@/components/app/token/TokenContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
@@ -23,7 +26,6 @@ function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
 }
 
 interface Props {
-  atkn: string;
   dadd: () => void;
   desc: DescriptionSearchObject[];
   erem: (eve: EventSearchObject) => void;
@@ -34,8 +36,9 @@ interface Props {
 export default function Footer(props: Props) {
   const patnam = usePathname();
   const nxtrtr = useRouter();
+  const { auth, atkn } = useToken();
 
-  const { addErro, addPgrs, addScss } = useToast();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user } = useUser();
 
   const [show, setShow] = useState<boolean>(false); // show list dialog
@@ -58,10 +61,13 @@ export default function Footer(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [del] = await EventDelete([{ atkn: props.atkn, evnt: eve.evnt() }]);
+      const [del] = await EventDelete([{ atkn: atkn, evnt: eve.evnt() }]);
 
       pgrs.setDone(() => {
         props.erem(eve);
+        // If an event gets deleted from the event page, there is nothing on the
+        // event page anymore after the event itself got removed. In that case
+        // we redirect to whatever default view is active for the user.
         if (indPag(patnam)) nxtrtr.push("/");
       });
 
@@ -104,11 +110,16 @@ export default function Footer(props: Props) {
         crem={ownr && !hpnd}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
-        slis={() => setShow(true)}
+        slis={() => {
+          if (!auth) {
+            addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
+          } else {
+            setShow(true);
+          }
+        }}
       />
 
       <ListDialog
-        atkn={props.atkn}
         clos={() => setShow(false)}
         show={show}
       />

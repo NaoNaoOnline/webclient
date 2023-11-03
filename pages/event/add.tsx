@@ -1,12 +1,14 @@
 import { useState, FormEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
-import Header from "@/components/app/layout/Header";
+import { useCache } from "@/components/app/cache/CacheContext";
 
 import TextInput from "@/components/app/event/add/TextInput";
 import LabelInput from "@/components/app/event/add/LabelInput";
 import LinkInput from "@/components/app/event/add/LinkInput";
 import TimeBar from "@/components/app/event/add/TimeBar";
+
+import Header from "@/components/app/layout/Header";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -24,20 +26,17 @@ import { LabelCreateRequest } from "@/modules/api/label/create/Request";
 import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
-import CacheApiLabel from "@/modules/cache/api/Label";
-
 export default function Page() {
+  const { labl } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn, auth } = useToken();
   const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);
 
-  const cal: LabelSearchResponse[] = CacheApiLabel();
-
-  const bltn: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "bltn").map((y) => y.name), ...blck]
-  const cate: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
-  const host: string[] = [...cal.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
+  const bltn: string[] = [...labl.filter((x: LabelSearchResponse) => x.kind === "bltn").map((y) => y.name), ...blck]
+  const cate: string[] = [...labl.filter((x: LabelSearchResponse) => x.kind === "cate").map((y) => y.name)]
+  const host: string[] = [...labl.filter((x: LabelSearchResponse) => x.kind === "host").map((y) => y.name)]
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("Hooray, event addedd milady!");
@@ -56,8 +55,8 @@ export default function Page() {
 
       // Get the list of desired category names and desired host names that
       // still have to be created.
-      const dcn = unqLab(uci, cal);
-      const dhn = unqLab(uhi, cal);
+      const dcn = unqLab(uci, labl);
+      const dhn = unqLab(uhi, labl);
 
       // Create the category labels in the backend, if any.
       let nci: string[] = [];
@@ -70,7 +69,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          cal.push({ labl: nci[i], kind: "cate", name: dcn[i] });
+          labl.push({ labl: nci[i], kind: "cate", name: dcn[i] });
         }
 
         pgrs.setCmpl(25);
@@ -88,7 +87,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          cal.push({ labl: nhi[i], kind: "host", name: dhn[i] });
+          labl.push({ labl: nhi[i], kind: "host", name: dhn[i] });
         }
 
         pgrs.setCmpl(50);
@@ -104,8 +103,8 @@ export default function Page() {
       // having the same name as host labels makes any straight forward sense.
       // We just do not want to stand in the way of any use case that we might
       // not be able to see right now.
-      const cci = cal.filter(x => x.kind === "cate" && uci.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
-      const chi = cal.filter(x => x.kind === "host" && uhi.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
+      const cci = labl.filter(x => x.kind === "cate" && uci.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
+      const chi = labl.filter(x => x.kind === "host" && uhi.map(y => y.toLocaleLowerCase()).includes(x.name.toLocaleLowerCase())).map(z => z.labl);
 
       // Create the event resource in the backend, now that we ensured our label
       // ids.

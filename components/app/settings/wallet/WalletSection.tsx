@@ -8,6 +8,8 @@ import { FaEthereum } from "react-icons/fa";
 
 import CopyButton from "@/components/app/button/CopyButton";
 
+import { useCache } from "@/components/app/cache/CacheContext";
+
 import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 
@@ -16,35 +18,22 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
-import CacheApiWallet from "@/modules/cache/api/Wallet";
-
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
-interface Props {
-  atkn: string;
-}
+interface Props { }
 
 export default function WalletSection(props: Props) {
+  const { wllt, addWllt, remWllt } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
+  const { atkn } = useToken();
 
   const [addr, setAddr] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);
-  const [wllt, setWllt] = useState<WalletSearchResponse[] | null>(null);
-
-  // Setting the user's wallets based on the backend state should only happen
-  // initially. If a user deletes all wallets then CacheApiWallet may still
-  // provide locally cached wallet objects which should not be rendered anymore.
-  // Below we work with the assumption that the uninitialized wllt value is
-  // null, so that once it is an array of length 0, then setWllt is not being
-  // called anymore with the old state of caw, because we are then in the middle
-  // of the user experience.
-  const caw: WalletSearchResponse[] = CacheApiWallet(props.atkn ? true : false, props.atkn);
-  if (caw.length !== 0 && !wllt) {
-    setWllt(caw);
-  }
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
   const scss: SuccessPropsObject = new SuccessPropsObject("We trashed it Pinky, that wallet's dust!");
@@ -58,13 +47,10 @@ export default function WalletSection(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [del] = await WalletDelete([{ atkn: props.atkn, wllt: wal.intern.wllt }]);
+      const [del] = await WalletDelete([{ atkn: atkn, wllt: wal.intern.wllt }]);
 
       pgrs.setDone(() => {
-        setWllt((old: WalletSearchResponse[] | null) => {
-          if (old) return old.filter((x) => wal.intern.wllt !== x.intern.wllt);
-          return old;
-        });
+        remWllt(wal);
       });
 
       addScss(scss);
@@ -116,20 +102,11 @@ export default function WalletSection(props: Props) {
             cncl={() => {
               setClck(false);
             }}
-            atkn={props.atkn}
             done={(wal: WalletSearchResponse) => {
-              setWllt((old: WalletSearchResponse[] | null) => {
-                if (old === null) return [wal];
-
-                const ind = old.findIndex((x) => x.intern.wllt === wal.intern.wllt);
-
-                if (ind === -1) return [...old, wal];
-
-                const upd = [...old];
-                upd[ind] = wal;
-                return upd;
-              });
-
+              // We remove the given wallet before adding it to effectively
+              // cover the case of updating an existing wallet.
+              remWllt(wal);
+              addWllt(wal);
               setClck(false);
             }}
 

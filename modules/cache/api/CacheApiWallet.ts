@@ -14,7 +14,7 @@ const fetcher = (atk: string) => {
 // will always get the latest state available on browser tab refresh. A valid
 // access token must be provided with atk for making the RPC work triggered by
 // the custom fetcher. The SWR hook can be deactivated if act is false.
-export default function CacheApiWallet(act: boolean, atk: string): WalletSearchResponse[] {
+export function CacheApiWallet(act: boolean, atk: string): WalletSearchResponse[] {
   const { data, error } = useSWR(
     act ? "wallet.API/Cache" : null, // static cache key
     fetcher(atk),

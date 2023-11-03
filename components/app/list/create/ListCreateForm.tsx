@@ -5,18 +5,20 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { ListCreate } from "@/modules/api/list/create/Create";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
 interface Props {
-  atkn: string;
   done: (lis: ListSearchResponse) => void;
-  fail: (des: string) => void;
+  fail: (lis: ListSearchResponse) => void;
   list: ListSearchResponse[];
 }
 
 export function ListCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
+  const { atkn } = useToken();
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New List");
   const scss: SuccessPropsObject = new SuccessPropsObject("Certified, and what a list it is!");
@@ -30,7 +32,7 @@ export function ListCreateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [lis] = await ListCreate([{ atkn: props.atkn, desc: des }]);
+      const [lis] = await ListCreate([{ atkn: atkn, desc: des }]);
 
       const newList = {
         // intern
@@ -49,7 +51,7 @@ export function ListCreateForm(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      props.fail(des);
+      props.fail({ crtd: "", list: "", user: "", desc: des });
       addErro(new ErrorPropsObject("Don't know what to tell ya, shit's not right around here!", err as Error));
     }
   };
