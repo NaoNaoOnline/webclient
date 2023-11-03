@@ -17,13 +17,15 @@ import UserButtons from "@/components/app/sidebar/UserButtons";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 export default function Sidebar() {
   const { addInfo } = useToast();
-  const { user, isLoading } = useUser();
+  const { auth } = useToken();
 
   const newOnLinkClick = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
-      if (!isLoading && !user) {
+      if (!auth) {
         evn.preventDefault();
         addInfo(new InfoPropsObject(str));
       }
