@@ -2,7 +2,7 @@ import { MouseEvent } from "react";
 import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-import Form from "@/components/app/description/create/Form";
+import { DescriptionCreateForm } from "@/components/app/description/create/DescriptionCreateForm";
 import Description from "@/components/app/description/Description";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
@@ -202,7 +202,7 @@ export default function Content(props: Props) {
                 )}
               </div>
             </div>
-            <Form
+            <DescriptionCreateForm
               atkn={props.atkn}
               cncl={props.cncl}
               done={props.dadd}
