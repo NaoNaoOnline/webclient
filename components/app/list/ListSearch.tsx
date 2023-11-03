@@ -105,7 +105,7 @@ export default function ListSearch(props: Props) {
     if (slct) {
       props.slct(slct);
     }
-  }, [slct]);
+  }, [props, slct]);
 
   useEffect(() => {
     // The goal here is to auto-focus on the input text field, which we

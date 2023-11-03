@@ -7,8 +7,9 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 interface Props {
-  atkn: string;
   cncl: () => void;
   desc: string;
   done: (txt: string) => void;
@@ -17,6 +18,7 @@ interface Props {
 
 export default function Form(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
+  const { atkn } = useToken();
 
   const [text, setText] = useState<string>(props.text);
 
@@ -46,7 +48,7 @@ export default function Form(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: props.desc, like: "", text: txt }]);
+      const [upd] = await DescriptionUpdate([{ atkn: atkn, desc: props.desc, like: "", text: txt }]);
 
       setText(txt);
 

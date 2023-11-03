@@ -8,6 +8,7 @@ import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { Mode } from "connectkit/build/types";
 
+import { CacheProvider } from "@/components/app/cache/CacheContext";
 import { NetworkContext, getChain, getNetwork } from "@/components/app/network/Network";
 import Sidebar from "@/components/app/sidebar/Sidebar";
 import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
@@ -61,20 +62,22 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
   return (
     <UserProvider>
       <TokenProvider>
-        <ToastProvider>
-          <ManualContext.Provider value={[manu, setManu]}>
-            <SystemContext.Provider value={[syst, setSyst]}>
-              <NetworkContext.Provider value={[netw, setNetw]}>
-                <WagmiConfig config={config}>
-                  <ConnectKitProvider theme="auto" mode={manu as Mode}>
-                    <Sidebar />
-                    <Component {...pageProps} />
-                  </ConnectKitProvider>
-                </WagmiConfig>
-              </NetworkContext.Provider>
-            </SystemContext.Provider>
-          </ManualContext.Provider>
-        </ToastProvider>
+        <CacheProvider>
+          <ToastProvider>
+            <ManualContext.Provider value={[manu, setManu]}>
+              <SystemContext.Provider value={[syst, setSyst]}>
+                <NetworkContext.Provider value={[netw, setNetw]}>
+                  <WagmiConfig config={config}>
+                    <ConnectKitProvider theme="auto" mode={manu as Mode}>
+                      <Sidebar />
+                      <Component {...pageProps} />
+                    </ConnectKitProvider>
+                  </WagmiConfig>
+                </NetworkContext.Provider>
+              </SystemContext.Provider>
+            </ManualContext.Provider>
+          </ToastProvider>
+        </CacheProvider>
       </TokenProvider>
     </UserProvider>
   );

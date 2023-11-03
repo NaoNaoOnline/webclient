@@ -11,6 +11,8 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { DescriptionUpdate } from "@/modules/api/description/update/Update";
@@ -19,7 +21,6 @@ import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 interface Props {
-  atkn: string;
   cncl: () => void;
   dadd: (des: DescriptionSearchObject) => void;
   drem: (des: DescriptionSearchObject) => void;
@@ -33,6 +34,7 @@ interface Props {
 
 export default function Content(props: Props) {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
+  const { auth, atkn } = useToken();
   const { user } = useUser();
 
   const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
@@ -48,7 +50,7 @@ export default function Content(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [del] = await DescriptionDelete([{ atkn: props.atkn, desc: des.desc() }]);
+      const [del] = await DescriptionDelete([{ atkn: atkn, desc: des.desc() }]);
 
       pgrs.setDone(() => {
         props.drem(des);
@@ -64,7 +66,7 @@ export default function Content(props: Props) {
 
   const voteCreate = async function (des: DescriptionSearchObject): Promise<DescriptionUpdateResponse> {
     try {
-      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "add", text: "" }]);
+      const [upd] = await DescriptionUpdate([{ atkn: atkn, desc: des.desc(), like: "add", text: "" }]);
       return upd;
     } catch (err) {
       addErro(new ErrorPropsObject("Darn it, the beavers don't want you to push that button right now!", err as Error));
@@ -74,7 +76,7 @@ export default function Content(props: Props) {
 
   const voteDelete = async function (des: DescriptionSearchObject): Promise<DescriptionUpdateResponse> {
     try {
-      const [upd] = await DescriptionUpdate([{ atkn: props.atkn, desc: des.desc(), like: "rem", text: "" }]);
+      const [upd] = await DescriptionUpdate([{ atkn: atkn, desc: des.desc(), like: "rem", text: "" }]);
       return upd;
     } catch (err) {
       addErro(new ErrorPropsObject("Oh no, the beavers don't want you to take it back like that!", err as Error));
@@ -88,7 +90,7 @@ export default function Content(props: Props) {
   // radd is called as "on picker add" callback, which is the event invoked when
   // the user clicks on a reaction icon in the reaction picker component.
   const radd = (des: DescriptionSearchObject, use: boolean) => {
-    if (props.atkn == "") {
+    if (!auth) {
       addInfo(info);
       return;
     }
@@ -117,7 +119,7 @@ export default function Content(props: Props) {
   // rrem is called as "on button remove" callback, which is the event invoked when
   // the user clicks on a reaction icon in the reaction button component.
   const rrem = (des: DescriptionSearchObject, use: boolean) => {
-    if (props.atkn == "") {
+    if (!auth) {
       addInfo(info);
       return;
     }
@@ -144,7 +146,6 @@ export default function Content(props: Props) {
         {!props.xpnd && props.desc.length !== 0 && (
           <Description
             amnt={props.desc.length}
-            atkn={props.atkn}
             desc={props.desc[0]}
             drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
             evnt={props.evnt}
@@ -158,7 +159,6 @@ export default function Content(props: Props) {
               <Description
                 key={i}
                 amnt={props.desc.length}
-                atkn={props.atkn}
                 desc={x}
                 drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
                 evnt={props.evnt}
@@ -203,7 +203,6 @@ export default function Content(props: Props) {
               </div>
             </div>
             <DescriptionCreateForm
-              atkn={props.atkn}
               cncl={props.cncl}
               done={props.dadd}
               evnt={props.evnt.evnt()}

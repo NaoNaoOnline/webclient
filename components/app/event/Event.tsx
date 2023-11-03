@@ -3,6 +3,8 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
+import { useCache } from "@/components/app/cache/CacheContext";
+
 import Content from "@/components/app/event/Content";
 import Footer from "@/components/app/event/Footer";
 import Header from "@/components/app/event/Header";
@@ -10,6 +12,8 @@ import Header from "@/components/app/event/Header";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastContext";
+
+import { useToken } from "@/components/app/token/TokenContext";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -20,10 +24,7 @@ import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
-import CacheApiLabel from "@/modules/cache/api/Label";
-
 interface Props {
-  atkn: string;
   cate?: string[];
   evnt?: string[];
   host?: string[];
@@ -39,24 +40,20 @@ interface ToggleState {
 }
 
 export default function Event(props: Props) {
+  const { labl } = useCache();
   const { addErro, addInfo } = useToast();
+  const { auth, atkn } = useToken();
   const { user } = useUser();
 
   const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
   const [form, setForm] = useState<ToggleState>({});
-  const [labl, setLabl] = useState<LabelSearchResponse[] | null>(null);
   const [ldng, setLdng] = useState<boolean>(true);
   const [xpnd, setXpnd] = useState<ToggleState>({});
 
   const clld = useRef(false);
 
   const info: InfoPropsObject = new InfoPropsObject("The beavers need you to login if you want to add a new description.");
-
-  const cal: LabelSearchResponse[] = CacheApiLabel();
-  if (cal && cal.length !== 0 && (!labl || labl.length === 0)) {
-    setLabl(cal);
-  }
 
   const addDesc = (des: DescriptionSearchObject) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
@@ -179,7 +176,7 @@ export default function Event(props: Props) {
 
         if (props.strt && props.stop && props.rctn) {
           req = [{
-            atkn: props.atkn,
+            atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
@@ -215,7 +212,7 @@ export default function Event(props: Props) {
           return;
         }
 
-        const des = await DescriptionSearch(evn.map(x => ({ atkn: props.atkn, evnt: x.evnt })));
+        const des = await DescriptionSearch(evn.map(x => ({ atkn: atkn, evnt: x.evnt })));
         const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
 
         setEvnt(evn.map((x) => new EventSearchObject(x)));
@@ -243,7 +240,7 @@ export default function Event(props: Props) {
       clld.current = true;
       getData();
     }
-  }, [props.atkn, props.cate, props.evnt, props.host, props.time, props.rctn, props.user, labl]);
+  }, [props, atkn, labl, addErro]);
 
   return (
     <>
@@ -263,7 +260,6 @@ export default function Event(props: Props) {
                       />
 
                       <Content
-                        atkn={props.atkn}
                         cncl={() => tglForm(x.evnt())}
                         desc={fltr[x.evnt()]}
                         dadd={(des: DescriptionSearchObject) => {
@@ -279,9 +275,8 @@ export default function Event(props: Props) {
                       />
 
                       <Footer
-                        atkn={props.atkn}
                         dadd={() => {
-                          if (props.atkn == "") {
+                          if (!auth) {
                             addInfo(info);
                           } else {
                             tglForm(x.evnt());
@@ -324,7 +319,6 @@ export default function Event(props: Props) {
                     />
 
                     <Content
-                      atkn={props.atkn}
                       cncl={() => tglForm(x.evnt())}
                       desc={fltr[x.evnt()]}
                       dadd={(des: DescriptionSearchObject) => {
@@ -340,9 +334,8 @@ export default function Event(props: Props) {
                     />
 
                     <Footer
-                      atkn={props.atkn}
                       dadd={() => {
-                        if (props.atkn == "") {
+                        if (!auth) {
                           addInfo(info);
                         } else {
                           tglForm(x.evnt());

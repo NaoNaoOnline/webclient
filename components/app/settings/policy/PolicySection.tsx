@@ -7,35 +7,31 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import CopyButton from "@/components/app/button/CopyButton";
 
+import { useCache } from "@/components/app/cache/CacheContext";
+
 import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 
-import CacheApiPolicy from "@/modules/cache/api/Policy";
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyUpdate } from "@/modules/api/policy/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
-interface Props {
-  atkn: string;
-}
+interface Props { }
 
 export default function PolicySection(props: Props) {
+  const { plcy, addPlcy, remPlcy } = useCache();
+  const { atkn } = useToken();
+
   const [crea, setCrea] = useState<boolean>(false);
   const [dele, setDele] = useState<boolean>(false);
   const [dltd, setDltd] = useState<PolicySearchResponse | null>(null);
-  const [plcy, setPlcy] = useState<PolicySearchResponse[] | null>(null);
 
-  const clld = useRef<boolean>(false);
   const form = useRef<HTMLFormElement | null>(null);
-
-  const caw: PolicySearchResponse[] = CacheApiPolicy(props.atkn ? true : false, props.atkn);
-  if (!clld.current && caw.length !== 0 && !plcy) {
-    clld.current = true;
-    polUser(caw).then((x: PolicySearchResponse[]) => setPlcy((x)));
-  }
 
   const handleSubmit = async (evn: FormEvent) => {
     evn.preventDefault();
@@ -43,9 +39,6 @@ export default function PolicySection(props: Props) {
 
   return (
     <>
-      {!plcy && (
-        <></>
-      )}
       {plcy && (
         <>
           <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
@@ -182,21 +175,10 @@ export default function PolicySection(props: Props) {
                   done={(pol: PolicySearchResponse) => {
                     form.current?.reset();
 
-                    setPlcy((old: PolicySearchResponse[] | null) => {
-                      if (old === null) return [pol];
-
-                      const ind = old.findIndex((x) => x.syst === pol.syst && x.memb === pol.memb && x.acce === pol.acce);
-
-                      if (ind === -1) return [...old, pol];
-
-                      const upd = [...old];
-                      upd[ind] = pol;
-                      return upd;
-                    });
-
+                    addPlcy(pol);
                     setCrea(false);
 
-                    PolicyUpdate([{ atkn: props.atkn, sync: "default" }]);
+                    PolicyUpdate([{ atkn: atkn, sync: "default" }]);
                   }}
                   form={form}
                 />
@@ -209,16 +191,13 @@ export default function PolicySection(props: Props) {
                   }}
                   dltd={dltd}
                   done={() => {
-                    if (plcy && dltd) {
-                      setPlcy((old: PolicySearchResponse[] | null) => {
-                        if (old) return old.filter((x) => !(x.syst === dltd.syst && x.memb === dltd.memb && x.acce === dltd.acce));
-                        return old;
-                      });
+                    if (dltd) {
+                      remPlcy(dltd);
 
                       setDele(false);
                       setDltd(null);
 
-                      PolicyUpdate([{ atkn: props.atkn, sync: "default" }]);
+                      PolicyUpdate([{ atkn: atkn, sync: "default" }]);
                     }
                   }}
                   form={form}

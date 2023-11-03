@@ -9,8 +9,9 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 interface Props {
-  atkn: string;
   cncl: () => void;
   done: (des: DescriptionSearchObject) => void;
   evnt: string;
@@ -18,6 +19,7 @@ interface Props {
 
 export function DescriptionCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
+  const { atkn } = useToken();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
@@ -37,7 +39,7 @@ export function DescriptionCreateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, props.atkn, props.evnt));
+      const [des] = await DescriptionCreate(NewDescriptionCreateRequestFromFormData(frm, atkn, props.evnt));
 
       const newDesc = new DescriptionSearchObject({
         // local

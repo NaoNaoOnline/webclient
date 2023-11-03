@@ -3,9 +3,15 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "fastly.picsum.photos",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "fastly.picsum.photos",
+      },
     ],
   },
 };

@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useMemo, useRef } from "react";
 
 import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
@@ -36,8 +36,7 @@ export default function PolicyCreateForm(props: Props) {
 
   const chid = getChain(netw)[0].id;
 
-  const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Policy");
-  const scss: SuccessPropsObject = new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!");
+  const pgrs: ProgressPropsObject = useMemo(() => new ProgressPropsObject("Removing Policy"), []);
 
   let sys = "";
   let mem = "";
@@ -105,7 +104,7 @@ export default function PolicyCreateForm(props: Props) {
       disconnect();
       clld.current = false;
     }
-  }, [props, waiErr, wriErr, disconnect]);
+  }, [props, disconnect, waiErr, wriErr, addErro]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -113,12 +112,12 @@ export default function PolicyCreateForm(props: Props) {
         if (props.dltd) props.done();
       });
 
-      addScss(scss);
+      addScss(new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!"));
 
       clld.current = false;
       disconnect();
     }
-  }, [isSuccess, disconnect, props.dltd]);
+  }, [props, disconnect, isSuccess, pgrs, addScss]);
 
   return <></>;
 };

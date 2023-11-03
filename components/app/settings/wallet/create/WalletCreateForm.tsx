@@ -10,6 +10,8 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
+import { useToken } from "@/components/app/token/TokenContext";
+
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { WalletUpdate } from "@/modules/api/wallet/update/Update";
@@ -18,7 +20,6 @@ import { truncateEthAddress } from "@/modules/wallet/Address";
 
 interface Props {
   actv: boolean;
-  atkn: string;
   cncl: () => void;
   done: (wal: WalletSearchResponse) => void;
   wllt: WalletSearchResponse[] | null;
@@ -29,6 +30,7 @@ export default function WalletCreateForm(props: Props) {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { addErro, addPgrs, addScss } = useToast();
+  const { atkn } = useToken();
 
   const clld = useRef(false);
 
@@ -44,7 +46,7 @@ export default function WalletCreateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [wal] = await WalletCreate([{ atkn: props.atkn, kind: "eth", mess: mess, pubk: pubk, sign: sign }]);
+      const [wal] = await WalletCreate([{ atkn: atkn, kind: "eth", mess: mess, pubk: pubk, sign: sign }]);
 
       const newWllt = {
         intern: {
@@ -91,7 +93,7 @@ export default function WalletCreateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [wal] = await WalletUpdate([{ atkn: props.atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.intern.wllt }]);
+      const [wal] = await WalletUpdate([{ atkn: atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.intern.wllt }]);
 
       const newWllt = {
         intern: {
