@@ -240,7 +240,7 @@ export default function Event(props: Props) {
       clld.current = true;
       getData();
     }
-  }, [props.cate, props.evnt, props.host, props.time, props.rctn, props.user, atkn, labl]);
+  }, [props, atkn, labl, addErro]);
 
   return (
     <>

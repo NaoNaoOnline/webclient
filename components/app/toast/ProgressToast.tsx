@@ -87,7 +87,7 @@ export function ProgressToast(props: { obj: ProgressPropsObject }) {
         setOpen(false);
       }, 3000); // 3 seconds
     }
-  }, [props.obj.getCmpl()]);
+  }, [props.obj]);
 
   useEffect(() => {
     if (props.obj.getCncl() && open) {
@@ -96,14 +96,14 @@ export function ProgressToast(props: { obj: ProgressPropsObject }) {
         setTerm(true);
       }, 3000); // 3 seconds
     }
-  }, [props.obj.getCncl(), open]);
+  }, [props.obj, open]);
 
   useEffect(() => {
     if (props.obj.getCmpl() >= 100 && !term) {
       props.obj.getDone()();
       setTerm(true);
     }
-  }, [props.obj.getCmpl(), props.obj.getDone(), term]);
+  }, [props.obj, term]);
 
   return (
     <>

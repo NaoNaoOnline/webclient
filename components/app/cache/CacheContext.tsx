@@ -67,7 +67,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
       if (lab.length === 0) return;
       setLabl(lab);
     });
-  }, [labr.current]);
+  }, []);
 
   useEffect(() => {
     if (lisr.current || !auth) return;
@@ -77,7 +77,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
       if (lis.length === 0) return;
       setList(lis);
     });
-  }, [lisr.current, auth]);
+  }, [atkn, auth, uuid]);
 
   useEffect(() => {
     if (polr.current || !auth) return;
@@ -87,7 +87,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
       if (pol.length === 0) return;
       setPlcy(pol);
     });
-  }, [polr.current, auth]);
+  }, [atkn, auth]);
 
   useEffect(() => {
     if (walr.current || !auth) return;
@@ -97,7 +97,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
       if (wal.length === 0) return;
       setWllt(wal);
     });
-  }, [walr.current, auth]);
+  }, [atkn, auth]);
 
   const addLabl = (lab: LabelSearchResponse) => {
     setLabl((old: LabelSearchResponse[]) => [...old, lab]);

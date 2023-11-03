@@ -10,11 +10,11 @@ const fetcher = async (url: string): Promise<string> => {
   return dat;
 };
 
-// fetchAuthToken is a SWR Module maintaining the user's session based short
+// FetchAuthToken is a SWR Module maintaining the user's session based short
 // lived OAuth access token. Since access tokens ought to change very
 // frequently, data is automatically refreshed every minute. The SWR hook can be
 // deactivated if act is false.
-const fetchAuthToken = (act: boolean): string => {
+const FetchAuthToken = (act: boolean): string => {
   const { data, error } = useSWR(
     act ? "/api/auth/token" : null, // nodejs server url
     fetcher,
@@ -43,7 +43,7 @@ export const TokenProvider = ({ children }: { children: ReactNode }) => {
     return <></>;
   }
 
-  const atkn: string = fetchAuthToken(usrctx.user ? true : false);
+  const atkn: string = FetchAuthToken(usrctx.user ? true : false);
 
   return (
     <>
