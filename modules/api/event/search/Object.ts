@@ -35,12 +35,20 @@ export default class EventSearchObject {
   // public
   //
 
-  // cate returns category label names based on this.res.cate, which is a comma
-  // separated string of label IDs, matching any of lsr.labl.
-  cate(lsr: LabelSearchResponse[]): string[] {
-    const ids = this.res.cate.split(',').map(item => item.trim());
-    const lab = lsr.filter(x => ids.includes(x.labl));
-    return lab.map(x => x.name).sort();
+  // cate returns the category labels for this event, mapping abstract label IDs
+  // to canonical object representations.
+  cate(all: LabelSearchResponse[]): LabelSearchResponse[] {
+    const ids: string[] = this.res.cate.split(',').map(item => item.trim());
+
+    const lab: LabelSearchResponse[] = all.filter((x: LabelSearchResponse) => ids.includes(x.labl));
+
+    lab.sort((x: LabelSearchResponse, y: LabelSearchResponse) => {
+      if (x.name < y.name) return -1;
+      if (x.name > y.name) return +1;
+      return 0;
+    });
+
+    return lab;
   }
 
   // dura returns the spacetime of this event's end time in UTC.
@@ -48,12 +56,20 @@ export default class EventSearchObject {
     return spacetime((Number(this.res.time) * 1000) + (Number(this.res.dura) * 1000)).goto("GMT");
   }
 
-  // cate returns host label names based on this.res.host, which is a comma
-  // separated string of label IDs, matching any of lsr.labl.
-  host(lsr: LabelSearchResponse[]): string[] {
-    const ids = this.res.host.split(',').map(item => item.trim());
-    const lab = lsr.filter(x => ids.includes(x.labl));
-    return lab.map(x => x.name).sort();
+  // host returns the host labels for this event, mapping abstract label IDs to
+  // canonical object representations.
+  host(all: LabelSearchResponse[]): LabelSearchResponse[] {
+    const ids: string[] = this.res.host.split(',').map(item => item.trim());
+
+    const lab: LabelSearchResponse[] = all.filter((x: LabelSearchResponse) => ids.includes(x.labl));
+
+    lab.sort((x: LabelSearchResponse, y: LabelSearchResponse) => {
+      if (x.name < y.name) return -1;
+      if (x.name > y.name) return +1;
+      return 0;
+    });
+
+    return lab;
   }
 
   link(): string {

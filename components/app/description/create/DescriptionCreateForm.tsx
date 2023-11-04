@@ -19,7 +19,7 @@ interface Props {
 
 export function DescriptionCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
+  const { atkn, uuid } = useToken();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
@@ -50,7 +50,7 @@ export function DescriptionCreateForm(props: Props) {
         // intern
         crtd: des.crtd,
         desc: des.desc,
-        user: "",
+        user: uuid,
         // public
         evnt: props.evnt,
         text: frm.get("description-input")?.toString() || "",

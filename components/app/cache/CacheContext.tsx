@@ -120,7 +120,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const remList = (lis: ListSearchResponse) => {
-    setList((old: ListSearchResponse[]) => old.filter((x) => x.list !== lis.list || x.desc !== lis.desc));
+    setList((old: ListSearchResponse[]) => old.filter((x) => (x.list !== "" && lis.list !== "" && x.list === lis.list) || ((x.list === "" || lis.list === "") && x.desc === lis.desc)));
   };
 
   const remPlcy = (pol: PolicySearchResponse) => {

@@ -39,11 +39,11 @@ const TokenContext = createContext(defaultContextValue);
 export const TokenProvider = ({ children }: { children: ReactNode }) => {
   const usrctx = useUser();
 
+  const atkn: string = FetchAuthToken(!usrctx.isLoading && usrctx.user ? true : false);
+
   if (usrctx.isLoading) {
     return <></>;
   }
-
-  const atkn: string = FetchAuthToken(usrctx.user ? true : false);
 
   return (
     <>

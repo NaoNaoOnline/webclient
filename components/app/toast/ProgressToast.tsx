@@ -60,8 +60,8 @@ export class ProgressPropsObject {
   }
 
   setDone(val: () => void) {
-    this.setCmpl(100);
     this.props.done = val;
+    this.setCmpl(100);
   }
 
   setRndr(val: () => void) {
@@ -81,29 +81,33 @@ export function ProgressToast(props: { obj: ProgressPropsObject }) {
   // eventually succeeded.
   const [term, setTerm] = useState<boolean>(false);
 
+  const cmpl: number = props.obj.getCmpl();
+  const cncl: boolean = props.obj.getCncl();
+  const done: () => void = props.obj.getDone();
+
   useEffect(() => {
-    if (props.obj.getCmpl() >= 100) {
+    if (cmpl >= 100) {
       setTimeout(() => {
         setOpen(false);
       }, 3000); // 3 seconds
     }
-  }, [props.obj]);
+  }, [cmpl]);
 
   useEffect(() => {
-    if (props.obj.getCncl() && open) {
+    if (cncl && open) {
       setTimeout(() => {
         setOpen(false);
         setTerm(true);
       }, 3000); // 3 seconds
     }
-  }, [props.obj, open]);
+  }, [cncl, open]);
 
   useEffect(() => {
-    if (props.obj.getCmpl() >= 100 && !term) {
-      props.obj.getDone()();
+    if (cmpl >= 100 && !term) {
+      done();
       setTerm(true);
     }
-  }, [props.obj, term]);
+  }, [cmpl, done, term]);
 
   return (
     <>

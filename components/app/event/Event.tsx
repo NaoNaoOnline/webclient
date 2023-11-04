@@ -393,7 +393,7 @@ function filDesc(evn: EventSearchObject, des: DescriptionSearchObject[]): Descri
     return xti - yti;
   });
 
-  return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt())
+  return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt());
 }
 
 

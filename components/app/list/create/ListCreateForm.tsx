@@ -1,3 +1,5 @@
+import { MutableRefObject } from "react";
+
 import ListSearch from "@/components/app/list/ListSearch";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
@@ -14,16 +16,18 @@ interface Props {
   done: (lis: ListSearchResponse) => void;
   fail: (lis: ListSearchResponse) => void;
   list: ListSearchResponse[];
+  salt: string;
+  slct: (lis: ListSearchResponse[]) => void;
 }
 
 export function ListCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
-
-  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New List");
-  const scss: SuccessPropsObject = new SuccessPropsObject("Certified, and what a list it is!");
+  const { atkn, uuid } = useToken();
 
   const createList = async (des: string) => {
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New List");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Certified, and what a list it is!");
+
     addPgrs(pgrs);
 
     try {
@@ -38,7 +42,7 @@ export function ListCreateForm(props: Props) {
         // intern
         crtd: lis.crtd,
         list: lis.list,
-        user: "",
+        user: uuid,
         // public
         desc: des,
       };
@@ -60,7 +64,8 @@ export function ListCreateForm(props: Props) {
     <ListSearch
       clis={(des: string) => createList(des)}
       list={props.list}
-      slct={(lis) => console.log("selected", lis)}
+      salt={props.salt}
+      slct={(lis: ListSearchResponse[]) => props.slct(lis)}
     />
   );
 }
