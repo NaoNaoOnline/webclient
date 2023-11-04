@@ -91,18 +91,16 @@ export default function Footer(props: Props) {
       className="flex flex-1 mb-4 rounded-b-md dark:bg-gray-700 items-center justify-between bg-white shadow-gray-400 dark:shadow-black shadow-[0_0_2px] outline-none cursor-pointer"
     >
       <div className="flex flex-row w-full">
-        {props.labl && (
-          props.evnt?.cate(props.labl).map((x, i) => (
-            <a
-              key={i}
-              href={`/event?cate=${encodeURIComponent(x)}`}
-              onClick={onLinkClick}
-              className="flex items-center pl-2 py-2 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
-            >
-              #{x}
-            </a>
-          ))
-        )}
+        {props.evnt.cate(props.labl).map((x, i) => (
+          <a
+            key={i}
+            href={`/event?cate=${encodeURIComponent(x.name)}`}
+            onClick={onLinkClick}
+            className="flex items-center pl-2 py-2 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
+          >
+            #{x.name}
+          </a>
+        ))}
       </div>
 
       <EventMenu
@@ -121,6 +119,9 @@ export default function Footer(props: Props) {
 
       <ListDialog
         clos={() => setShow(false)}
+        desc={props.desc}
+        evnt={props.evnt}
+        labl={props.labl}
         show={show}
       />
     </div>

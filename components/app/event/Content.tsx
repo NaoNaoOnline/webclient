@@ -202,11 +202,13 @@ export default function Content(props: Props) {
                 )}
               </div>
             </div>
+
             <DescriptionCreateForm
               cncl={props.cncl}
               done={props.dadd}
               evnt={props.evnt.evnt()}
             />
+
           </div>
         )}
       </div>

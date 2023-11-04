@@ -38,18 +38,16 @@ export default function Event(props: Props) {
     >
       <div className="flex flex-row w-full dark:bg-gray-700 items-center justify-between bg-white outline-none">
         <div className="flex flex-row w-full">
-          {props.labl && (
-            props.evnt?.host(props.labl).map((x, i) => (
-              <a
-                key={i}
-                href={`/event?host=${encodeURIComponent(x)}`}
-                onClick={onLinkClick}
-                className="flex items-center pl-2 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline"
-              >
-                @{x}
-              </a>
-            ))
-          )}
+          {props.evnt.host(props.labl).map((x, i) => (
+            <a
+              key={i}
+              href={`/event?host=${encodeURIComponent(x.name)}`}
+              onClick={onLinkClick}
+              className="flex items-center pl-2 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline"
+            >
+              @{x.name}
+            </a>
+          ))}
         </div>
 
         <Link evnt={props.evnt} />
