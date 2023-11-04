@@ -108,7 +108,7 @@ export default function ListDialog(props: Props) {
                     </Checkbox.Indicator>
                   </Checkbox.Root>
 
-                  @{x.name}
+                  #{x.name}
 
                 </label>
               ))}
