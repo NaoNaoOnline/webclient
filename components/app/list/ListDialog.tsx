@@ -66,7 +66,7 @@ export default function ListDialog(props: Props) {
               {props.evnt.host(props.labl).map((x, i) => (
                 <label
                   key={salt + ":host:" + x.labl}
-                  className="flex text-sm h-full p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
+                  className="flex text-sm p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
                   htmlFor={"host:" + x.labl}
                 >
                   <Checkbox.Root
@@ -92,7 +92,7 @@ export default function ListDialog(props: Props) {
               {props.evnt.cate(props.labl).map((x, i) => (
                 <label
                   key={salt + ":cate:" + x.labl}
-                  className="flex text-sm h-full p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
+                  className="flex text-sm p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
                   htmlFor={"cate:" + x.labl}
                 >
                   <Checkbox.Root
@@ -118,7 +118,7 @@ export default function ListDialog(props: Props) {
               {srtUser(props.evnt, props.desc).map((x, i) => (
                 <label
                   key={salt + ":user:" + x.user}
-                  className="flex text-sm h-full p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
+                  className="flex text-sm p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
                   htmlFor={"user:" + x.user}
                 >
                   <Checkbox.Root
@@ -150,7 +150,7 @@ export default function ListDialog(props: Props) {
               {srtUser(props.evnt, props.desc).map((x, i) => (
                 <label
                   key={salt + ":like:" + x.user}
-                  className="flex text-sm h-full p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
+                  className="flex text-sm p-2 leading-none truncate h-[32px] rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
                   htmlFor={"like:" + x.user}
                 >
                   <Checkbox.Root

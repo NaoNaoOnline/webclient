@@ -114,11 +114,11 @@ export default function ListSearch(props: Props) {
       <Command.Item
         key={salt + ":" + i}
         value={JSON.stringify(x)}
-        className="grid gap-x-4 grid-cols-10 text-sm p-2 rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none data-[selected]:bg-gray-200 data-[selected]:text-gray-900 dark:data-[selected]:bg-gray-800 dark:data-[selected]:text-gray-50 cursor-pointer"
+        className="flex text-sm p-2 rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none data-[selected]:bg-gray-200 data-[selected]:text-gray-900 dark:data-[selected]:bg-gray-800 dark:data-[selected]:text-gray-50 cursor-pointer"
         onSelect={onSelect}
       >
         <Checkbox.Root
-          className="col-span-1 w-4 h-4 bg-gray-700 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
+          className="w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
           checked={chck}
           onCheckedChange={onCheckedChange}
           id={String(i)}
@@ -127,7 +127,7 @@ export default function ListSearch(props: Props) {
             <CheckIcon className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
-        <label className="col-span-9 text-sm leading-none truncate cursor-pointer" htmlFor={String(i)}>
+        <label className="text-sm leading-none truncate cursor-pointer" htmlFor={String(i)}>
           {x.desc}
         </label>
       </Command.Item >
