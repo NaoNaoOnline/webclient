@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from "react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { ListUpdate } from "@/modules/api/list/update/Update";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
@@ -87,16 +87,17 @@ export function ListUpdateForm(props: Props) {
           maxLength={40}
           pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
           title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-          className="flex p-2 pb-[6px] w-full min-w-[200px] align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="flex p-2 pb-[6px] w-full align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           defaultValue={desc}
           ref={inpt}
           required
+          onKeyDown={(eve: KeyboardEvent<HTMLInputElement>) => { if (eve.key === "Escape") props.cncl() }}
         />
 
         <button
           type="submit"
           disabled={pgrs.getCmpl() !== 0}
-          className="flex w-full md:w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+          className="flex w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
           onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
         >
           Submit
@@ -105,7 +106,7 @@ export function ListUpdateForm(props: Props) {
         <button
           onClick={props.cncl}
           type="button"
-          className="flex w-full md:w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+          className="flex w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
           onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
         >
           Cancel
