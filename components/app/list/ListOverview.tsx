@@ -52,32 +52,6 @@ export function ListOverview() {
     }
   };
 
-  const updateList = async (lis: ListSearchResponse) => {
-    const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing List");
-    const scss: SuccessPropsObject = new SuccessPropsObject("You did'em dirty dis time, gone it is!");
-
-    addPgrs(pgrs);
-
-    try {
-      pgrs.setCmpl(25);
-      await new Promise(r => setTimeout(r, 200));
-      pgrs.setCmpl(50);
-      await new Promise(r => setTimeout(r, 200));
-
-      const [del] = await ListDelete([{ atkn: atkn, list: lis.list }]);
-
-      pgrs.setDone(() => {
-        remList(lis);
-      });
-
-      addScss(scss);
-      await new Promise(r => setTimeout(r, 200));
-
-    } catch (err) {
-      addErro(new ErrorPropsObject("Yeah no, this is not how anything works now isn't it!?", err as Error));
-    }
-  };
-
   return (
     <>
       {srtList(list).map((x, i) => (
