@@ -5,7 +5,7 @@ import Image from "next/image";
 import spacetime, { Spacetime } from "spacetime";
 
 import ReactionBar from "@/components/app/reaction/ReactionBar";
-import Form from "@/components/app/description/update/Form";
+import { DescriptionUpdateForm } from "@/components/app/description/update/DescriptionUpdateForm";
 import DescriptionMenu from "@/components/app/description/DescriptionMenu";
 
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
@@ -96,7 +96,7 @@ export default function Description(props: Props) {
       </div>
 
       {form && (
-        <Form
+        <DescriptionUpdateForm
           cncl={() => setForm(false)}
           desc={props.desc.desc()}
           done={(txt: string) => {
@@ -105,6 +105,7 @@ export default function Description(props: Props) {
             } else {
               setText(txt);
             }
+            setForm(false)
           }}
           text={text}
         />

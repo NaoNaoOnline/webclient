@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, FormEvent, KeyboardEvent } from "react";
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { DescriptionUpdate } from "@/modules/api/description/update/Update";
 
@@ -16,7 +16,7 @@ interface Props {
   text: string;
 }
 
-export default function Form(props: Props) {
+export function DescriptionUpdateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useToken();
 
@@ -34,7 +34,6 @@ export default function Form(props: Props) {
     const txt: string = frm.get("description-input")?.toString() || "";
 
     if (txt === props.text) {
-      props.cncl();
       props.done(text);
       return;
     }
@@ -95,6 +94,7 @@ export default function Form(props: Props) {
           defaultValue={text}
           ref={inpt}
           required
+          onKeyDown={(eve: KeyboardEvent<HTMLInputElement>) => { if (eve.key === "Escape") props.cncl() }}
         />
 
         <div className="flex flex-row pt-2">
