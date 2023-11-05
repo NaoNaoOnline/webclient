@@ -28,7 +28,7 @@ import { truncateEthAddress } from "@/modules/wallet/Address";
 interface Props { }
 
 export default function WalletSection(props: Props) {
-  const { wllt, addWllt, remWllt } = useCache();
+  const { wllt, addWllt, remWllt, updWllt } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useToken();
 
@@ -38,7 +38,7 @@ export default function WalletSection(props: Props) {
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
   const scss: SuccessPropsObject = new SuccessPropsObject("We trashed it Pinky, that wallet's dust!");
 
-  const walletDelete = async function (wal: WalletSearchResponse) {
+  const walletDelete = async (wal: WalletSearchResponse) => {
     addPgrs(pgrs);
 
     try {
@@ -103,10 +103,10 @@ export default function WalletSection(props: Props) {
               setClck(false);
             }}
             done={(wal: WalletSearchResponse) => {
-              // We remove the given wallet before adding it to effectively
-              // cover the case of updating an existing wallet.
-              remWllt(wal);
-              addWllt(wal);
+              // We update the given wallet with itself, since the update
+              // removes by wallet ID, replacing the same object with, e.g. an
+              // updated timestamp should not be a problem.
+              updWllt(wal, wal);
               setClck(false);
             }}
 
@@ -117,7 +117,7 @@ export default function WalletSection(props: Props) {
 
       {wllt && (
         <>
-          {sortWllt(wllt).map((x, i) => (
+          {srtWllt(wllt).map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
               <li className={`flex items-center pl-3 py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <span className="w-[20px] text-center text-sm font-mono"></span>
@@ -157,7 +157,7 @@ export default function WalletSection(props: Props) {
   );
 };
 
-const sortWllt = (lis: WalletSearchResponse[]): WalletSearchResponse[] => {
+const srtWllt = (lis: WalletSearchResponse[]): WalletSearchResponse[] => {
   lis.sort((x: WalletSearchResponse, y: WalletSearchResponse) => {
     if (x.public.addr < y.public.addr) return -1;
     if (x.public.addr > y.public.addr) return +1;

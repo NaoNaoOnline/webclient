@@ -27,6 +27,9 @@ const defaultContextValue: {
   remList: (lis: ListSearchResponse) => void;
   remPlcy: (wal: PolicySearchResponse) => void;
   remWllt: (wal: WalletSearchResponse) => void;
+
+  updList: (rem: ListSearchResponse, add: ListSearchResponse) => void;
+  updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => void;
 } = {
   labl: [],
   list: [],
@@ -42,6 +45,9 @@ const defaultContextValue: {
   remList: (lis: ListSearchResponse) => { },
   remPlcy: (pol: PolicySearchResponse) => { },
   remWllt: (wal: WalletSearchResponse) => { },
+
+  updList: (rem: ListSearchResponse, add: ListSearchResponse) => { },
+  updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => { },
 };
 
 const CacheContext = createContext(defaultContextValue);
@@ -120,7 +126,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const remList = (lis: ListSearchResponse) => {
-    setList((old: ListSearchResponse[]) => old.filter((x) => (x.list !== "" && lis.list !== "" && x.list === lis.list) || ((x.list === "" || lis.list === "") && x.desc === lis.desc)));
+    setList((old: ListSearchResponse[]) => old.filter((x) => (x.list !== "" && lis.list !== "" && x.list !== lis.list) || ((x.list === "" || lis.list === "") && x.desc !== lis.desc)));
   };
 
   const remPlcy = (pol: PolicySearchResponse) => {
@@ -129,6 +135,26 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
   const remWllt = (wal: WalletSearchResponse) => {
     setWllt((old: WalletSearchResponse[]) => old.filter((x) => x.intern.wllt !== wal.intern.wllt));
+  };
+
+  const updList = (rem: ListSearchResponse, add: ListSearchResponse) => {
+    setList((old: ListSearchResponse[]) => {
+      const upd: ListSearchResponse[] = old.filter((x) => (x.list !== "" && rem.list !== "" && x.list !== rem.list) || ((x.list === "" || rem.list === "") && x.desc !== rem.desc));
+
+      upd.push(add);
+
+      return upd;
+    });
+  };
+
+  const updWllt = (rem: WalletSearchResponse, add: WalletSearchResponse) => {
+    setWllt((old: WalletSearchResponse[]) => {
+      const upd: WalletSearchResponse[] = old.filter((x) => x.intern.wllt !== rem.intern.wllt);
+
+      upd.push(add);
+
+      return upd;
+    });
   };
 
   // We only want to render the injected child components if we have a label
@@ -155,6 +181,9 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         remList: remList,
         remPlcy: remPlcy,
         remWllt: remWllt,
+
+        updList: updList,
+        updWllt: updWllt,
       }}
     >
       {children}

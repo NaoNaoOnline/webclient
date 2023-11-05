@@ -16,7 +16,7 @@ interface Props {
   text: string;
 }
 
-export default function Form(props: Props) {
+export function DescriptionUpdateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useToken();
 
@@ -34,7 +34,6 @@ export default function Form(props: Props) {
     const txt: string = frm.get("description-input")?.toString() || "";
 
     if (txt === props.text) {
-      props.cncl();
       props.done(text);
       return;
     }
