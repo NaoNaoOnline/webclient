@@ -32,7 +32,7 @@ export default function Link(props: Props) {
       href={props.evnt.actv(now) ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
       onClick={onLinkClick}
       target={props.evnt.actv(now) ? "_blank" : "_self"}
-      className={`relative inline-block flex items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
+      className={`relative items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
     >
       <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
         {props.evnt.upcm(now) && (

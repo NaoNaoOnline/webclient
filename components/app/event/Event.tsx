@@ -256,7 +256,6 @@ export default function Event(props: Props) {
                         desc={fltr[x.evnt()]}
                         evnt={x}
                         labl={labl}
-                        xpnd={() => tglXpnd(x.evnt())}
                       />
 
                       <Content
@@ -286,6 +285,7 @@ export default function Event(props: Props) {
                         erem={remEvnt}
                         evnt={x}
                         labl={labl}
+                        xpnd={() => tglXpnd(x.evnt())}
                       />
                     </li>
                   ))}
@@ -315,7 +315,6 @@ export default function Event(props: Props) {
                       desc={fltr[x.evnt()]}
                       evnt={x}
                       labl={labl}
-                      xpnd={() => tglXpnd(x.evnt())}
                     />
 
                     <Content
@@ -345,6 +344,7 @@ export default function Event(props: Props) {
                       erem={remEvnt}
                       evnt={x}
                       labl={labl}
+                      xpnd={() => tglXpnd(x.evnt())}
                     />
                   </li>
                 ))}

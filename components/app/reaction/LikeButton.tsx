@@ -20,10 +20,15 @@ export default function ReactionButton(props: ReactionButtonProps) {
   };
 
   return (
-    <li className="flex flex-row min-w-[70px] items-center">
+    <li className="flex flex-row items-center">
+      {props.amnt !== 0 && (
+        <div className="text-xs text-gray-400 dark:text-gray-500">
+          {fmtNum(props.amnt)}
+        </div>
+      )}
       <button
         onClick={onClck}
-        className={`${!props.cupd ? "cursor-default" : ""}  p-2 py-3`}
+        className={`${!props.cupd ? "cursor-default" : ""}  p-3`}
         type="button"
       >
         <HeartIcon
@@ -36,9 +41,6 @@ export default function ReactionButton(props: ReactionButtonProps) {
           `}
         />
       </button>
-      <div className="text-xs text-gray-400 dark:text-gray-500">
-        {fmtNum(props.amnt)}
-      </div>
     </li>
   );
 }
