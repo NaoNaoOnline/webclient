@@ -12,6 +12,8 @@ interface Props {
 }
 
 export function ActiveButton(props: Props) {
+  const patnam = usePathname();
+
   return (
     <Link
       href={props.href}
@@ -22,14 +24,14 @@ export function ActiveButton(props: Props) {
       {props.icon && cloneElement(props.icon, {
         className: `
           flex-shrink-0 w-5 h-5
-          ${props.href === usePathname() ? "text-gray-900 dark:text-gray-50" : "text-gray-400 dark:text-gray-500"}
+          ${props.href === patnam ? "text-gray-900 dark:text-gray-50" : "text-gray-400 dark:text-gray-500"}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `,
       })}
       <span
         className={`
           flex-1 ml-3 whitespace-nowrap
-          ${props.href === usePathname() ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-400 dark:text-gray-500"}
+          ${props.href === patnam ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-400 dark:text-gray-500"}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `}
       >
