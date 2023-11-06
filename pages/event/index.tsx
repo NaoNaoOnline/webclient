@@ -1,6 +1,6 @@
 import { useSearchParams } from "next/navigation";
 
-import Event from "@/components/app/event/Event";
+import { Event } from "@/components/app/event/Event";
 import Header from "@/components/app/layout/Header";
 
 export default function Page() {

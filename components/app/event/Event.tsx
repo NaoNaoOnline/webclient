@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, MutableRefObject, useEffect, useRef, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
+
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 import { useCache } from "@/components/app/cache/CacheContext";
 
@@ -28,6 +30,7 @@ interface Props {
   cate?: string[];
   evnt?: string[];
   host?: string[];
+  list?: string;
   rctn?: string;
   strt?: string;
   stop?: string;
@@ -39,19 +42,22 @@ interface ToggleState {
   [evnt: string]: boolean;
 }
 
-export default function Event(props: Props) {
+export function Event(props: Props) {
   const { labl } = useCache();
   const { addErro, addInfo } = useToast();
   const { auth, atkn } = useToken();
   const { user } = useUser();
 
+  const qury: string = newQury(props);
+
   const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
   const [form, setForm] = useState<ToggleState>({});
   const [ldng, setLdng] = useState<boolean>(true);
+  const [salt, setSalt] = useState<string>(qury);
   const [xpnd, setXpnd] = useState<ToggleState>({});
 
-  const clld = useRef(false);
+  const clld: MutableRefObject<boolean> = useRef(false);
 
   const info: InfoPropsObject = new InfoPropsObject("The beavers need you to login if you want to add a new description.");
 
@@ -159,17 +165,17 @@ export default function Event(props: Props) {
           }));
         }
 
-        if (props.strt && props.stop && props.time) {
+        if (props.list) {
           req = [{
             atkn: "",
             cate: "",
             evnt: "",
             host: "",
-            list: "",
+            list: props.list,
             rctn: "",
-            strt: props.strt,
-            stop: props.stop,
-            time: props.time,
+            strt: "",
+            stop: "",
+            time: "",
             user: "",
           }];
         }
@@ -185,6 +191,21 @@ export default function Event(props: Props) {
             strt: props.strt,
             stop: props.stop,
             time: "",
+            user: "",
+          }];
+        }
+
+        if (props.strt && props.stop && props.time) {
+          req = [{
+            atkn: "",
+            cate: "",
+            evnt: "",
+            host: "",
+            list: "",
+            rctn: "",
+            strt: props.strt,
+            stop: props.stop,
+            time: props.time,
             user: "",
           }];
         }
@@ -242,6 +263,13 @@ export default function Event(props: Props) {
     }
   }, [props, atkn, labl, addErro]);
 
+  useEffect(() => {
+    if (qury !== salt) {
+      clld.current = false;
+      setSalt(qury);
+    }
+  }, [qury, salt]);
+
   return (
     <>
       {!ldng && (
@@ -273,6 +301,22 @@ export default function Event(props: Props) {
                         xpnd={xpnd[x.evnt()]}
                       />
 
+                      {fltr[x.evnt()].length > 1 && (
+                        <div className="relative w-full h-0 z-1 grid justify-items-center">
+                          <button
+                            className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
+                            type="button"
+                            onClick={(evn: MouseEvent<HTMLButtonElement>) => {
+                              evn.stopPropagation();
+                              if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
+                              tglXpnd(x.evnt());
+                            }}
+                          >
+                            <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
+                          </button>
+                        </div>
+                      )}
+
                       <Footer
                         dadd={() => {
                           if (!auth) {
@@ -285,7 +329,6 @@ export default function Event(props: Props) {
                         erem={remEvnt}
                         evnt={x}
                         labl={labl}
-                        xpnd={() => tglXpnd(x.evnt())}
                       />
                     </li>
                   ))}
@@ -332,6 +375,22 @@ export default function Event(props: Props) {
                       xpnd={xpnd[x.evnt()]}
                     />
 
+                    {fltr[x.evnt()].length > 1 && (
+                      <div className="relative w-full h-0 z-1 grid justify-items-center">
+                        <button
+                          className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
+                          type="button"
+                          onClick={(evn: MouseEvent<HTMLButtonElement>) => {
+                            evn.stopPropagation();
+                            if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
+                            tglXpnd(x.evnt());
+                          }}
+                        >
+                          <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
+                        </button>
+                      </div>
+                    )}
+
                     <Footer
                       dadd={() => {
                         if (!auth) {
@@ -344,7 +403,6 @@ export default function Event(props: Props) {
                       erem={remEvnt}
                       evnt={x}
                       labl={labl}
-                      xpnd={() => tglXpnd(x.evnt())}
                     />
                   </li>
                 ))}
@@ -357,7 +415,7 @@ export default function Event(props: Props) {
   );
 };
 
-function getLabl(lab: LabelSearchResponse[], nam: string[] | undefined): string {
+const getLabl = (lab: LabelSearchResponse[], nam: string[] | undefined): string => {
   if (!nam) {
     return "";
   }
@@ -375,7 +433,7 @@ function getLabl(lab: LabelSearchResponse[], nam: string[] | undefined): string 
   return ids.join(",");
 }
 
-function filDesc(evn: EventSearchObject, des: DescriptionSearchObject[]): DescriptionSearchObject[] {
+const filDesc = (evn: EventSearchObject, des: DescriptionSearchObject[]): DescriptionSearchObject[] => {
   des.sort((x: DescriptionSearchObject, y: DescriptionSearchObject) => {
     // Sort descriptions by cumulative like count in descending order at first.
     const xam = x.likeAmnt();
@@ -399,7 +457,7 @@ function filDesc(evn: EventSearchObject, des: DescriptionSearchObject[]): Descri
 
 // latEvnt returns a list of event objects for the events happening right now.
 // The list is sorted by event start time, from earlier to later.
-function latEvnt(evn: EventSearchObject[]): EventSearchObject[] {
+const latEvnt = (evn: EventSearchObject[]): EventSearchObject[] => {
   // Keep all the events that have not already happened.
   const now: Spacetime = spacetime.now();
   evn = evn.filter((x) => !x.hpnd(now));
@@ -410,9 +468,23 @@ function latEvnt(evn: EventSearchObject[]): EventSearchObject[] {
   return evn;
 }
 
+const newQury = (props: Props): string => {
+  var qry: string[] = [];
+
+  if (props.cate) qry.push("cate", ...props.cate);
+  if (props.evnt) qry.push("evnt", ...props.evnt);
+  if (props.host) qry.push("host", ...props.host);
+  if (props.list) qry.push("list", props.list);
+  if (props.rctn) qry.push("rctn", props.rctn);
+  if (props.time) qry.push("time", props.time);
+  if (props.user) qry.push("user", props.user);
+
+  return qry.join(":");
+}
+
 // pasEvnt returns a list of event objects for the events that have already
 // happened. The list is sorted by event start time, from earlier to later.
-function pasEvnt(evn: EventSearchObject[]): EventSearchObject[] {
+const pasEvnt = (evn: EventSearchObject[]): EventSearchObject[] => {
   // Keep all the events that have already happened.
   const now: Spacetime = spacetime.now();
   evn = evn.filter((x) => x.hpnd(now));
@@ -425,7 +497,7 @@ function pasEvnt(evn: EventSearchObject[]): EventSearchObject[] {
 
 // uniUser extracts unique user names from a list of descriptions and returns
 // them as a list of strings.
-function uniUser(des: DescriptionSearchResponse[]): string[] {
+const uniUser = (des: DescriptionSearchResponse[]): string[] => {
   const usr: Record<string, boolean> = {};
   const uni: string[] = [];
 

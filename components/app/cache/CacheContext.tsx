@@ -168,7 +168,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     <CacheContext.Provider
       value={{
         labl: labl,
-        list: list,
+        list: srtList(list),
         plcy: plcy,
         wllt: wllt,
 
@@ -193,4 +193,14 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
 export const useCache = () => {
   return useContext(CacheContext);
+};
+
+const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {
+  lis.sort((x: ListSearchResponse, y: ListSearchResponse) => {
+    if (x.desc < y.desc) return -1;
+    if (x.desc > y.desc) return +1;
+    return 0;
+  });
+
+  return lis;
 };

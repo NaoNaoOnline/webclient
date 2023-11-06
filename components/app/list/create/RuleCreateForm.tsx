@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -107,12 +107,10 @@ export function RuleCreateForm(props: Props) {
     return rul
   };
 
-  useEffect(() => {
-    if (props.sbmt && !clld.current) {
-      clld.current = true;
-      createRule();
-    }
-  }, [props]);
+  if (props.sbmt && !clld.current) {
+    clld.current = true;
+    createRule();
+  }
 
   return (
     <></>

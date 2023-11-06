@@ -154,21 +154,6 @@ export default function ListSearch(props: Props) {
     }
   }, [props, slct]);
 
-  useEffect(() => {
-    // The goal here is to auto-focus on the input text field, which we
-    // conditionally render below. The user clicks a button to add a new
-    // description to an event and should then be able to write right away as
-    // soon as the input text field is rendered. Using the timeout of some
-    // milliseconds was the only way this behaviour could be achieved reliably
-    // for the user. If somebody knows a better way of doing this, please create
-    // a pull request.
-    setTimeout(() => {
-      if (inpt.current) {
-        inpt.current.focus();
-      }
-    }, 100);
-  }, []);
-
   return (
     <Command
       loop={true}

@@ -1,6 +1,8 @@
 import { useState, MouseEvent } from "react";
+
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
+import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
@@ -45,7 +47,7 @@ export default function Description(props: Props) {
     <div className="bg-gray-50 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
-          <a
+          <Link
             href={`/event?user=${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
             className="flex items-center pl-2"
@@ -57,14 +59,14 @@ export default function Description(props: Props) {
               width={28}
               src={props.desc.imag()}
             />
-          </a>
-          <a
+          </Link>
+          <Link
             href={`/event?user=${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
             className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >
             {props.desc.name()}
-          </a>
+          </Link>
           {props.desc.user() === props.evnt.user() && (
             <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
               EC

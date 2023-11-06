@@ -54,8 +54,8 @@ export function ListOverview() {
 
   return (
     <>
-      {srtList(list).map((x, i) => (
-        <ul key={i} className="flex flex-row w-full text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-700 group">
+      {list.map((x, i) => (
+        <ul key={x.list} className="flex flex-row w-full text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 group">
           {form === x.list && (
             <ListUpdateForm
               cncl={() => setForm("")}
@@ -75,7 +75,7 @@ export function ListOverview() {
             <>
               <Link
                 key={i}
-                href={"/list/" + x.list}
+                href={"/list/update/" + x.list}
                 className="flex p-3 items-center w-full hover:underline"
               >
                 <li className="flex w-fit items-center whitespace-nowrap">
@@ -114,14 +114,4 @@ export function ListOverview() {
       ))}
     </>
   );
-};
-
-const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {
-  lis.sort((x: ListSearchResponse, y: ListSearchResponse) => {
-    if (x.desc < y.desc) return -1;
-    if (x.desc > y.desc) return +1;
-    return 0;
-  });
-
-  return lis;
 };

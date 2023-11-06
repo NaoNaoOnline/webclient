@@ -1,4 +1,4 @@
-import Event from "@/components/app/event/Event";
+import { Event } from "@/components/app/event/Event";
 import Header from "@/components/app/layout/Header";
 
 import spacetime from "spacetime";

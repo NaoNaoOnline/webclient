@@ -1,4 +1,5 @@
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { RiHeart3Fill } from "react-icons/ri";
+import { RiHeart3Line } from "react-icons/ri";
 
 interface ReactionButtonProps {
   amnt: number;                 // can update
@@ -28,18 +29,31 @@ export default function ReactionButton(props: ReactionButtonProps) {
       )}
       <button
         onClick={onClck}
-        className={`${!props.cupd ? "cursor-default" : ""}  p-3`}
+        className={`${!props.cupd ? "cursor-default" : ""} p-3`}
         type="button"
       >
-        <HeartIcon
-          className={`
-            text-lg w-5 h-5
-            ${props.cupd && props.user ? " fill-red-500 text-red-500  dark:text-red-500 " : ""}
-            ${props.cupd && !props.user ? "             text-gray-400 dark:text-gray-500" : ""}
-            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700 fill-gray-200 dark:fill-gray-700" : ""}
+        {props.user && (
+          <RiHeart3Fill
+            className={`
+            w-5 h-5
+            ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}
+            ${props.cupd && !props.user ? " text-gray-400 dark:text-gray-500" : ""}
+            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700" : ""}
             ${!props.cupd && !props.user ? "text-gray-200 dark:text-gray-700" : ""}
           `}
-        />
+          />
+        )}
+        {!props.user && (
+          <RiHeart3Line
+            className={`
+            w-5 h-5
+            ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}
+            ${props.cupd && !props.user ? " text-gray-400 dark:text-gray-500" : ""}
+            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700" : ""}
+            ${!props.cupd && !props.user ? "text-gray-200 dark:text-gray-700" : ""}
+          `}
+          />
+        )}
       </button>
     </li>
   );

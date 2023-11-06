@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import Event from "@/components/app/event/Event";
+import { Event } from "@/components/app/event/Event";
 import Header from "@/components/app/layout/Header";
 
 import { useToken } from "@/components/app/token/TokenContext";
