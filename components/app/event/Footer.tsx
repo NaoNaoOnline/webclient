@@ -1,10 +1,12 @@
-import { useState, MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
+
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { RiMenuAddLine } from "react-icons/ri";
 
 import EventMenu from "@/components/app/event/EventMenu";
 
@@ -33,7 +35,6 @@ interface Props {
   erem: (eve: EventSearchObject) => void;
   evnt: EventSearchObject;
   labl: LabelSearchResponse[];
-  xpnd: () => void;
 }
 
 export default function Footer(props: Props) {
@@ -45,7 +46,6 @@ export default function Footer(props: Props) {
   const { user } = useUser();
 
   const [show, setShow] = useState<boolean>(false); // show list dialog
-  const [xpnd, setXpnd] = useState<boolean>(false);
 
 
   const now: Spacetime = spacetime.now();
@@ -86,22 +86,6 @@ export default function Footer(props: Props) {
 
   return (
     <>
-      {props.desc.length > 1 && (
-        <div className="relative w-full h-0 z-10 grid justify-items-center">
-          <button
-            className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-500 hover:border-gray-400 hover:dark:border-gray-400 outline-none group`}
-            type="button"
-            onClick={(evn: MouseEvent<HTMLButtonElement>) => {
-              evn.stopPropagation();
-              props.xpnd();
-              setXpnd(!xpnd);
-            }}
-          >
-            <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd ? "rotate-180" : ""}`} />
-          </button>
-        </div>
-      )}
-
       <div
         onClick={(e: MouseEvent<HTMLDivElement>) => {
           if (e.metaKey || e.ctrlKey) {
@@ -114,29 +98,37 @@ export default function Footer(props: Props) {
       >
         <div className="flex flex-row w-full">
           {props.evnt.cate(props.labl).map((x, i) => (
-            <a
+            <Link
               key={i}
               href={`/event?cate=${encodeURIComponent(x.name)}`}
               onClick={onLinkClick}
               className="flex items-center pl-2 py-2 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
             >
               #{x.name}
-            </a>
+            </Link>
           ))}
         </div>
 
-        <EventMenu
-          cadd={!dmax && !hpnd}
-          crem={ownr && !hpnd}
-          dadd={props.dadd}
-          erem={() => eventDelete(props.evnt)}
-          slis={() => {
+        <button
+          onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+            eve.stopPropagation();
             if (!auth) {
               addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
             } else {
               setShow(true);
             }
           }}
+          className="p-3 outline-none group"
+          type="button"
+        >
+          <RiMenuAddLine className="w-5 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" />
+        </button>
+
+        <EventMenu
+          cadd={!dmax && !hpnd}
+          crem={ownr && !hpnd}
+          dadd={props.dadd}
+          erem={() => eventDelete(props.evnt)}
         />
 
         <ListDialog

@@ -1,4 +1,13 @@
+import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+
+import { WagmiConfig, createConfig } from "wagmi";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { Mode } from "connectkit/build/types";
+
+import { getManual } from "@/components/app/theme/ManualTheme";
+import { NetworkContext, getChain, getNetwork } from "@/components/app/network/Network";
 
 import Header from "@/components/app/layout/Header";
 
@@ -10,9 +19,14 @@ import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
 import { useToken } from "@/components/app/token/TokenContext";
 
+import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
+
 export default function Page() {
   const nxtrtr = useRouter();
   const { auth } = useToken();
+
+  const [manu, setManu] = useState<string>(getManual());
+  const [netw, setNetw] = useState<string>(getNetwork());
 
   // In case unauthenticated users try to access a page that is meant to only
   // render content for authenticated users, we redirect to the generic login
@@ -22,21 +36,38 @@ export default function Page() {
     return nxtrtr.push("/login");
   }
 
-  return (
-    <>
-      <Header titl="Settings" />
+  const config = createConfig(
+    getDefaultConfig({
+      // required
+      appName: "NaoNao",
 
-      <div className="px-2 mt-4 md:ml-64">
-        <div className="px-2 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-gray-50">
-            <SettingsHeader />
-            <ThemeSection />
-            <WalletSection />
-            <PolicySection />
-            <NetworkSection />
-          </div>
-        </div>
-      </div >
-    </>
+      alchemyId: AlchemyAPIKey,
+      walletConnectProjectId: WalletConnectProjectID,
+
+      // custom
+      chains: getChain(netw),
+    }),
+  );
+
+  return (
+    <NetworkContext.Provider value={[netw, setNetw]}>
+      <WagmiConfig config={config}>
+        <ConnectKitProvider theme="auto" mode={manu as Mode}>
+          <Header titl="Settings" />
+
+          <div className="px-2 mt-4 md:ml-64">
+            <div className="px-2 flex grid justify-items-center">
+              <div className="w-full max-w-xl dark:text-gray-50">
+                <SettingsHeader />
+                <ThemeSection />
+                <WalletSection />
+                <PolicySection />
+                <NetworkSection />
+              </div>
+            </div>
+          </div >
+        </ConnectKitProvider>
+      </WagmiConfig>
+    </NetworkContext.Provider>
   )
 }

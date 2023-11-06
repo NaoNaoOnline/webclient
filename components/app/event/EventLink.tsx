@@ -1,7 +1,10 @@
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState, MouseEvent } from "react";
+
+import Link from "next/link";
+
+import spacetime, { Spacetime } from "spacetime";
 
 import EventSearchObject from "@/modules/api/event/search/Object";
-import spacetime, { Spacetime } from 'spacetime';
 
 function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
   e.stopPropagation();
@@ -11,7 +14,7 @@ interface Props {
   evnt: EventSearchObject;
 }
 
-export default function Link(props: Props) {
+export function EventLink(props: Props) {
   const [_, setRndr] = useState(true);
 
   const now: Spacetime = spacetime.now();
@@ -28,10 +31,10 @@ export default function Link(props: Props) {
   }, []);
 
   return (
-    <a
-      href={props.evnt.actv(now) ? props.evnt.link() : `/event/${props.evnt.evnt()}`}
+    <Link
+      href={props.evnt.upcm(now) ? "/event/" + props.evnt.evnt() : props.evnt.link()}
       onClick={onLinkClick}
-      target={props.evnt.actv(now) ? "_blank" : "_self"}
+      target={props.evnt.upcm(now) ? "_self" : "_blank"}
       className={`relative items-center p-2 whitespace-nowrap text-md font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
     >
       <div className="absolute top-[5%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
@@ -54,7 +57,7 @@ export default function Link(props: Props) {
         )}
       </div>
       {props.evnt.dsplLink(now)}
-    </a>
+    </Link>
   );
 };
 
