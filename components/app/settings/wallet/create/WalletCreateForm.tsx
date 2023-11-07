@@ -10,7 +10,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
@@ -30,7 +30,7 @@ export default function WalletCreateForm(props: Props) {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
+  const { atkn } = useAuth();
 
   const clld = useRef(false);
 

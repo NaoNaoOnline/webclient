@@ -9,7 +9,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 interface Props {
   cncl: () => void;
@@ -19,7 +19,7 @@ interface Props {
 
 export function DescriptionCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn, uuid } = useToken();
+  const { atkn, uuid } = useAuth();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 

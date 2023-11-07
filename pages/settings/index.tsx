@@ -17,13 +17,13 @@ import PolicySection from "@/components/app/settings/policy/PolicySection";
 import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
 export default function Page() {
   const nxtrtr = useRouter();
-  const { auth } = useToken();
+  const { auth } = useAuth();
 
   const [manu, setManu] = useState<string>(getManual());
   const [netw, setNetw] = useState<string>(getNetwork());

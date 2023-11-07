@@ -13,7 +13,7 @@ import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyUpdate } from "@/modules/api/policy/update/Update";
@@ -25,7 +25,7 @@ interface Props { }
 
 export default function PolicySection(props: Props) {
   const { plcy, addPlcy, remPlcy } = useCache();
-  const { atkn } = useToken();
+  const { atkn } = useAuth();
 
   const [crea, setCrea] = useState<boolean>(false);
   const [dele, setDele] = useState<boolean>(false);

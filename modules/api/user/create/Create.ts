@@ -9,6 +9,7 @@ export async function UserCreate(req: UserCreateRequest[]): Promise<UserCreateRe
         object: req.map((x) => ({
           intern: {},
           public: {
+            home: "",
             imag: x.imag,
             name: x.name,
           },

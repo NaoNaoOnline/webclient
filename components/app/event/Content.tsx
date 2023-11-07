@@ -11,7 +11,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -34,7 +34,7 @@ interface Props {
 
 export default function Content(props: Props) {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
-  const { auth, atkn } = useToken();
+  const { auth, atkn } = useAuth();
   const { user } = useUser();
 
   const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
@@ -140,10 +140,16 @@ export default function Content(props: Props) {
     });
   };
 
+  // If for whatever reason there is no description on an event anymore, we
+  // prevent the webapp from crashing and just return early.
+  if (props.desc.length === 0) {
+    return <></>;
+  }
+
   return (
     <>
-      <div className="shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
-        {!props.xpnd && props.desc.length !== 0 && (
+      <div className="max-h-[404px] overflow-y-auto shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
+        {!props.xpnd && (
           <Description
             amnt={props.desc.length}
             desc={props.desc[0]}

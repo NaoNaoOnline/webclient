@@ -15,7 +15,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { EventCreate } from "@/modules/api/event/create/Create";
 import { NewEventCreateRequest } from "@/modules/api/event/create/Request";
@@ -29,7 +29,7 @@ import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 export default function Page() {
   const { labl } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn, auth } = useToken();
+  const { atkn, auth } = useAuth();
   const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);

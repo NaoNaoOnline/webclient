@@ -12,12 +12,12 @@ import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 export function ListButtons() {
-  const { list } = useCache();
+  const { list, user } = useCache();
   const { addInfo } = useToast();
-  const { auth } = useToken();
+  const { auth } = useAuth();
 
   const newOnLinkClick = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
@@ -52,7 +52,7 @@ export function ListButtons() {
           <ActiveButton
             href={`/list/` + x.list}
             text={x.desc}
-            icon={<RiListUnordered />}
+            icon={x.list === user[0].home ? <HomeIcon /> : <RiListUnordered />}
           />
         </li>
       ))}

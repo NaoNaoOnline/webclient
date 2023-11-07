@@ -3,11 +3,11 @@ import { useRouter } from "next/navigation";
 import { ListOverview } from "@/components/app/list/ListOverview";
 import Header from "@/components/app/layout/Header";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 export default function Page() {
   const nxtrtr = useRouter();
-  const { auth } = useToken();
+  const { auth } = useAuth();
 
   // In case unauthenticated users try to access a page that is meant to only
   // render content for authenticated users, we redirect to the generic login

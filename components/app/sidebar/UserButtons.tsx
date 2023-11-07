@@ -2,7 +2,6 @@ import { MouseEvent, useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 import { CgAddR } from "react-icons/cg";
 import { FiLogIn } from "react-icons/fi";
@@ -10,7 +9,6 @@ import { FiLogOut } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbMoon } from "react-icons/tb";
 import { TbSunHigh } from "react-icons/tb";
-import { UserIcon } from "@heroicons/react/24/outline";
 
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 
@@ -20,12 +18,11 @@ import { useSystem } from "@/components/app/theme/SystemTheme";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 export function UserButtons() {
   const { addInfo } = useToast();
-  const { auth } = useToken();
-  const { user } = useUser();
+  const { auth, imag, name } = useAuth();
 
   const [manu, setManu] = useManual();
   const [rndr, setRndr] = useState(false);
@@ -59,42 +56,26 @@ export function UserButtons() {
     <>
       <ul className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-700">
 
-        {user && (
+        {auth && (
           <li>
             <Link
-              href={`/user/` + user?.public?.name}
+              href={`/user/` + name}
               className="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer group"
             >
-              {user.picture && (
-                <div className="flex-shrink-0">
-                  <Image
-                    alt="profile picture"
-                    className="w-5 h-5 rounded-full"
-                    height={20}
-                    width={20}
-                    src={user.picture}
-                  />
-                </div>
-              )}
-              {!user.picture && (
-                <UserIcon
-                  className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+              <div className="flex-shrink-0">
+                <Image
+                  alt="profile picture"
+                  className="w-5 h-5 rounded-full"
+                  height={20}
+                  width={20}
+                  src={imag}
                 />
-              )}
-              {user?.public?.name && (
-                <span
-                  className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
-                >
-                  {user?.public?.name}
-                </span>
-              )}
-              {!user?.public?.name && (
-                <span
-                  className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
-                >
-                  Profile
-                </span>
-              )}
+              </div>
+              <span
+                className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+              >
+                {name}
+              </span>
             </Link>
           </li>
         )}
@@ -140,7 +121,7 @@ export function UserButtons() {
           </div>
         )}
 
-        {user && (
+        {auth && (
           <li>
             <ActiveButton
               href="/settings"
@@ -150,7 +131,7 @@ export function UserButtons() {
           </li>
         )}
 
-        {user && (
+        {auth && (
           <li>
             <ActiveButton
               href="/api/auth/logout"
@@ -159,7 +140,7 @@ export function UserButtons() {
             />
           </li>
         )}
-        {!user && (
+        {!auth && (
           <li>
             <ActiveButton
               href="/api/auth/login"
