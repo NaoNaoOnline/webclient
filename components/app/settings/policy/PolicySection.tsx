@@ -5,7 +5,7 @@ import { ConnectKitButton } from "connectkit";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-import CopyButton from "@/components/app/button/CopyButton";
+import { CopyButton } from "@/components/app/button/CopyButton";
 
 import { useCache } from "@/components/app/cache/CacheContext";
 

@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { ListOverview } from "@/components/app/list/ListOverview";
+import { ListOverview } from "@/components/app/list/page/ListOverview";
 import Header from "@/components/app/layout/Header";
 
 import { useAuth } from "@/components/app/auth/AuthContext";

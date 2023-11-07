@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 
 import { FaEthereum } from "react-icons/fa";
 
-import CopyButton from "@/components/app/button/CopyButton";
+import { CopyButton } from "@/components/app/button/CopyButton";
 
 import { useCache } from "@/components/app/cache/CacheContext";
 

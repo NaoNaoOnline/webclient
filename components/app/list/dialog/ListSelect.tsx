@@ -1,10 +1,10 @@
-import { KeyboardEvent, MutableRefObject, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { Command } from "cmdk";
 
 import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { CheckIcon } from "@heroicons/react/24/outline";
+import { RiCheckLine } from "react-icons/ri";
 
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
@@ -15,53 +15,13 @@ interface Props {
   slct: (lis: ListSearchResponse[]) => void; // selected lists
 }
 
-export default function ListSearch(props: Props) {
+export function ListSelect(props: Props) {
   const [list, setList] = useState<ListSearchResponse[]>([]);
   const [salt, setSalt] = useState<string>("");
   const [slct, setSlct] = useState<ListSearchResponse[]>([]);
   const [srch, setSrch] = useState<string>("");
 
   const inpt = useRef<HTMLInputElement | null>(null);
-
-  // After the creation of a new list, the new list is provided with props.list
-  // and must be used to replace the temporary local copy that we added
-  // optimistically upon list creation below. The two copies of local state
-  // hooks that we need to cover are list and slct. If we do not update the
-  // local copies a user may create a list and add rules to it, running into the
-  // problem that the backend rejects the call because the rules shown to the
-  // backend do not include a list ID, since we only added the loist description
-  // to our local copy below.
-  useEffect(() => {
-    setList(old => {
-      const lis = [...old];
-
-      for (const x of props.list) {
-        const ind = lis.findIndex((y: ListSearchResponse) => (x.list !== "" && y.list !== "" && x.list === y.list) || ((x.list === "" || y.list === "") && x.desc === y.desc));
-
-        if (ind !== -1) {
-          lis[ind] = x;
-        } else {
-          lis.push(x);
-        }
-      }
-
-      return lis;
-    });
-
-    setSlct(old => {
-      const lis = [...old];
-
-      for (const x of props.list) {
-        const ind = lis.findIndex((y: ListSearchResponse) => (x.list !== "" && y.list !== "" && x.list === y.list) || ((x.list === "" || y.list === "") && x.desc === y.desc));
-
-        if (ind !== -1) {
-          lis[ind] = x;
-        }
-      }
-
-      return lis;
-    });
-  }, [props.list]);
 
   const srtd = list
     .filter((x) => {
@@ -121,13 +81,16 @@ export default function ListSearch(props: Props) {
           className="w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
           checked={chck}
           onCheckedChange={onCheckedChange}
-          id={String(i)}
+          id={salt + ":" + i}
         >
           <Checkbox.Indicator>
-            <CheckIcon className="text-gray-50 dark:text-gray-900" />
+            <RiCheckLine className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
-        <label className="text-sm leading-none truncate cursor-pointer" htmlFor={String(i)}>
+        <label
+          className="text-sm truncate max-w-[175px]"
+          htmlFor={salt + ":" + i}
+        >
           {x.desc}
         </label>
       </Command.Item >
@@ -141,6 +104,10 @@ export default function ListSearch(props: Props) {
     });
     setSrch("");
   };
+
+  useEffect(() => {
+    setList(props.list);
+  }, [props.list]);
 
   useEffect(() => {
     setSlct([]);
@@ -161,7 +128,7 @@ export default function ListSearch(props: Props) {
     >
       <div className="relative">
         <Command.Input
-          className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="mb-2 py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           onKeyDown={(e) => {
             if (e.key === "Escape") {
               e.preventDefault();
@@ -193,12 +160,12 @@ export default function ListSearch(props: Props) {
       </div>
 
       <Command.List
-        className="w-full h-[232px] pt-2 bg-gray-50 dark:bg-gray-700 overflow-y-auto"
+        className="w-full max-h-[254px] bg-gray-50 dark:bg-gray-700 overflow-y-auto"
         onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
           e.preventDefault();
         }}
       >
-        <Command.Empty className="py-2 text-sm text-center">
+        <Command.Empty className="py-1 text-sm text-center">
           <button
             className="flex-1 w-full py-2.5 text-gray-50 text-sm font-medium rounded-lg text-center bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
             onClick={() => onCreate(srch)}

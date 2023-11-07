@@ -1,6 +1,4 @@
-import { MutableRefObject } from "react";
-
-import ListSearch from "@/components/app/list/ListSearch";
+import { ListSelect } from "@/components/app/list/dialog/ListSelect";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -61,7 +59,7 @@ export function ListCreateForm(props: Props) {
   };
 
   return (
-    <ListSearch
+    <ListSelect
       clis={(des: string) => createList(des)}
       list={props.list}
       salt={props.salt}
