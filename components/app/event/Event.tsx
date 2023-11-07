@@ -460,7 +460,7 @@ const filDesc = (evn: EventSearchObject, des: DescriptionSearchObject[]): Descri
   return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt());
 }
 
-// indPag expressed whether the URL path of the current page complies with the
+// indPag expresses whether the URL path of the current page complies with the
 // URL format of the event page as shown below.
 //
 //     /event/1698943315449571
