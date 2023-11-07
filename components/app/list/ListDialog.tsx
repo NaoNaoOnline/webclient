@@ -253,6 +253,7 @@ function srtUser(evn: EventSearchObject, des: DescriptionSearchObject[]): UserSe
         crtd: "",
         user: x.user(),
         // public
+        home: "",
         imag: "",
         name: x.name(),
       });
