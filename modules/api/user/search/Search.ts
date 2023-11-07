@@ -20,6 +20,7 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
       crtd: x.intern?.crtd || "",
       user: x.intern?.user || "",
       // public
+      home: x.public?.home || "",
       imag: x.public?.imag || "",
       name: x.public?.name || "",
     }));

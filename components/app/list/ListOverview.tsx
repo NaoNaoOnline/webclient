@@ -2,6 +2,7 @@ import { MouseEvent, useState } from "react";
 
 import Link from "next/link";
 
+import { HomeIcon } from "@heroicons/react/24/outline";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
@@ -16,15 +17,42 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 import { ListUpdateForm } from "./update/ListUpdateForm";
+import { UserUpdate } from "@/modules/api/user/update/Update";
 
 export function ListOverview() {
-  const { list, remList, updList } = useCache();
+  const { list, remList, updList, user, updUser } = useCache();
   const { addErro, addInfo, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
+  const { atkn, uuid } = useAuth();
 
   const [form, setForm] = useState<string>("");
+
+  const defaultView = async (hom: string) => {
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Default View");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Yowser, we just keep on winning bb!");
+
+    addPgrs(pgrs);
+
+    try {
+      pgrs.setCmpl(25);
+      await new Promise(r => setTimeout(r, 200));
+      pgrs.setCmpl(50);
+      await new Promise(r => setTimeout(r, 200));
+
+      const [upd] = await UserUpdate([{ atkn: atkn, home: hom, name: "", user: uuid }]);
+
+      pgrs.setDone(() => {
+        updUser(user[0], { ...user[0], home: hom });
+      });
+
+      addScss(scss);
+      await new Promise(r => setTimeout(r, 200));
+
+    } catch (err) {
+      addErro(new ErrorPropsObject("This shite again, Immabout to quit!", err as Error));
+    }
+  };
 
   const deleteList = async (lis: ListSearchResponse) => {
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing List");
@@ -93,6 +121,25 @@ export function ListOverview() {
                   }}
                 >
                   <PencilSquareIcon className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
+                </button>
+              </li>
+
+              <li
+                className={`
+                  flex items-center text-gray-400 dark:text-gray-500
+                  ${x.list === user[0].home ? "visible" : "invisible"}
+                  group-hover:visible
+                `}
+              >
+                <button
+                  className="pl-3 outline-none flex-shrink-0"
+                  type="button"
+                  onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+                    eve.preventDefault();
+                    defaultView(x.list === user[0].home ? "/" : x.list);
+                  }}
+                >
+                  <HomeIcon className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
                 </button>
               </li>
 

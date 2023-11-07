@@ -7,7 +7,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 interface Props {
   cncl: () => void;
@@ -18,7 +18,7 @@ interface Props {
 
 export function DescriptionUpdateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
+  const { atkn } = useAuth();
 
   const [text, setText] = useState<string>(props.text);
 

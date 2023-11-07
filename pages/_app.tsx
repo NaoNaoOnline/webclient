@@ -9,7 +9,7 @@ import { Sidebar } from "@/components/app/sidebar/Sidebar";
 import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
 import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
 import { ToastProvider } from "@/components/app/toast/ToastContext";
-import { TokenProvider } from "@/components/app/token/TokenContext";
+import { AuthProvider } from "@/components/app/auth/AuthContext";
 
 export default function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [manu, setManu] = useState<string>(getManual());
@@ -40,7 +40,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
 
   return (
     <UserProvider>
-      <TokenProvider>
+      <AuthProvider>
         <CacheProvider>
           <ToastProvider>
             <ManualContext.Provider value={[manu, setManu]}>
@@ -51,7 +51,7 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
             </ManualContext.Provider>
           </ToastProvider>
         </CacheProvider>
-      </TokenProvider>
+      </AuthProvider>
     </UserProvider>
   );
 }

@@ -1,9 +1,9 @@
-export interface UserSearchResponse {
+export interface UserUpdateRequest {
+  // local
+  atkn: string;
   // intern
-  crtd: string;
   user: string;
   // public
   home: string;
-  imag: string;
   name: string;
 }

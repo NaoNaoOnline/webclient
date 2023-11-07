@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from "react";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
@@ -18,7 +18,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
@@ -34,13 +34,13 @@ interface Props {
   desc: DescriptionSearchObject[];
   erem: (eve: EventSearchObject) => void;
   evnt: EventSearchObject;
+  indx: boolean;
   labl: LabelSearchResponse[];
 }
 
 export default function Footer(props: Props) {
-  const patnam = usePathname();
   const nxtrtr = useRouter();
-  const { auth, atkn } = useToken();
+  const { auth, atkn } = useAuth();
 
   const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { user } = useUser();
@@ -73,7 +73,7 @@ export default function Footer(props: Props) {
         // If an event gets deleted from the event page, there is nothing on the
         // event page anymore after the event itself got removed. In that case
         // we redirect to whatever default view is active for the user.
-        if (indPag(patnam)) nxtrtr.push("/");
+        if (props.indx) nxtrtr.push("/");
       });
 
       addScss(scss);
@@ -142,18 +142,3 @@ export default function Footer(props: Props) {
     </>
   );
 };
-
-// indPag expressed whether the URL path of the current page complies with the
-// URL format of the event page as shown below.
-//
-//     /event/1698943315449571
-//
-const indPag = function (str: string): boolean {
-  const spl = str.split('/');
-
-  if (spl.length >= 2 && spl[spl.length - 2] === "event") {
-    return !isNaN(Number(spl[spl.length - 1]))
-  }
-
-  return false;
-}

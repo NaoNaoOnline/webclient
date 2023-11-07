@@ -18,7 +18,7 @@ import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
@@ -30,7 +30,7 @@ interface Props { }
 export default function WalletSection(props: Props) {
   const { wllt, addWllt, remWllt, updWllt } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useToken();
+  const { atkn } = useAuth();
 
   const [addr, setAddr] = useState<string>("");
   const [clck, setClck] = useState<boolean>(false);

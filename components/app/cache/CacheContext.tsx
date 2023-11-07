@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { LabelSearch } from "@/modules/api/label/search/Search";
@@ -9,6 +9,8 @@ import { ListSearch } from "@/modules/api/list/search/Search";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 import { PolicySearch } from "@/modules/api/policy/search/Search";
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+import { UserSearchResponse } from "@/modules/api/user/search/Response";
+import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
@@ -16,58 +18,69 @@ const defaultContextValue: {
   labl: LabelSearchResponse[];
   list: ListSearchResponse[];
   plcy: PolicySearchResponse[];
+  user: UserSearchResponse[];
   wllt: WalletSearchResponse[];
 
   addLabl: (lab: LabelSearchResponse) => void;
   addList: (lis: ListSearchResponse) => void;
   addPlcy: (wal: PolicySearchResponse) => void;
+  addUser: (use: UserSearchResponse) => void;
   addWllt: (wal: WalletSearchResponse) => void;
 
   remLabl: (lab: LabelSearchResponse) => void;
   remList: (lis: ListSearchResponse) => void;
   remPlcy: (wal: PolicySearchResponse) => void;
+  remUser: (use: UserSearchResponse) => void;
   remWllt: (wal: WalletSearchResponse) => void;
 
   updList: (rem: ListSearchResponse, add: ListSearchResponse) => void;
+  updUser: (rem: UserSearchResponse, add: UserSearchResponse) => void;
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => void;
 } = {
   labl: [],
   list: [],
   plcy: [],
+  user: [],
   wllt: [],
 
   addLabl: (lab: LabelSearchResponse) => { },
   addList: (lis: ListSearchResponse) => { },
   addPlcy: (pol: PolicySearchResponse) => { },
+  addUser: (use: UserSearchResponse) => { },
   addWllt: (wal: WalletSearchResponse) => { },
 
   remLabl: (lab: LabelSearchResponse) => { },
   remList: (lis: ListSearchResponse) => { },
   remPlcy: (pol: PolicySearchResponse) => { },
+  remUser: (use: UserSearchResponse) => { },
   remWllt: (wal: WalletSearchResponse) => { },
 
   updList: (rem: ListSearchResponse, add: ListSearchResponse) => { },
+  updUser: (rem: UserSearchResponse, add: UserSearchResponse) => { },
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => { },
 };
 
 const CacheContext = createContext(defaultContextValue);
 
 export const CacheProvider = ({ children }: { children: ReactNode }) => {
-  const { atkn, auth, uuid } = useToken();
+  const { atkn, auth, uuid } = useAuth();
 
   const [labl, setLabl] = useState<LabelSearchResponse[]>([]);
   const [list, setList] = useState<ListSearchResponse[]>([]);
   const [plcy, setPlcy] = useState<PolicySearchResponse[]>([]);
+  const [user, setUser] = useState<UserSearchResponse[]>([]);
   const [wllt, setWllt] = useState<WalletSearchResponse[]>([]);
 
-  const labr = useRef(false);
-  const lisr = useRef(false);
-  const polr = useRef(false);
-  const walr = useRef(false);
+  const labc = useRef(false);
+  const lisc = useRef(false);
+  const polc = useRef(false);
+  const usec = useRef(false);
+  const walc = useRef(false);
 
   useEffect(() => {
-    if (labr.current) return;
-    labr.current = true;
+    if (labc.current) return;
+
+    labc.current = true;
 
     LabelSearch(NewLabelSearchRequest("bltn", "cate", "host")).then((lab: LabelSearchResponse[]) => {
       if (lab.length === 0) return;
@@ -76,8 +89,9 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (lisr.current || !auth) return;
-    lisr.current = true;
+    if (lisc.current || !auth) return;
+
+    lisc.current = true;
 
     ListSearch([{ atkn: atkn, user: uuid }]).then((lis: ListSearchResponse[]) => {
       if (lis.length === 0) return;
@@ -86,8 +100,9 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   }, [atkn, auth, uuid]);
 
   useEffect(() => {
-    if (polr.current || !auth) return;
-    polr.current = true;
+    if (polc.current || !auth) return;
+
+    polc.current = true;
 
     PolicySearch([{ atkn: atkn, ltst: "default" }]).then((pol: PolicySearchResponse[]) => {
       if (pol.length === 0) return;
@@ -96,8 +111,20 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   }, [atkn, auth]);
 
   useEffect(() => {
-    if (walr.current || !auth) return;
-    walr.current = true;
+    if (usec.current || !auth) return;
+
+    usec.current = true;
+
+    UserSearch([{ user: uuid, name: "", self: false }]).then((use: UserSearchResponse[]) => {
+      if (use.length === 0) return;
+      setUser(use);
+    });
+  }, [atkn, auth, uuid]);
+
+  useEffect(() => {
+    if (walc.current || !auth) return;
+
+    walc.current = true;
 
     WalletSearch([{ atkn: atkn, kind: "eth", wllt: "" }]).then((wal: WalletSearchResponse[]) => {
       if (wal.length === 0) return;
@@ -117,6 +144,10 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     setPlcy((old: PolicySearchResponse[]) => [...old, pol]);
   };
 
+  const addUser = (use: UserSearchResponse) => {
+    setUser((old: UserSearchResponse[]) => [...old, use]);
+  };
+
   const addWllt = (wal: WalletSearchResponse) => {
     setWllt((old: WalletSearchResponse[]) => [...old, wal]);
   };
@@ -133,6 +164,10 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     setPlcy((old: PolicySearchResponse[]) => old.filter((x) => !(x.syst === pol.syst && x.memb === pol.memb && x.acce === pol.acce)));
   };
 
+  const remUser = (use: UserSearchResponse) => {
+    setUser((old: UserSearchResponse[]) => old.filter((x) => x.user !== use.user));
+  };
+
   const remWllt = (wal: WalletSearchResponse) => {
     setWllt((old: WalletSearchResponse[]) => old.filter((x) => x.intern.wllt !== wal.intern.wllt));
   };
@@ -140,6 +175,16 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   const updList = (rem: ListSearchResponse, add: ListSearchResponse) => {
     setList((old: ListSearchResponse[]) => {
       const upd: ListSearchResponse[] = old.filter((x) => (x.list !== "" && rem.list !== "" && x.list !== rem.list) || ((x.list === "" || rem.list === "") && x.desc !== rem.desc));
+
+      upd.push(add);
+
+      return upd;
+    });
+  };
+
+  const updUser = (rem: UserSearchResponse, add: UserSearchResponse) => {
+    setUser((old: UserSearchResponse[]) => {
+      const upd: UserSearchResponse[] = old.filter((x) => x.user !== rem.user);
 
       upd.push(add);
 
@@ -170,19 +215,23 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         labl: labl,
         list: srtList(list),
         plcy: plcy,
+        user: user,
         wllt: wllt,
 
         addLabl: addLabl,
         addList: addList,
         addPlcy: addPlcy,
+        addUser: addUser,
         addWllt: addWllt,
 
         remLabl: remLabl,
         remList: remList,
         remPlcy: remPlcy,
+        remUser: remUser,
         remWllt: remWllt,
 
         updList: updList,
+        updUser: updUser,
         updWllt: updWllt,
       }}
     >

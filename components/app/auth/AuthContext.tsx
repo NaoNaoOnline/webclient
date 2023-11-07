@@ -1,7 +1,8 @@
 import { ReactNode, createContext, useContext } from "react";
-import useSWR from "swr";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
+
+import useSWR from "swr";
 
 const fetcher = async (url: string): Promise<string> => {
   const res = await fetch(url);
@@ -31,12 +32,14 @@ const FetchAuthToken = (act: boolean): string => {
 const defaultContextValue = {
   atkn: "",
   auth: false,
+  imag: "",
+  name: "",
   uuid: "",
 };
 
-const TokenContext = createContext(defaultContextValue);
+const AuthContext = createContext(defaultContextValue);
 
-export const TokenProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const usrctx = useUser();
 
   const atkn: string = FetchAuthToken(!usrctx.isLoading && usrctx.user ? true : false);
@@ -48,19 +51,31 @@ export const TokenProvider = ({ children }: { children: ReactNode }) => {
   return (
     <>
       {(!usrctx.user && !atkn &&
-        <TokenContext.Provider value={{ atkn: "", auth: false, uuid: "" }}>
+        <AuthContext.Provider value={{
+          atkn: "",
+          auth: false,
+          imag: "",
+          name: "",
+          uuid: "",
+        }}>
           {children}
-        </TokenContext.Provider>
+        </AuthContext.Provider>
       )}
       {(usrctx.user && atkn &&
-        <TokenContext.Provider value={{ atkn: atkn, auth: true, uuid: usrctx.user.intern?.uuid || "" }}>
+        <AuthContext.Provider value={{
+          atkn: atkn,
+          auth: true,
+          imag: usrctx.user.picture || "",
+          name: usrctx.user.public?.name || "",
+          uuid: usrctx.user.intern?.uuid || "",
+        }}>
           {children}
-        </TokenContext.Provider>
+        </AuthContext.Provider>
       )}
     </>
   );
 };
 
-export const useToken = () => {
-  return useContext(TokenContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

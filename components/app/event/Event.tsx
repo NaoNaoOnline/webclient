@@ -1,5 +1,7 @@
 import { MouseEvent, MutableRefObject, useEffect, useRef, useState } from "react";
+
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { usePathname } from "next/navigation";
 
 import spacetime, { Spacetime } from "spacetime";
 
@@ -15,7 +17,7 @@ import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastContext";
 
-import { useToken } from "@/components/app/token/TokenContext";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -44,11 +46,13 @@ interface ToggleState {
 
 export function Event(props: Props) {
   const { labl } = useCache();
+  const patnam = usePathname();
   const { addErro, addInfo } = useToast();
-  const { auth, atkn } = useToken();
+  const { auth, atkn } = useAuth();
   const { user } = useUser();
 
   const qury: string = newQury(props);
+  const indx: boolean = indPag(patnam);
 
   const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
@@ -298,10 +302,10 @@ export function Event(props: Props) {
                         evnt={x}
                         form={form[x.evnt()]}
                         labl={labl}
-                        xpnd={xpnd[x.evnt()]}
+                        xpnd={xpnd[x.evnt()] || indx}
                       />
 
-                      {fltr[x.evnt()].length > 1 && (
+                      {fltr[x.evnt()].length > 1 && !indx && (
                         <div className="relative w-full h-0 z-1 grid justify-items-center">
                           <button
                             className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
@@ -328,6 +332,7 @@ export function Event(props: Props) {
                         desc={fltr[x.evnt()]}
                         erem={remEvnt}
                         evnt={x}
+                        indx={indx}
                         labl={labl}
                       />
                     </li>
@@ -372,10 +377,10 @@ export function Event(props: Props) {
                       evnt={x}
                       form={form[x.evnt()]}
                       labl={labl}
-                      xpnd={xpnd[x.evnt()]}
+                      xpnd={xpnd[x.evnt()] || indx}
                     />
 
-                    {fltr[x.evnt()].length > 1 && (
+                    {fltr[x.evnt()].length > 1 && !indx && (
                       <div className="relative w-full h-0 z-1 grid justify-items-center">
                         <button
                           className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
@@ -402,6 +407,7 @@ export function Event(props: Props) {
                       desc={fltr[x.evnt()]}
                       erem={remEvnt}
                       evnt={x}
+                      indx={indx}
                       labl={labl}
                     />
                   </li>
@@ -454,6 +460,20 @@ const filDesc = (evn: EventSearchObject, des: DescriptionSearchObject[]): Descri
   return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt());
 }
 
+// indPag expressed whether the URL path of the current page complies with the
+// URL format of the event page as shown below.
+//
+//     /event/1698943315449571
+//
+const indPag = function (str: string): boolean {
+  const spl = str.split('/');
+
+  if (spl.length >= 2 && spl[spl.length - 2] === "event") {
+    return !isNaN(Number(spl[spl.length - 1]))
+  }
+
+  return false;
+}
 
 // latEvnt returns a list of event objects for the events happening right now.
 // The list is sorted by event start time, from earlier to later.
