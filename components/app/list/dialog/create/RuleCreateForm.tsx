@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -18,6 +18,7 @@ interface Props {
   done: () => void;
   fail: () => void;
   host: LabelSearchResponse[];
+  incl: boolean;
   like: UserSearchResponse[];
   list: ListSearchResponse[];
   sbmt: boolean;
@@ -66,8 +67,8 @@ export function RuleCreateForm(props: Props) {
       if (props.cate.length !== 0) {
         rul.push({
           atkn: atkn,
-          excl: "",
-          incl: props.cate.map((y: LabelSearchResponse) => y.labl).join(','),
+          excl: !props.incl ? props.cate.map((y: LabelSearchResponse) => y.labl).join(',') : "",
+          incl: props.incl ? props.cate.map((y: LabelSearchResponse) => y.labl).join(',') : "",
           kind: "cate",
           list: x.list,
         });
@@ -76,8 +77,8 @@ export function RuleCreateForm(props: Props) {
       if (props.host.length !== 0) {
         rul.push({
           atkn: atkn,
-          excl: "",
-          incl: props.host.map((y: LabelSearchResponse) => y.labl).join(','),
+          excl: !props.incl ? props.host.map((y: LabelSearchResponse) => y.labl).join(',') : "",
+          incl: props.incl ? props.host.map((y: LabelSearchResponse) => y.labl).join(',') : "",
           kind: "host",
           list: x.list,
         });
@@ -86,8 +87,8 @@ export function RuleCreateForm(props: Props) {
       if (props.like.length !== 0) {
         rul.push({
           atkn: atkn,
-          excl: "",
-          incl: props.like.map((y: UserSearchResponse) => y.user).join(','),
+          excl: !props.incl ? props.like.map((y: UserSearchResponse) => y.user).join(',') : "",
+          incl: props.incl ? props.like.map((y: UserSearchResponse) => y.user).join(',') : "",
           kind: "like",
           list: x.list,
         });
@@ -96,8 +97,8 @@ export function RuleCreateForm(props: Props) {
       if (props.user.length !== 0) {
         rul.push({
           atkn: atkn,
-          excl: "",
-          incl: props.user.map((y: UserSearchResponse) => y.user).join(','),
+          excl: !props.incl ? props.user.map((y: UserSearchResponse) => y.user).join(',') : "",
+          incl: props.incl ? props.user.map((y: UserSearchResponse) => y.user).join(',') : "",
           kind: "user",
           list: x.list,
         });
@@ -107,10 +108,18 @@ export function RuleCreateForm(props: Props) {
     return rul
   };
 
-  if (props.sbmt && !clld.current) {
-    clld.current = true;
-    createRule();
-  }
+  // We need to ensure that we only start creating the rules in the backend once
+  // the component here finished rendering. This is because creating the rules
+  // creates a progress toast that starts the rendering process within our toast
+  // provider which is wrapping us. And so if we were to add the toast before
+  // this component here was finished rendering iteself, then we would get funky
+  // react errors.
+  useEffect(() => {
+    if (props.sbmt && !clld.current) {
+      clld.current = true;
+      createRule();
+    }
+  }, [props.sbmt]);
 
   return (
     <></>

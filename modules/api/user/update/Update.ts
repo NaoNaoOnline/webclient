@@ -30,8 +30,8 @@ export async function UserUpdate(req: UserUpdateRequest[]): Promise<UserUpdateRe
 }
 
 const newPat = (req: UserUpdateRequest): string => {
-  if (req.home) return "/home";
-  if (req.name) return "/name";
+  if (req.home) return "/home/data";
+  if (req.name) return "/name/data";
   return "";
 };
 

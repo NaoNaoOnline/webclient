@@ -30,7 +30,7 @@ export function ActiveButton(props: Props) {
       })}
       <span
         className={`
-          flex-1 ml-3 whitespace-nowrap
+          flex-1 ml-3 truncate max-w-[175px]
           ${props.href === patnam ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-400 dark:text-gray-500"}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `}

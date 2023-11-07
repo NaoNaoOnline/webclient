@@ -261,12 +261,20 @@ export function Event(props: Props) {
       }
     };
 
-    if (!clld.current && labl) {
+    if (!clld.current) {
       clld.current = true;
       getData();
     }
-  }, [props, atkn, labl, addErro]);
+  }, [props, atkn, labl, salt, addErro]); // Note the salt as dependency
 
+  // Since NextJS operates in parts like a single-page-app, we may want to
+  // render content using the same react components, but with different input.
+  // One example for this are all pages generated from lists. If the user
+  // watches a list and then switches to another list, the event component is
+  // re-rendered, just with another list ID. Here we keep track of our internal
+  // salt and reconcile it with the external query. If the query changes, we
+  // want to fetch new data once. Fetching once is the reason why we use the
+  // "called ref".
   useEffect(() => {
     if (qury !== salt) {
       clld.current = false;

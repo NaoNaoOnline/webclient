@@ -15,12 +15,12 @@ interface Props {
   erem: () => void; // event remove callback
 }
 
-export default function EventMenu(props: Props) {
+export function EventMenu(props: Props) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className="py-3 outline-none group" type="button">
-          <EllipsisHorizontalIcon className="w-5 h-5 mr-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
+          <EllipsisHorizontalIcon className="w-5 h-5 mr-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
         </button>
       </DropdownMenu.Trigger>
 

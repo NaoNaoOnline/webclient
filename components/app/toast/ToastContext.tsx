@@ -54,11 +54,12 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ToastContext.Provider value={{ addErro, addInfo, addPgrs, addScss }}>
-      <Toast.Provider>
-
+    <>
+      <ToastContext.Provider value={{ addErro, addInfo, addPgrs, addScss }}>
         {children}
+      </ToastContext.Provider>
 
+      <Toast.Provider>
         {erro.map((x, i) => (
           <ErrorToast
             key={i}
@@ -86,9 +87,8 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
             obj={x}
           />
         ))}
-
       </Toast.Provider>
-    </ToastContext.Provider>
+    </>
   );
 };
 

@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { ReactElement, cloneElement, useState } from "react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { CheckIcon } from "@heroicons/react/24/outline";
+import { RiCheckLine } from "react-icons/ri";
 
 interface Props {
-  copy: string;
-  text: string;
   className?: string;
+  copy: string;
+  icon?: ReactElement;
+  text?: string;
 }
 
-export default function CopyButton(props: Props) {
+export function CopyButton(props: Props) {
   const [chck, setChck] = useState<boolean>(false);
   const [time, setTime] = useState<NodeJS.Timeout[]>([]);
 
@@ -29,15 +30,21 @@ export default function CopyButton(props: Props) {
     <div className="flex">
       <CopyToClipboard onCopy={() => shwChck()} text={props.copy} >
         <button className={`flex-1 text-left ${props.className}`}>
-          {props.text}
+          {props.text ? props.text : ""}
+          {props.icon && !chck && cloneElement(props.icon)}
+          {props.icon && chck && (
+            <span className="text-green-400">
+              <RiCheckLine className="w-5 h-5" />
+            </span>
+          )}
         </button>
       </CopyToClipboard>
 
-      {chck && (
+      {props.text && chck && (
         <span className="flex-1 ml-1 text-green-400">
-          <CheckIcon className="w-5 h-5" />
+          <RiCheckLine className="w-5 h-5" />
         </span>
       )}
-    </div>
+    </div >
   );
 };

@@ -8,9 +8,9 @@ import spacetime, { Spacetime } from "spacetime";
 
 import { RiMenuAddLine } from "react-icons/ri";
 
-import EventMenu from "@/components/app/event/EventMenu";
+import { EventMenu } from "@/components/app/event/EventMenu";
 
-import ListDialog from "@/components/app/list/ListDialog";
+import { ListDialog } from "@/components/app/list/dialog/ListDialog";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
