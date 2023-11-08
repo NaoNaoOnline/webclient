@@ -16,7 +16,7 @@ export function DialogTitle(props: Props) {
         onValueChange={props.slct}
       >
         <Select.Trigger
-          className="inline-flex px-1 data-[placeholder]:text-gray-900 data-[placeholder]:dark:text-gray-50 underline items-center justify-center outline-none"
+          className="inline-flex px-1 data-[placeholder]:text-gray-900 data-[placeholder]:dark:text-gray-50 underline underline-offset-2 decoration-dashed items-center justify-center outline-none"
         >
 
           <Select.Value placeholder={props.incl ? "include" : "exclude"} />
@@ -27,7 +27,7 @@ export function DialogTitle(props: Props) {
           <Select.Content className="bg-gray-50 dark:bg-gray-700 rounded-md shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
             <Select.Viewport className="p-[5px]">
               <Select.Item
-                className="flex text-md p-2 leading-none rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 data-[state=checked]:underline cursor-pointer"
+                className="flex text-md p-2 leading-none rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 data-[state=checked]:underline data-[state=checked]:underline-offset-2 data-[state=checked]:decoration-dashed cursor-pointer"
                 value="incl"
               >
                 <Select.ItemText>
@@ -36,7 +36,7 @@ export function DialogTitle(props: Props) {
               </Select.Item>
 
               <Select.Item
-                className="flex text-md p-2 leading-none rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 data-[state=checked]:underline cursor-pointer"
+                className="flex text-md p-2 leading-none rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 data-[state=checked]:underline data-[state=checked]:underline-offset-2 data-[state=checked]:decoration-dashed cursor-pointer"
                 value="excl"
               >
                 <Select.ItemText>

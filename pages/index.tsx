@@ -18,7 +18,7 @@ export default function Page() {
 
       <div className="px-2 mt-4 md:ml-64">
         <div className="px-2 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-gray-50">
+          <div className="w-full max-w-xl">
             {auth && user[0].home !== "" && user[0].home !== "/" && (
               <Event
                 list={user[0].home}
