@@ -7,8 +7,9 @@ import { CopyButton } from "@/components/app/button/CopyButton";
 
 interface Props {
   chck: (che: boolean | "indeterminate") => void; // Radix onCheckedChange callback
+  crtr?: boolean;                                 // is event creator
   name: string;                                   // resource name, e.g. host or like
-  prfx: string;                                   // label text prefix, e.g. @ or # for hosts and categories
+  prfx?: string;                                  // label text prefix, e.g. @ or # for hosts and categories
   rsrc: string;                                   // resource ID, e.g. Label.labl or User.user
   salt: string;
   text: string;                                   // label text to show for the rendered resource
@@ -33,9 +34,14 @@ export function RuleSelect(props: Props) {
           </Checkbox.Indicator>
         </Checkbox.Root>
 
-        <span className="text-sm truncate max-w-[135px]">
+        <span className="text-sm truncate max-w-[120px] sm:max-w-[155px]">
           {props.prfx}{props.text}
         </span>
+        {props.crtr && (
+          <span className="inline-block items-center rounded ml-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
+            EC
+          </span>
+        )}
 
       </label>
 

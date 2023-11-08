@@ -1,7 +1,7 @@
 import { MouseEvent, ReactElement, cloneElement } from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface Props {
   clck?: (eve: MouseEvent<HTMLAnchorElement>) => void;
@@ -12,7 +12,8 @@ interface Props {
 }
 
 export function ActiveButton(props: Props) {
-  const patnam = usePathname();
+  const path = usePathname();
+  const qury = useSearchParams().toString();
 
   return (
     <Link
@@ -23,15 +24,15 @@ export function ActiveButton(props: Props) {
     >
       {props.icon && cloneElement(props.icon, {
         className: `
-          flex-shrink-0 w-5 h-5
-          ${props.href === patnam ? "text-gray-900 dark:text-gray-50" : "text-gray-400 dark:text-gray-500"}
+          flex-shrink-0 w-5 h-5 rounded-full
+          ${props.href === href(path, qury) ? "text-gray-900 dark:text-gray-50" : "text-gray-400 dark:text-gray-500"}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `,
       })}
       <span
         className={`
           flex-1 ml-3 truncate max-w-[175px]
-          ${props.href === patnam ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-400 dark:text-gray-500"}
+          ${props.href === href(path, qury) ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-400 dark:text-gray-500"}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `}
       >
@@ -40,3 +41,9 @@ export function ActiveButton(props: Props) {
     </Link>
   );
 };
+
+const href = (pat: string, qry: string): string => {
+  if (qry === "") return pat;
+
+  return pat + "?" + qry;
+}

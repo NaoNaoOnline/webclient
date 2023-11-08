@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { CgAddR } from "react-icons/cg";
+import { RiNotification2Line } from "react-icons/ri";
 import { FiLogIn } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -28,7 +29,7 @@ export function UserButtons() {
   const [rndr, setRndr] = useState(false);
   const [syst, setSyst] = useSystem();
 
-  const newOnLinkClick = (str: string) => {
+  const reqAuth = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
       if (!auth) {
         evn.preventDefault();
@@ -57,35 +58,36 @@ export function UserButtons() {
       <ul className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-700">
 
         {auth && (
-          <li>
-            <Link
-              href={`/user/` + name}
-              className="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer group"
-            >
-              <div className="flex-shrink-0">
-                <Image
-                  alt="profile picture"
-                  className="w-5 h-5 rounded-full"
-                  height={20}
-                  width={20}
-                  src={imag}
-                />
-              </div>
-              <span
-                className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
-              >
-                {name}
-              </span>
-            </Link>
-          </li>
+          <ActiveButton
+            href="/comingsoon?page=profile"
+            text={name}
+            icon={
+              <Image
+                alt="profile picture"
+                height={20}
+                width={20}
+                src={imag}
+              />
+            }
+            clck={reqAuth("Oh, this door is locked! Try logging in first.")}
+          />
         )}
+
+        <li>
+          <ActiveButton
+            href="/comingsoon?page=notifications"
+            text="Notifications"
+            icon={<RiNotification2Line />}
+            clck={reqAuth("Oh, this door is locked! Try logging in first.")}
+          />
+        </li>
 
         <li>
           <ActiveButton
             href="/event/create"
             text="Add Event"
             icon={<CgAddR />}
-            clck={newOnLinkClick("Join the beavers and login if you want to add a new event. Or else!")}
+            clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}
           />
         </li>
 
