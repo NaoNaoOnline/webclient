@@ -25,10 +25,6 @@ import { EventDelete } from "@/modules/api/event/delete/Delete";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
-function onLinkClick(e: MouseEvent<HTMLAnchorElement>) {
-  e.stopPropagation();
-}
-
 interface Props {
   dadd: () => void;
   desc: DescriptionSearchObject[];
@@ -38,7 +34,7 @@ interface Props {
   labl: LabelSearchResponse[];
 }
 
-export default function Footer(props: Props) {
+export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
   const { auth, atkn } = useAuth();
 
@@ -85,60 +81,50 @@ export default function Footer(props: Props) {
   };
 
   return (
-    <>
-      <div
-        onClick={(e: MouseEvent<HTMLDivElement>) => {
-          if (e.metaKey || e.ctrlKey) {
-            window.open("/event/" + props.evnt.evnt(), '_blank');
+    <div className="flex flex-row w-full mb-4 shadow-gray-400 dark:shadow-black shadow-[0px_-1px_2px_-1px]">
+      {props.evnt.cate(props.labl).map((x, i) => (
+        <Link
+          key={i}
+          href={`/event?cate=${encodeURIComponent(x.name)}`}
+          className="flex-1 ml-3 py-3 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
+        >
+          #{x.name}
+        </Link>
+      ))}
+
+      <Link
+        href={"/event/" + props.evnt.evnt()}
+        className="w-full"
+      />
+
+      <button
+        onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+          if (!auth) {
+            addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
           } else {
-            nxtrtr.push("/event/" + props.evnt.evnt());
+            setShow(true);
           }
         }}
-        className="flex flex-1 mb-4 px-1 rounded-b-md dark:bg-gray-700 items-center justify-between bg-white shadow-gray-400 dark:shadow-black shadow-[0_0_2px] outline-none cursor-pointer"
+        className="p-3 outline-none group"
+        type="button"
       >
-        <div className="flex flex-row w-full">
-          {props.evnt.cate(props.labl).map((x, i) => (
-            <Link
-              key={i}
-              href={`/event?cate=${encodeURIComponent(x.name)}`}
-              onClick={onLinkClick}
-              className="flex items-center pl-2 py-2 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
-            >
-              #{x.name}
-            </Link>
-          ))}
-        </div>
+        <RiMenuAddLine className="flex-1 w-5 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" />
+      </button>
 
-        <button
-          onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-            eve.stopPropagation();
-            if (!auth) {
-              addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
-            } else {
-              setShow(true);
-            }
-          }}
-          className="p-3 outline-none group"
-          type="button"
-        >
-          <RiMenuAddLine className="w-5 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" />
-        </button>
+      <EventMenu
+        cadd={!dmax && !hpnd}
+        crem={ownr && !hpnd}
+        dadd={props.dadd}
+        erem={() => eventDelete(props.evnt)}
+      />
 
-        <EventMenu
-          cadd={!dmax && !hpnd}
-          crem={ownr && !hpnd}
-          dadd={props.dadd}
-          erem={() => eventDelete(props.evnt)}
-        />
-
-        <ListDialog
-          clos={() => setShow(false)}
-          desc={props.desc}
-          evnt={props.evnt}
-          labl={props.labl}
-          show={show}
-        />
-      </div >
-    </>
+      <ListDialog
+        clos={() => setShow(false)}
+        desc={props.desc}
+        evnt={props.evnt}
+        labl={props.labl}
+        show={show}
+      />
+    </div >
   );
 };

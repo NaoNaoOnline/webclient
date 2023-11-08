@@ -1,7 +1,7 @@
 import { MouseEvent } from "react";
 
 import { RiHeart3Line } from "react-icons/ri";
-import { HomeIcon } from "@heroicons/react/24/outline";
+import { RiHome4Line } from "react-icons/ri";
 import { RiMenuAddLine } from "react-icons/ri";
 import { RiListUnordered } from "react-icons/ri";
 
@@ -33,7 +33,7 @@ export function ListButtons() {
       <li>
         <ActiveButton
           href="/"
-          icon={<HomeIcon />}
+          icon={<RiHome4Line />}
           text="Default View"
         />
       </li>
@@ -52,7 +52,7 @@ export function ListButtons() {
           <ActiveButton
             href={`/list/` + x.list}
             text={x.desc}
-            icon={x.list === user[0].home ? <HomeIcon /> : <RiListUnordered />}
+            icon={x.list === user[0].home ? <RiHome4Line /> : <RiListUnordered />}
           />
         </li>
       ))}

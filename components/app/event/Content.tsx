@@ -147,78 +147,76 @@ export default function Content(props: Props) {
   }
 
   return (
-    <>
-      <div className="max-h-[404px] overflow-y-auto shadow-gray-400 dark:shadow-black shadow-[0_0_2px]">
-        {!props.xpnd && (
-          <Description
-            amnt={props.desc.length}
-            desc={props.desc[0]}
-            drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
-            evnt={props.evnt}
-            radd={radd}
-            rrem={rrem}
-          />
-        )}
-        {props.xpnd && (
-          <>
-            {props.desc.map((x, i) => (
-              <Description
-                key={i}
-                amnt={props.desc.length}
-                desc={x}
-                drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
-                evnt={props.evnt}
-                radd={radd}
-                rrem={rrem}
-              />
-            ))}
-          </>
-        )}
-        {props.form && (
-          <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between">
-              <div className="flex-shrink-0 flex flex-row">
-                <a
-                  href={`/user/${user?.public?.name}`}
-                  onClick={onLinkClick}
-                  className="flex items-center pl-2"
-                >
-                  <Image
-                    alt="profile picture"
-                    className="w-7 h-7 rounded-full"
-                    height={28}
-                    width={28}
-                    src={user?.picture || ""}
-                  />
-                </a>
-                <a
-                  href={`/user/${user?.public?.name}`}
-                  onClick={onLinkClick}
-                  className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
-                >
-                  {user?.public?.name}
-                </a>
-                {user?.intern?.uuid === props.evnt.user() && (
-                  <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
-                    EC
-                    <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-                      Event Creator
-                    </div>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <DescriptionCreateForm
-              cncl={props.cncl}
-              done={props.dadd}
-              evnt={props.evnt.evnt()}
+    <div className="max-h-[404px] overflow-y-auto">
+      {!props.xpnd && (
+        <Description
+          amnt={props.desc.length}
+          desc={props.desc[0]}
+          drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
+          evnt={props.evnt}
+          radd={radd}
+          rrem={rrem}
+        />
+      )}
+      {props.xpnd && (
+        <>
+          {props.desc.map((x, i) => (
+            <Description
+              key={i}
+              amnt={props.desc.length}
+              desc={x}
+              drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
+              evnt={props.evnt}
+              radd={radd}
+              rrem={rrem}
             />
-
+          ))}
+        </>
+      )}
+      {props.form && (
+        <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between">
+            <div className="flex-shrink-0 flex flex-row">
+              <a
+                href={`/user/${user?.public?.name}`}
+                onClick={onLinkClick}
+                className="flex items-center pl-2"
+              >
+                <Image
+                  alt="profile picture"
+                  className="w-7 h-7 rounded-full"
+                  height={28}
+                  width={28}
+                  src={user?.picture || ""}
+                />
+              </a>
+              <a
+                href={`/user/${user?.public?.name}`}
+                onClick={onLinkClick}
+                className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+              >
+                {user?.public?.name}
+              </a>
+              {user?.intern?.uuid === props.evnt.user() && (
+                <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
+                  EC
+                  <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
+                    Event Creator
+                  </div>
+                </span>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </>
+
+          <DescriptionCreateForm
+            cncl={props.cncl}
+            done={props.dadd}
+            evnt={props.evnt.evnt()}
+          />
+
+        </div>
+      )}
+    </div>
   );
 };
 

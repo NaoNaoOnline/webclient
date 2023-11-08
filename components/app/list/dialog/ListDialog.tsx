@@ -1,4 +1,4 @@
-import { KeyboardEvent, MouseEvent, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Separator from "@radix-ui/react-separator";
@@ -19,10 +19,6 @@ import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
-
-function onItemClick(e: MouseEvent<HTMLDivElement>) {
-  e.stopPropagation();
-}
 
 interface Props {
   clos: () => void;                // close dialog callback
@@ -54,7 +50,7 @@ export function ListDialog(props: Props) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 inset-0">
           <Dialog.Content
-            onClick={onItemClick}
+            onInteractOutside={(e) => e.preventDefault()}
             onOpenAutoFocus={(e) => e.preventDefault()}
             className="relative w-full max-w-xl min-h-[400px] bg-gray-50 dark:bg-gray-700 mt-7 mx-auto p-4 rounded-md justify-items-center shadow-gray-400 dark:shadow-black shadow-[0_0_2px] focus:outline-none"
           >
@@ -65,7 +61,7 @@ export function ListDialog(props: Props) {
             />
 
             <div className="flex flex-row w-full h-[300px]">
-              <div className="flex-1 w-full px-2 overflow-y-auto">
+              <div className="flex-1 w-full overflow-y-auto">
 
                 <h5 className="py-2 text-gray-900 dark:text-gray-50 text-sm font-medium">Hosted By</h5>
 
@@ -106,12 +102,12 @@ export function ListDialog(props: Props) {
                 {srtUser(props.evnt, props.desc).map((x, i) => (
                   <RuleSelect
                     key={salt + ":user:" + x.user}
+                    crtr={props.evnt.user() === x.user}
                     chck={(che: boolean | "indeterminate") => {
                       if (che === true) setUser((old: UserSearchResponse[]) => [...old, x]);
                       if (che === false) setUser((old: UserSearchResponse[]) => old.filter((y) => y.user !== x.user));
                     }}
                     name="user"
-                    prfx=""
                     rsrc={x.user}
                     salt={salt}
                     text={x.name}
@@ -123,12 +119,12 @@ export function ListDialog(props: Props) {
                 {srtUser(props.evnt, props.desc).map((x, i) => (
                   <RuleSelect
                     key={salt + ":like:" + x.user}
+                    crtr={props.evnt.user() === x.user}
                     chck={(che: boolean | "indeterminate") => {
                       if (che === true) setLike((old: UserSearchResponse[]) => [...old, x]);
                       if (che === false) setLike((old: UserSearchResponse[]) => old.filter((y) => y.user !== x.user));
                     }}
                     name="like"
-                    prfx=""
                     rsrc={x.user}
                     salt={salt}
                     text={x.name}
@@ -143,7 +139,7 @@ export function ListDialog(props: Props) {
                 orientation="vertical"
               />
 
-              <div className="flex-1 w-full px-2 overflow-y-hidden">
+              <div className="flex-1 w-full overflow-y-hidden">
                 <ListCreateForm
                   done={(lis: ListSearchResponse) => addList(lis)}
                   fail={(lis: ListSearchResponse) => remList(lis)}

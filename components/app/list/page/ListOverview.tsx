@@ -2,7 +2,7 @@ import { MouseEvent, useState } from "react";
 
 import Link from "next/link";
 
-import { HomeIcon } from "@heroicons/react/24/outline";
+import { RiHome4Line } from "react-icons/ri";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
@@ -139,7 +139,7 @@ export function ListOverview() {
                     defaultView(x.list === user[0].home ? "/" : x.list);
                   }}
                 >
-                  <HomeIcon className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
+                  <RiHome4Line className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
                 </button>
               </li>
 

@@ -10,7 +10,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useCache } from "@/components/app/cache/CacheContext";
 
 import Content from "@/components/app/event/Content";
-import Footer from "@/components/app/event/Footer";
+import { EventFooter } from "@/components/app/event/EventFooter";
 import { EventHeader } from "@/components/app/event/EventHeader";
 
 import { PageHeader } from "@/components/app/layout/PageHeader";
@@ -236,6 +236,7 @@ export function Event(props: Props) {
         const evn = await EventSearch(req);
 
         if (evn.length === 0) {
+          setEvnt([]);
           setLdng(false);
           return;
         }
@@ -285,6 +286,12 @@ export function Event(props: Props) {
     }
   }, [qury, salt]);
 
+  // We are trying to prevent multiple re-renderings here. Without the checks
+  // below we will see the "There are no events." screen while the actual
+  // content is loading.
+  if (qury !== salt) return <></>;
+  if (ldng === true) return <></>;
+
   return (
     <>
       <PageHeader titl={props.titl || "Latest Events"} />
@@ -305,7 +312,10 @@ export function Event(props: Props) {
           {desc && Object.keys(fltr).length !== 0 && labl && (
             <ul>
               {ltst.map((x, i) => (
-                <li key={i}>
+                <li
+                  key={i}
+                  className="rounded-md dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+                >
                   <EventHeader
                     desc={fltr[x.evnt()]}
                     evnt={x}
@@ -343,7 +353,7 @@ export function Event(props: Props) {
                     </div>
                   )}
 
-                  <Footer
+                  <EventFooter
                     dadd={() => {
                       if (!auth) {
                         addInfo(info);
@@ -369,7 +379,10 @@ export function Event(props: Props) {
 
           <ul>
             {past.map((x, i) => (
-              <li key={i}>
+              <li
+                key={i}
+                className="rounded-md dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+              >
                 <EventHeader
                   desc={fltr[x.evnt()]}
                   evnt={x}
@@ -407,7 +420,7 @@ export function Event(props: Props) {
                   </div>
                 )}
 
-                <Footer
+                <EventFooter
                   dadd={() => {
                     if (!auth) {
                       addInfo(info);

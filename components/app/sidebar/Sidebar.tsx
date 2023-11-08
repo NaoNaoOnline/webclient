@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
 import { ListButtons } from "@/components/app/sidebar/ListButtons";
+import { GlobalButtons } from "@/components/app/sidebar/GlobalButtons";
 import { SocialButtons } from "@/components/app/sidebar/SocialButtons";
 import { UserButtons } from "@/components/app/sidebar/UserButtons";
 
@@ -41,6 +42,7 @@ export const Sidebar = () => {
       >
 
         <ListButtons />
+        <GlobalButtons />
         <UserButtons />
         <SocialButtons />
 
