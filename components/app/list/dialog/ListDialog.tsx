@@ -52,7 +52,7 @@ export function ListDialog(props: Props) {
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 px-4 md:ml-64 inset-0">
+        <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 inset-0">
           <Dialog.Content
             onClick={onItemClick}
             onOpenAutoFocus={(e) => e.preventDefault()}

@@ -45,8 +45,17 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
           <ToastProvider>
             <ManualContext.Provider value={[manu, setManu]}>
               <SystemContext.Provider value={[syst, setSyst]}>
+
+                <div className="mt-4 justify-items-center">
+                  <div className="m-auto w-full max-w-xl">
+
+                    <Component {...pageProps} />
+
+                  </div>
+                </div>
+
                 <Sidebar />
-                <Component {...pageProps} />
+
               </SystemContext.Provider>
             </ManualContext.Provider>
           </ToastProvider>
