@@ -8,7 +8,7 @@ import LabelInput from "@/components/app/event/add/LabelInput";
 import LinkInput from "@/components/app/event/add/LinkInput";
 import TimeBar from "@/components/app/event/add/TimeBar";
 
-import Header from "@/components/app/layout/Header";
+import { PageHeader } from "@/components/app/layout/PageHeader";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -137,66 +137,60 @@ export default function Page() {
 
   return (
     <>
-      <Header titl="Add Event" />
+      <PageHeader titl="Add Event" />
 
-      <div className="px-2 mt-4 md:ml-64">
-        <div className="px-2 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-gray-50">
-            <form onSubmit={handleSubmit}>
-              <div className="grid">
-                <TimeBar />
+      <form onSubmit={handleSubmit}>
+        <div className="grid">
+          <TimeBar />
 
-                <LabelInput
-                  blck={bltn}
-                  crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
-                  desc="the host labels for who is organizing this event"
-                  labl={host}
-                  name="host"
-                  pldr="Flashbots"
-                  titl="allowed are up to 5 comma separated host labels, each between 3 and 20 characters long, without special characters"
-                />
+          <LabelInput
+            blck={bltn}
+            crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
+            desc="the host labels for who is organizing this event"
+            labl={host}
+            name="host"
+            pldr="Flashbots"
+            titl="allowed are up to 5 comma separated host labels, each between 3 and 20 characters long, without special characters"
+          />
 
-                <LabelInput
-                  blck={bltn}
-                  crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
-                  desc="the category labels for topics this event is about"
-                  labl={cate}
-                  name="category"
-                  pldr="Crypto, DeFi, MEV"
-                  titl="allowed are up to 5 comma separated category labels, each between 3 and 20 characters long, without special characters"
-                />
+          <LabelInput
+            blck={bltn}
+            crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
+            desc="the category labels for topics this event is about"
+            labl={cate}
+            name="category"
+            pldr="Crypto, DeFi, MEV"
+            titl="allowed are up to 5 comma separated category labels, each between 3 and 20 characters long, without special characters"
+          />
 
-                <TextInput
-                  desc="the short one-liner for what this event is about"
-                  maxl={120}
-                  minl={20}
-                  name="description"
-                  pldr="dicussing how EIP-4844 will change L2 economics forever"
-                  ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-                  span="mb-6"
-                  titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-                />
+          <TextInput
+            desc="the short one-liner for what this event is about"
+            maxl={120}
+            minl={20}
+            name="description"
+            pldr="dicussing how EIP-4844 will change L2 economics forever"
+            ptrn={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
+            span="mb-6"
+            titl={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
+          />
 
-                <LinkInput
-                  desc="the online location at which this event takes place"
-                  name="link"
-                  pldr="discord.gg/Flashbots"
-                  titl="allowed is one valid https URL (we cover the scheme for you)"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={pgrs.getCmpl() !== 0}
-                className="text-sm mb-6 font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
-                onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
-              >
-                Submit
-              </button>
-            </form>
-          </div>
+          <LinkInput
+            desc="the online location at which this event takes place"
+            name="link"
+            pldr="discord.gg/Flashbots"
+            titl="allowed is one valid https URL (we cover the scheme for you)"
+          />
         </div>
-      </div >
+
+        <button
+          type="submit"
+          disabled={pgrs.getCmpl() !== 0}
+          className="text-sm mb-6 font-medium rounded-lg w-full md:w-auto px-5 py-2.5 text-center disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800 enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-500"
+          onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
+        >
+          Submit
+        </button>
+      </form>
     </>
   )
 }

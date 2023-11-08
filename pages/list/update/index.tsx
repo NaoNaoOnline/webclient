@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 
 import { ListOverview } from "@/components/app/list/page/ListOverview";
-import Header from "@/components/app/layout/Header";
+import { PageHeader } from "@/components/app/layout/PageHeader";
 
 import { useAuth } from "@/components/app/auth/AuthContext";
 
@@ -19,15 +19,9 @@ export default function Page() {
 
   return (
     <>
-      <Header titl="My Lists" />
+      <PageHeader titl="My Lists" />
 
-      <div className="px-2 mt-4 md:ml-64">
-        <div className="px-2 flex grid justify-items-center">
-          <div className="w-full max-w-xl dark:text-gray-50">
-            <ListOverview />
-          </div>
-        </div>
-      </div >
+      <ListOverview />
     </>
   );
 };

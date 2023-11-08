@@ -19,7 +19,7 @@ interface Props {
   labl: LabelSearchResponse[];
 }
 
-export default function Event(props: Props) {
+export function EventHeader(props: Props) {
   const nxtrtr = useRouter();
 
   return (
