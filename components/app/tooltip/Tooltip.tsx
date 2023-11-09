@@ -34,7 +34,7 @@ export function Tooltip({
       </TooltipPrimitive.Trigger>
       <TooltipPrimitive.Content
         className={`
-          max-w-[150px] px-2 py-1 text-xs font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900
+          max-w-[250px] px-2 py-1 text-xs font-medium font-mono rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900
           data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade
           data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade
           data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade
@@ -50,7 +50,6 @@ export function Tooltip({
         <TooltipPrimitive.Arrow
           className="w-3 h-1 fill-gray-800 dark:fill-gray-200"
         />
-
 
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Root>

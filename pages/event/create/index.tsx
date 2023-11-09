@@ -146,7 +146,12 @@ export default function Page() {
           <LabelInput
             blck={bltn}
             crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
-            desc="the host labels for who is organizing this event"
+            desc={
+              <div>
+                <div>the host labels for who</div>
+                <div>is organizing this event</div>
+              </div>
+            }
             labl={host}
             name="host"
             pldr="Flashbots"
@@ -156,7 +161,12 @@ export default function Page() {
           <LabelInput
             blck={bltn}
             crtd={(val: string) => setBlck((old: string[]) => [...old, val])}
-            desc="the category labels for topics this event is about"
+            desc={
+              <div>
+                <div>the category labels for</div>
+                <div>what this event is about</div>
+              </div>
+            }
             labl={cate}
             name="category"
             pldr="Crypto, DeFi, MEV"
@@ -164,7 +174,12 @@ export default function Page() {
           />
 
           <TextInput
-            desc="the short one-liner for what this event is about"
+            desc={
+              <div>
+                <div>the short one-liner for</div>
+                <div>what this event is about</div>
+              </div>
+            }
             maxl={120}
             minl={20}
             name="description"
@@ -175,7 +190,12 @@ export default function Page() {
           />
 
           <LinkInput
-            desc="the online location at which this event takes place"
+            desc={
+              <div>
+                <div>the online location where</div>
+                <div>this event is happening</div>
+              </div>
+            }
             name="link"
             pldr="discord.gg/Flashbots"
             titl="allowed is one valid https URL (we cover the scheme for you)"

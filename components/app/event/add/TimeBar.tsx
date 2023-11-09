@@ -36,7 +36,12 @@ export default function TimeBar() {
           date.setDay(dat)
           setRndr((old: boolean) => !old);
         }}
-        desc="the day this event is expected to happen"
+        desc={
+          <div>
+            <div>the day this event</div>
+            <div>is expected to happen</div>
+          </div>
+        }
         dspl={(dat: Spacetime): string[] => {
           return date.dspDay(dat);
         }}
@@ -49,7 +54,12 @@ export default function TimeBar() {
       />
       <ZoneInput
         chng={setZone}
-        desc="the timezone to base start and end time on"
+        desc={
+          <div>
+            <div>the timezone to base</div>
+            <div>start and end time on</div>
+          </div>
+        }
         name="zone"
         span="col-span-5"
         zind="z-30"
@@ -60,7 +70,12 @@ export default function TimeBar() {
           date.setSta(dat)
           setRndr((old: boolean) => !old);
         }}
-        desc="the time this event is expected to start"
+        desc={
+          <div>
+            <div>the time this event</div>
+            <div>is expected to start</div>
+          </div>
+        }
         dspl={(dat: Spacetime): string[] => date.dspSta(dat)}
         list={date.lisSta()}
         name="start"
@@ -74,7 +89,12 @@ export default function TimeBar() {
           date.setEnd(dat)
           setRndr((old: boolean) => !old);
         }}
-        desc="the time this event is expected to end"
+        desc={
+          <div>
+            <div>the time this event</div>
+            <div>is expected to end</div>
+          </div>
+        }
         dspl={(dat: Spacetime): string[] => date.dspEnd(dat)}
         list={date.lisEnd()}
         name="end"

@@ -2,6 +2,7 @@ import { MouseEvent, useState } from "react";
 
 import Link from "next/link";
 
+import { BiInfoCircle } from "react-icons/bi";
 import { RiHome4Line } from "react-icons/ri";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -16,6 +17,8 @@ import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { ListUpdateForm } from "./update/ListUpdateForm";
@@ -83,81 +86,107 @@ export function ListOverview() {
   return (
     <>
       {list.map((x, i) => (
-        <ul key={x.list} className="flex flex-row w-full text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 group">
-          {form === x.list && (
-            <ListUpdateForm
-              cncl={() => setForm("")}
-              done={(des: string) => {
-                if (des === x.desc) {
-                  addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
-                } else {
-                  updList(x, { ...x, desc: des });
-                }
-                setForm("")
-              }}
-              list={x}
-            />
-          )}
+        <div className="relative">
+          <div
+            className={`
+                  absolute left-[-30px] h-[48px] flex items-center text-gray-500 dark:text-gray-500
+                  ${x.list === user[0].home ? "visible" : "invisible"}
+                `}
+          >
+            <Tooltip
+              desc={
+                <div>
+                  <div>your current "home" page</div>
+                  <div>undo using the house icon</div>
+                </div>
+              }
+              side="top"
+            >
+              <BiInfoCircle
+                className="w-5 h-5 text-gray-500 dark:text-gray-500"
+              />
+            </Tooltip>
+          </div>
 
-          {form !== x.list && (
-            <>
-              <Link
-                key={i}
-                href={"/list/update/" + x.list}
-                className="flex p-3 items-center w-full hover:underline"
-              >
-                <li className="flex w-fit items-center whitespace-nowrap">
-                  {x.desc}
-                </li>
-              </Link >
+          <ul
+            key={x.list}
+            className="flex flex-row w-full text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 group"
+          >
+            {form === x.list && (
+              <ListUpdateForm
+                cncl={() => setForm("")}
+                done={(des: string) => {
+                  if (des === x.desc) {
+                    addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
+                  } else {
+                    updList(x, { ...x, desc: des });
+                  }
+                  setForm("")
+                }}
+                list={x}
+              />
+            )}
 
-              <li className="flex items-center text-gray-400 dark:text-gray-500 invisible group-hover:visible">
-                <button
-                  className="pl-3 outline-none flex-shrink-0"
-                  type="button"
-                  onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-                    eve.preventDefault();
-                    setForm(x.list);
-                  }}
+            {form !== x.list && (
+              <>
+                <Link
+                  key={i}
+                  href={"/list/update/" + x.list}
+                  className="flex p-3 items-center w-full hover:underline"
                 >
-                  <PencilSquareIcon className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
-                </button>
-              </li>
+                  <li className="truncate max-w-[350px] w-fit items-center whitespace-nowrap">
+                    {x.desc}
+                  </li>
+                </Link >
 
-              <li
-                className={`
-                  flex items-center text-gray-400 dark:text-gray-500
+                <li className="flex items-center text-gray-500 dark:text-gray-500 invisible group-hover:visible">
+                  <button
+                    className="pl-3 outline-none flex-shrink-0"
+                    type="button"
+                    onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+                      eve.preventDefault();
+                      setForm(x.list);
+                    }}
+                  >
+                    <PencilSquareIcon className="w-5 h-5 text-gray-500 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-50" />
+                  </button>
+                </li>
+
+                <li
+                  className={`
+                  flex items-center text-gray-500 dark:text-gray-500
                   ${x.list === user[0].home ? "visible" : "invisible"}
                   group-hover:visible
                 `}
-              >
-                <button
-                  className="pl-3 outline-none flex-shrink-0"
-                  type="button"
-                  onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-                    eve.preventDefault();
-                    defaultView(x.list === user[0].home ? "/" : x.list);
-                  }}
                 >
-                  <RiHome4Line className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
-                </button>
-              </li>
+                  <button
+                    className="pl-3 outline-none flex-shrink-0"
+                    type="button"
+                    onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+                      eve.preventDefault();
+                      defaultView(x.list === user[0].home ? "/" : x.list);
+                    }}
+                  >
+                    <RiHome4Line className="w-5 h-5 text-gray-500 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-50" />
+                  </button>
+                </li>
 
-              <li className="flex items-center text-gray-400 dark:text-gray-500 invisible group-hover:visible">
-                <button
-                  className="px-3 outline-none flex-shrink-0"
-                  type="button"
-                  onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-                    eve.preventDefault();
-                    deleteList(x);
-                  }}
-                >
-                  <TrashIcon className="w-5 h-5 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50" />
-                </button>
-              </li>
-            </>
-          )}
-        </ul>
+                <li className="flex items-center text-gray-500 dark:text-gray-500 invisible group-hover:visible">
+                  <button
+                    className="px-3 outline-none flex-shrink-0"
+                    type="button"
+                    onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+                      eve.preventDefault();
+                      deleteList(x);
+                    }}
+                  >
+                    <TrashIcon className="w-5 h-5 text-gray-500 hover:text-gray-900 dark:text-gray-500 dark:hover:text-gray-50" />
+                  </button>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
       ))}
     </>
   );

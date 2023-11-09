@@ -13,6 +13,8 @@ import DescriptionMenu from "@/components/app/description/DescriptionMenu";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
+
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 
@@ -50,7 +52,7 @@ export default function Description(props: Props) {
           <Link
             href={`/event?user=${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
-            className="flex items-center pl-2"
+            className="flex items-center p-2"
           >
             <Image
               alt="profile picture"
@@ -63,17 +65,19 @@ export default function Description(props: Props) {
           <Link
             href={`/event?user=${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
-            className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+            className="flex items-center py-2 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >
             {props.desc.name()}
           </Link>
           {props.desc.user() === props.evnt.user() && (
-            <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
-              EC
-              <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-                Event Creator
-              </div>
-            </span>
+            <Tooltip
+              desc="Event Creator"
+              side="right"
+            >
+              <span className="rounded mx-2 my-auto px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer">
+                EC
+              </span>
+            </Tooltip>
           )}
         </div>
 

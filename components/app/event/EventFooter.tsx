@@ -105,7 +105,12 @@ export function EventFooter(props: Props) {
             className="flex-1 p-3"
           >
             <Tooltip
-              desc="the number of clicks on the event link"
+              desc={
+                <div>
+                  <div>the number of clicks</div>
+                  <div>on the event link   </div>
+                </div>
+              }
               side="left"
             >
               <BiBarChart

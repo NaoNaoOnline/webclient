@@ -1,7 +1,9 @@
-import { useRef, useState, ChangeEvent } from "react";
+import { ChangeEvent, ReactNode, useRef, useState } from "react";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 interface Props {
-  desc: string;
+  desc: ReactNode;
   name: string;
   pldr: string;
   titl: string;
@@ -34,12 +36,18 @@ export default function LinkInput(props: Props) {
 
   return (
     <div className="relative z-0 w-full mb-6">
-      <label htmlFor={`${props.name}-input`} className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
-        {ttlCas(props.name)}
-        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-          {props.desc}
-        </div>
-      </label>
+
+      <div className="relative z-10">
+        <Tooltip
+          desc={props.desc}
+          side="right"
+        >
+          <label htmlFor={`${props.name}-input`} className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
+            {ttlCas(props.name)}
+          </label>
+        </Tooltip>
+      </div>
+
       <div className="relative">
         <div className={`absolute py-2 px-0 z-0 text-sm bg-transparent appearance-none ${fcsd || stld ? "text-gray-900 dark:text-gray-50 " : "text-gray-400 dark:text-gray-500"}`}>
           https://

@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react"
-import { MultiSelect, SelectItem } from "@mantine/core"
+import { ReactNode, useEffect, useRef, useState } from "react"
+
+import { MultiSelect, SelectItem } from "@mantine/core";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 interface Props {
   blck: string[];
   crtd: (val: string) => void;
-  desc: string;
+  desc: ReactNode;
   labl: string[];
   name: string;
   pldr: string;
@@ -26,13 +29,19 @@ export default function LabelInput(props: Props) {
   }, []);
 
   return (
-    <div className="relative w-full mb-6">
-      <label htmlFor={`${props.name}-input`} className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
-        {ttlCas(props.name)}
-        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[250px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-          {props.desc}
-        </div>
-      </label>
+    <div className="w-full mb-6">
+
+      <div className="relative z-10">
+        <Tooltip
+          desc={props.desc}
+          side="right"
+        >
+          <label htmlFor={`${props.name}-input`} className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
+            {ttlCas(props.name)}
+          </label>
+        </Tooltip>
+      </div>
+
       <MultiSelect
         type="text"
         id={`${props.name}-input`}

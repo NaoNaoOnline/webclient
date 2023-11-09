@@ -1,6 +1,10 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Select from "@radix-ui/react-select";
 
+import { BiInfoCircle } from "react-icons/bi";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
+
 interface Props {
   incl: boolean;
   slct: (val: string) => void; // Radix onValueChange callback
@@ -8,7 +12,7 @@ interface Props {
 
 export function DialogTitle(props: Props) {
   return (
-    <Dialog.Title className="mb-4 text-gray-900 dark:text-gray-50 text-md font-medium">
+    <Dialog.Title className="flex flex-row mb-4 text-gray-900 dark:text-gray-50 text-md font-medium">
       Manage Lists to
 
       <Select.Root
@@ -51,6 +55,24 @@ export function DialogTitle(props: Props) {
       </Select.Root>
 
       Events
+
+      <span
+        className="flex-1 ml-1 my-auto"
+      >
+        <Tooltip
+          desc={
+            <div>
+              <div>use <b>include</b> to follow events</div>
+              <div>use <b>exclude</b> to ignore events</div>
+            </div>
+          }
+          side="right"
+        >
+          <BiInfoCircle
+            className="w-5 h-5 text-gray-500 dark:text-gray-500"
+          />
+        </Tooltip>
+      </span>
     </Dialog.Title>
   );
 }
