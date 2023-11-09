@@ -86,7 +86,10 @@ export function ListOverview() {
   return (
     <>
       {list.map((x, i) => (
-        <div className="relative">
+        <div
+          key={x.list}
+          className="relative"
+        >
           <div
             className={`
                   absolute left-[-30px] h-[48px] flex items-center text-gray-500 dark:text-gray-500
@@ -96,7 +99,7 @@ export function ListOverview() {
             <Tooltip
               desc={
                 <div>
-                  <div>your current "home" page</div>
+                  <div>your current &quot;home&quot; page</div>
                   <div>undo using the house icon</div>
                 </div>
               }
@@ -109,7 +112,6 @@ export function ListOverview() {
           </div>
 
           <ul
-            key={x.list}
             className="flex flex-row w-full text-gray-900 rounded-lg dark:text-gray-50 hover:bg-gray-200 dark:hover:bg-gray-800 group"
           >
             {form === x.list && (
