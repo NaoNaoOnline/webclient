@@ -3,9 +3,9 @@ import { ListSelect } from "@/components/app/list/dialog/ListSelect";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { ListCreate } from "@/modules/api/list/create/Create";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";

@@ -7,7 +7,7 @@ import spacetime, { Spacetime } from "spacetime";
 
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import Content from "@/components/app/event/Content";
 import { EventFooter } from "@/components/app/event/EventFooter";
@@ -17,9 +17,9 @@ import { PageHeader } from "@/components/app/layout/PageHeader";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -320,72 +320,68 @@ export function EventList(props: Props) {
       )}
 
       {ltst.length !== 0 && (
-        <>
-          {desc && Object.keys(fltr).length !== 0 && labl && (
-            <ul>
-              {ltst.map((x, i) => (
-                <li
-                  key={i}
-                  className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
-                >
-                  <EventHeader
-                    desc={fltr[x.evnt()]}
-                    evnt={x}
-                    labl={labl}
-                  />
+        <ul>
+          {ltst.map((x, i) => (
+            <li
+              key={i}
+              className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+            >
+              <EventHeader
+                desc={fltr[x.evnt()]}
+                evnt={x}
+                labl={labl}
+              />
 
-                  <Content
-                    cncl={() => tglForm(x.evnt())}
-                    desc={fltr[x.evnt()]}
-                    dadd={(des: DescriptionSearchObject) => {
-                      if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
-                      addDesc(des);
+              <Content
+                cncl={() => tglForm(x.evnt())}
+                desc={fltr[x.evnt()]}
+                dadd={(des: DescriptionSearchObject) => {
+                  if (fltr[x.evnt()]?.length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
+                  addDesc(des);
+                }}
+                drem={remDesc}
+                dupd={updDesc}
+                evnt={x}
+                form={form[x.evnt()]}
+                labl={labl}
+                xpnd={xpnd[x.evnt()] || indx}
+              />
+
+              {fltr[x.evnt()]?.length > 1 && !indx && (
+                <div className="relative w-full h-0 z-1 grid justify-items-center">
+                  <button
+                    className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
+                    type="button"
+                    onClick={(evn: MouseEvent<HTMLButtonElement>) => {
+                      evn.stopPropagation();
+                      if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
+                      tglXpnd(x.evnt());
                     }}
-                    drem={remDesc}
-                    dupd={updDesc}
-                    evnt={x}
-                    form={form[x.evnt()]}
-                    labl={labl}
-                    xpnd={xpnd[x.evnt()] || indx}
-                  />
+                  >
+                    <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
+                  </button>
+                </div>
+              )}
 
-                  {fltr[x.evnt()].length > 1 && !indx && (
-                    <div className="relative w-full h-0 z-1 grid justify-items-center">
-                      <button
-                        className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
-                        type="button"
-                        onClick={(evn: MouseEvent<HTMLButtonElement>) => {
-                          evn.stopPropagation();
-                          if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
-                          tglXpnd(x.evnt());
-                        }}
-                      >
-                        <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
-                      </button>
-                    </div>
-                  )}
-
-                  <EventFooter
-                    dadd={() => {
-                      if (!auth) {
-                        addInfo(info);
-                      } else {
-                        tglForm(x.evnt());
-                      }
-                    }}
-                    desc={fltr[x.evnt()]}
-                    erem={remEvnt}
-                    evnt={x}
-                    indx={indx}
-                    labl={labl}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
+              <EventFooter
+                dadd={() => {
+                  if (!auth) {
+                    addInfo(info);
+                  } else {
+                    tglForm(x.evnt());
+                  }
+                }}
+                desc={fltr[x.evnt()]}
+                erem={remEvnt}
+                evnt={x}
+                indx={indx}
+                labl={labl}
+              />
+            </li>
+          ))}
+        </ul>
       )}
-      {!props.evnt && past.length !== 0 && desc && Object.keys(fltr).length !== 0 && labl && (
+      {!props.evnt && past.length !== 0 && labl && (
         <>
           <PageHeader titl="Already Happened" />
 
@@ -405,7 +401,7 @@ export function EventList(props: Props) {
                   cncl={() => tglForm(x.evnt())}
                   desc={fltr[x.evnt()]}
                   dadd={(des: DescriptionSearchObject) => {
-                    if (fltr[x.evnt()].length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
+                    if (fltr[x.evnt()]?.length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
                     addDesc(des);
                   }}
                   drem={remDesc}
@@ -416,7 +412,7 @@ export function EventList(props: Props) {
                   xpnd={xpnd[x.evnt()] || indx}
                 />
 
-                {fltr[x.evnt()].length > 1 && !indx && (
+                {fltr[x.evnt()]?.length > 1 && !indx && (
                   <div className="relative w-full h-0 z-1 grid justify-items-center">
                     <button
                       className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}

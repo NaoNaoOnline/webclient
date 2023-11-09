@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { LabelSearch } from "@/modules/api/label/search/Search";

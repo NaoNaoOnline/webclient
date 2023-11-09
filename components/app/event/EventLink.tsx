@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { EventUpdate } from "@/modules/api/event/update/Update";

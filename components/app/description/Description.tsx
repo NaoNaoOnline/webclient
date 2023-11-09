@@ -11,7 +11,7 @@ import { DescriptionUpdateForm } from "@/components/app/description/update/Descr
 import DescriptionMenu from "@/components/app/description/DescriptionMenu";
 
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";

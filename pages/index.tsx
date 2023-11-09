@@ -1,5 +1,5 @@
-import { useAuth } from "@/components/app/auth/AuthContext";
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { EventList } from "@/components/app/event/EventList";
 
 import spacetime from "spacetime";

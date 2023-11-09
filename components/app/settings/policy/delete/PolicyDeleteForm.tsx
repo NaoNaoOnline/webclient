@@ -4,13 +4,13 @@ import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransac
 import { fetchBalance } from "@wagmi/core";
 import { parseGwei } from "viem";
 
-import { getChain, useNetwork } from "@/components/app/network/Network";
+import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { PolicyABI } from "@/modules/abi/PolicyABI";
 

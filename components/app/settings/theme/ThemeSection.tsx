@@ -3,7 +3,7 @@ import * as Switch from "@radix-ui/react-switch";
 
 import { Half2Icon } from "@radix-ui/react-icons";
 
-import { useSystem } from "@/components/app/theme/SystemTheme";
+import { useSystem } from "@/components/app/theme/SystemThemeProvider";
 
 export default function ThemeSection() {
   const [rndr, setRndr] = useState<boolean>(false);

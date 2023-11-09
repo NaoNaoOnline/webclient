@@ -7,7 +7,7 @@ import spacetime from "spacetime";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import { ListCreateForm } from "@/components/app/list/dialog/create/ListCreateForm";
 import { RuleCreateForm } from "@/components/app/list/dialog/create/RuleCreateForm";
@@ -220,6 +220,10 @@ const newSlt = function (): string {
 };
 
 const srtUser = (evn: EventSearchObject, des: DescriptionSearchObject[]): UserSearchResponse[] => {
+  // It may just happen that there are no descriptions for an intermittendly. So
+  // we guard against it and return an empty list.
+  if (!des || des.length === 0) return [];
+
   const usr: Record<string, boolean> = {};
   const uni: UserSearchResponse[] = [];
 

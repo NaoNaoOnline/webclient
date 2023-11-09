@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
 
-import { useManual } from "@/components/app/theme/ManualTheme";
+import { useManual } from "@/components/app/theme/ManualThemeProvider";
 
 const systKey: string = "theme.naonao.online/system";
 

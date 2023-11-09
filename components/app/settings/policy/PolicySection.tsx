@@ -7,13 +7,13 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import TextInput from "@/components/app/event/add/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyUpdate } from "@/modules/api/policy/update/Update";

@@ -6,14 +6,16 @@ import spacetime, { Spacetime } from "spacetime";
 
 import { BiBarChart } from "react-icons/bi";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { EventMenu } from "@/components/app/event/EventMenu";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
@@ -41,9 +43,9 @@ export function EventFooter(props: Props) {
   const now: Spacetime = spacetime.now();
   const lin: number = props.evnt.linkAmnt();
 
-  const dmax: boolean = props.desc.length >= 50; // description limit per event
-  const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
-  const hpnd: boolean = props.evnt.hpnd(now);    // event already happened
+  const dmax: boolean = props.desc?.length >= 50; // description limit per event
+  const ownr: boolean = props.evnt?.ownr(user);   // current user is event owner
+  const hpnd: boolean = props.evnt?.hpnd(now);    // event already happened
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");
@@ -102,9 +104,14 @@ export function EventFooter(props: Props) {
           <span
             className="flex-1 p-3"
           >
-            <BiBarChart
-              className="w-5 h-5 text-gray-500 dark:text-gray-500"
-            />
+            <Tooltip
+              desc="the number of clicks on the event link"
+              side="left"
+            >
+              <BiBarChart
+                className="w-5 h-5 text-gray-500 dark:text-gray-500"
+              />
+            </Tooltip>
           </span>
         </div>
       )}
