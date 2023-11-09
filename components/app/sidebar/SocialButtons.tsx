@@ -6,7 +6,7 @@ import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 
 export function SocialButtons() {
   return (
-    <ul className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-700">
+    <ul className="pt-4 mt-4 border-t border-gray-50 dark:border-gray-700">
 
       <li>
         <ActiveButton

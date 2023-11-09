@@ -44,7 +44,7 @@ export default function Description(props: Props) {
   const hpnd: boolean = props.evnt.hpnd(now);  // event already happened
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
+    <div className="bg-gray-200 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
           <Link

@@ -70,16 +70,16 @@ export default function LabelInput(props: Props) {
           return true;
         }}
         classNames={{
-          defaultValue: "h-[28px] mx-0 pl-0 pr-3 text-gray-900 dark:text-gray-50 bg-white dark:bg-gray-700",
+          defaultValue: "h-[28px] mx-0 pl-0 pr-3 text-gray-900 dark:text-gray-50 bg-gray-50 dark:bg-gray-700",
           defaultValueLabel: "text-sm font-normal",
           defaultValueRemove: "w-5 h-5 min-w-0 min-h-0 mx-0.5 border-0 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-50",
           dropdown: "bg-gray-50 dark:bg-gray-700 border-0 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]",
           rightSection: "invisible",
           item: "text-gray-900 dark:text-gray-50 data-[hovered]:bg-gray-200 data-[hovered]:text-gray-900 dark:data-[hovered]:bg-gray-800 dark:data-[hovered]:text-gray-50",
-          input: `min-h-0 pl-0 py-[1px] rounded-none bg-white dark:bg-gray-700 border-0 text-gray-900 dark:text-gray-50 bg-transparent cursor-text`,
-          searchInput: "ml-0 min-w-fit bg-white dark:bg-gray-700 p-0 text-sm placeholder-gray-400 dark:placeholder-gray-500",
+          input: `min-h-0 pl-0 py-[1px] rounded-none bg-gray-50 dark:bg-gray-700 border-0 text-gray-900 dark:text-gray-50 bg-transparent cursor-text`,
+          searchInput: "ml-0 min-w-fit bg-gray-50 dark:bg-gray-700 p-0 text-sm placeholder-gray-400 dark:placeholder-gray-500",
           values: "ml-0",
-          wrapper: "bg-white dark:bg-gray-700",
+          wrapper: "bg-gray-50 dark:bg-gray-700",
         }}
         maxSelectedValues={5}
         onFocus={() => setFcsd(true)}

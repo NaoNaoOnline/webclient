@@ -1,24 +1,17 @@
-import { MouseEvent, useState } from "react";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { RiMenuAddLine } from "react-icons/ri";
+import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { EventMenu } from "@/components/app/event/EventMenu";
 
-import { ListDialog } from "@/components/app/list/dialog/ListDialog";
-
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
-import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastContext";
-
-import { useAuth } from "@/components/app/auth/AuthContext";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
@@ -36,13 +29,10 @@ interface Props {
 
 export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
-  const { auth, atkn } = useAuth();
+  const { atkn } = useAuth();
 
-  const { addErro, addInfo, addPgrs, addScss } = useToast();
+  const { addErro, addPgrs, addScss } = useToast();
   const { user } = useUser();
-
-  const [show, setShow] = useState<boolean>(false); // show list dialog
-
 
   const now: Spacetime = spacetime.now();
 
@@ -97,33 +87,11 @@ export function EventFooter(props: Props) {
         className="w-full"
       />
 
-      <button
-        onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-          if (!auth) {
-            addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
-          } else {
-            setShow(true);
-          }
-        }}
-        className="p-3 outline-none group"
-        type="button"
-      >
-        <RiMenuAddLine className="flex-1 w-5 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300" />
-      </button>
-
       <EventMenu
         cadd={!dmax && !hpnd}
         crem={ownr && !hpnd}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
-      />
-
-      <ListDialog
-        clos={() => setShow(false)}
-        desc={props.desc}
-        evnt={props.evnt}
-        labl={props.labl}
-        show={show}
       />
     </div >
   );

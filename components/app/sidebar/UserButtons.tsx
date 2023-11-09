@@ -55,7 +55,7 @@ export function UserButtons() {
 
   return (
     <>
-      <ul className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-700">
+      <ul className="pt-4 mt-4 border-t border-gray-50 dark:border-gray-700">
 
         {auth && (
           <ActiveButton
@@ -94,15 +94,15 @@ export function UserButtons() {
         {rndr && (
           <div
             onClick={onClick}
-            className="flex items-center p-3 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer group"
+            className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group"
           >
             {manu === "dark" && (
               <>
                 <TbSunHigh
-                  className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 />
                 <span
-                  className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+                  className="flex-1 ml-3 whitespace-nowrap text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 >
                   Light Mode
                 </span>
@@ -111,10 +111,10 @@ export function UserButtons() {
             {manu === "light" && (
               <>
                 <TbMoon
-                  className="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 />
                 <span
-                  className="flex-1 ml-3 whitespace-nowrap text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
+                  className="flex-1 ml-3 whitespace-nowrap text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 >
                   Dark Mode
                 </span>

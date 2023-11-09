@@ -38,7 +38,7 @@ export const Sidebar = () => {
           `}
     >
       <div
-        className="flex-none w-64 h-full px-4 py-4 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto bg-gray-50 dark:bg-gray-800"
+        className="flex-none w-64 h-full px-4 py-4 bg-gray-200 dark:bg-gray-800 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto"
       >
 
         <ListButtons />
@@ -54,7 +54,7 @@ export const Sidebar = () => {
           onClick={tglShow}
           type="button"
         >
-          <Bars3BottomLeftIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+          <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
         </button>
       </div>
 
