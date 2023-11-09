@@ -144,7 +144,7 @@ export function Event(props: Props) {
         let req: EventSearchRequest[] = [];
         if (labl && (props.cate || props.host)) {
           req = [{
-            atkn: "",
+            atkn: atkn,
             cate: getLabl(labl, props.cate),
             evnt: "",
             host: getLabl(labl, props.host),
@@ -159,7 +159,7 @@ export function Event(props: Props) {
 
         if (props.evnt) {
           req = props.evnt.map(x => ({
-            atkn: "",
+            atkn: atkn,
             cate: "",
             evnt: x,
             host: "",
@@ -174,7 +174,7 @@ export function Event(props: Props) {
 
         if (props.list) {
           req = [{
-            atkn: "",
+            atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
@@ -204,7 +204,7 @@ export function Event(props: Props) {
 
         if (props.strt && props.stop && props.time) {
           req = [{
-            atkn: "",
+            atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
@@ -220,7 +220,7 @@ export function Event(props: Props) {
         if (props.user) {
           const usr = await UserSearch([{ user: "", name: props.user, self: false }]);
           req = [{
-            atkn: "",
+            atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
@@ -314,7 +314,7 @@ export function Event(props: Props) {
               {ltst.map((x, i) => (
                 <li
                   key={i}
-                  className="rounded-md dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+                  className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
                 >
                   <EventHeader
                     desc={fltr[x.evnt()]}
@@ -381,7 +381,7 @@ export function Event(props: Props) {
             {past.map((x, i) => (
               <li
                 key={i}
-                className="rounded-md dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
+                className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
               >
                 <EventHeader
                   desc={fltr[x.evnt()]}

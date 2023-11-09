@@ -23,7 +23,7 @@ export default function ReactionButton(props: ReactionButtonProps) {
   return (
     <li className="flex flex-row items-center">
       {props.amnt !== 0 && (
-        <div className="text-xs text-gray-400 dark:text-gray-500">
+        <div className="text-xs text-gray-500 dark:text-gray-500">
           {fmtNum(props.amnt)}
         </div>
       )}
@@ -37,9 +37,9 @@ export default function ReactionButton(props: ReactionButtonProps) {
             className={`
             w-5 h-5
             ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}
-            ${props.cupd && !props.user ? " text-gray-400 dark:text-gray-500" : ""}
-            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700" : ""}
-            ${!props.cupd && !props.user ? "text-gray-200 dark:text-gray-700" : ""}
+            ${props.cupd && !props.user ? " text-gray-500 dark:text-gray-500" : ""}
+            ${!props.cupd && props.user ? " text-gray-50 dark:text-gray-700" : ""}
+            ${!props.cupd && !props.user ? "text-gray-50 dark:text-gray-700" : ""}
           `}
           />
         )}
@@ -48,9 +48,9 @@ export default function ReactionButton(props: ReactionButtonProps) {
             className={`
             w-5 h-5
             ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}
-            ${props.cupd && !props.user ? " text-gray-400 dark:text-gray-500" : ""}
-            ${!props.cupd && props.user ? " text-gray-200 dark:text-gray-700" : ""}
-            ${!props.cupd && !props.user ? "text-gray-200 dark:text-gray-700" : ""}
+            ${props.cupd && !props.user ? " text-gray-500 dark:text-gray-500" : ""}
+            ${!props.cupd && props.user ? " text-gray-50 dark:text-gray-700" : ""}
+            ${!props.cupd && !props.user ? "text-gray-50 dark:text-gray-700" : ""}
           `}
           />
         )}
