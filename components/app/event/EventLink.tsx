@@ -1,10 +1,12 @@
-import { useEffect, useState, MouseEvent } from "react";
+import { MouseEvent, ReactNode, useEffect, useState } from "react";
 
 import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { EventUpdate } from "@/modules/api/event/update/Update";
@@ -50,36 +52,87 @@ export function EventLink(props: Props) {
   }, []);
 
   return (
-    <Link
-      href={props.evnt.link()}
-      onClick={updateClick}
-      target="_blank"
-      className={`relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
+    <Tooltip
+      desc={tipDesc(props.evnt, now)}
+      side="left"
     >
-      <div className="absolute top-[8%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-        {props.evnt.upcm(now) && (
-          <>
-            {props.evnt.dsplUpcm(now)}
-          </>
-        )}
-        {props.evnt.actv(now) && (
-          <>
-            {props.evnt.dsplActv(now)}
-          </>
-        )}
-        {!props.evnt.upcm(now) && !props.evnt.actv(now) && (
-          <>
-            {dateTime(props.evnt.time(), now)}
-            {` - `}
-            {dateTime(props.evnt.dura(), now)}
-          </>
-        )}
-      </div>
-      {props.evnt.dsplLink(now)}
-    </Link>
+      <Link
+        href={props.evnt.link()}
+        onClick={updateClick}
+        target="_blank"
+        className={`relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
+      >
+
+        {props.evnt.dsplLink(now)}
+
+      </Link>
+    </Tooltip>
   );
 };
 
-function dateTime(tim: Spacetime, now: Spacetime): string {
+const tipDesc = (eve: EventSearchObject, now: Spacetime): ReactNode => {
+  if (eve.upcm(now)) return disUpcm(eve, now);
+  if (eve.actv(now)) return disActv(eve, now);
+
+  return disHpnd(eve, now);
+}
+
+const disActv = (eve: EventSearchObject, now: Spacetime): ReactNode => {
+  return (
+    <div>
+      <div className="relative flex">
+        <span>
+          start&nbsp;
+        </span>
+        <span className="ml-auto">
+          {eve.time().diff(now, "minute")}
+        </span>
+        <span>
+          m ago&nbsp;
+        </span>
+      </div>
+      <div className="relative flex">
+        <span>
+          still&nbsp;
+        </span>
+        <span className="ml-auto">
+          {now.startOf("minute").diff(eve.dura(), "minute")}
+        </span>
+        <span>
+          m left
+        </span>
+      </div>
+    </div>
+  );
+}
+
+const disHpnd = (eve: EventSearchObject, now: Spacetime): ReactNode => {
+  return (
+    <div>
+      <div className="relative flex">
+        <span>
+          start&nbsp;
+        </span>
+        <span className="ml-auto">
+          {datTime(eve.time(), now)}
+        </span>
+      </div>
+      <div className="relative flex">
+        <span>
+          until&nbsp;
+        </span>
+        <span className="ml-auto">
+          {datTime(eve.dura(), now)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const disUpcm = (eve: EventSearchObject, now: Spacetime): ReactNode => {
+  return `in ${now.startOf("minute").diff(eve.time(), "minute")}m`;
+};
+
+const datTime = (tim: Spacetime, now: Spacetime): string => {
   return tim.goto(now.timezone().name).format("{date-ordinal} {month-short}, {hour-24-pad}:{minute-pad}");
 };

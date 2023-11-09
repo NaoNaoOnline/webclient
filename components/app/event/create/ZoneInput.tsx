@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { Command } from "cmdk";
+
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { Locl, Zone } from "@/modules/date/TimeZone";
 
 interface Props {
   chng: (zon: Zone) => void;
-  desc: string;
+  desc: ReactNode;
   name: string;
   span: string;
   zind: string;
@@ -95,16 +97,21 @@ export default function ZoneInput(props: Props) {
 
   return (
     <div className={`relative w-full mb-6 ${props.span} ${props.zind}`}>
-      <label
-        className="relative inline-block mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group"
-        htmlFor={inpt?.current?.id}
-        onClick={() => inpt?.current?.focus()}
-      >
-        {ttlCas(props.name)}
-        <div className="absolute top-[-85%] left-[105%] ml-4 z-10 w-[178px] invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-          {props.desc}
-        </div>
-      </label>
+
+      <div className="relative z-10">
+        <Tooltip
+          desc={props.desc}
+          side="right"
+        >
+          <label
+            htmlFor={`${props.name}-input`}
+            className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
+            onClick={() => inpt?.current?.focus()}
+          >
+            {ttlCas(props.name)}
+          </label>
+        </Tooltip>
+      </div>
 
       <Command
         loop={true}
@@ -112,6 +119,8 @@ export default function ZoneInput(props: Props) {
       >
         <div className="relative">
           <Command.Input
+            id={`${props.name}-input`}
+            name={`${props.name}-input`}
             className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             onKeyDown={(e) => {
               if (e.key === "Escape") {

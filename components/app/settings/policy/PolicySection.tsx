@@ -9,7 +9,7 @@ import { CopyButton } from "@/components/app/button/CopyButton";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 
-import TextInput from "@/components/app/event/add/TextInput";
+import TextInput from "@/components/app/event/create/TextInput";
 import PolicyCreateForm from "@/components/app/settings/policy/create/PolicyCreateForm";
 import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 

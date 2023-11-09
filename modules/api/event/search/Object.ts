@@ -4,6 +4,7 @@ import { EventSearchResponse } from "@/modules/api/event/search/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 import spacetime, { Spacetime } from "spacetime";
+import { ReactNode } from "react";
 
 export default class EventSearchObject {
   private res: EventSearchResponse;
@@ -146,10 +147,6 @@ export default class EventSearchObject {
   // display
   //
 
-  dsplActv(now: Spacetime): string {
-    return `${this.time().diff(now, "minute")}m ago - ${now.startOf("minute").diff(this.dura(), "minute")}m left`;
-  }
-
   dsplLink(now: Spacetime): string {
     if (this.hpnd(now)) {
       return "already happened";
@@ -176,9 +173,5 @@ export default class EventSearchObject {
     }
 
     return "in the future";
-  }
-
-  dsplUpcm(now: Spacetime): string {
-    return `in ${now.startOf("minute").diff(this.time(), "minute")}m`;
   }
 }
