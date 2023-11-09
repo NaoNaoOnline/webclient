@@ -1,6 +1,6 @@
-import { Event } from "@/components/app/event/Event";
-
 import spacetime from "spacetime";
+
+import { EventList } from "@/components/app/event/EventList";
 
 export default function Page() {
   const sta: string = String(Math.floor(spacetime.now().goto("GMT").subtract(1, "week").epoch / 1000));
@@ -8,7 +8,7 @@ export default function Page() {
 
   return (
     <>
-      <Event
+      <EventList
         strt={sta}
         stop={sto}
         time="page"

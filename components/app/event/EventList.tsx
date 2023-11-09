@@ -47,7 +47,7 @@ interface ToggleState {
   [evnt: string]: boolean;
 }
 
-export function Event(props: Props) {
+export function EventList(props: Props) {
   const { labl } = useCache();
   const patnam = usePathname();
   const { addErro, addInfo } = useToast();
@@ -241,10 +241,22 @@ export function Event(props: Props) {
           return;
         }
 
+        setEvnt(evn.map((x) => new EventSearchObject(x)));
+
         const des = await DescriptionSearch(evn.map(x => ({ atkn: atkn, evnt: x.evnt })));
+
+        // Since event and description objects are separate resources linked
+        // together, their resource lifecycles are separate as well. The
+        // implication here being that events may not have any description
+        // intermittently if something went awry during the event creation
+        // process. We then need to guard against empty RPCs throwing errors.
+        if (des.length === 0) {
+          setLdng(false);
+          return;
+        }
+
         const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
 
-        setEvnt(evn.map((x) => new EventSearchObject(x)));
         setDesc(des.map((x) => {
           const u = usr.find(y => y.user === x.user);
           if (u) {

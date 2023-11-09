@@ -54,7 +54,7 @@ export function EventLink(props: Props) {
       href={props.evnt.link()}
       onClick={updateClick}
       target="_blank"
-      className={`relative py-2 items-center whitespace-nowrap text-lg font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
+      className={`relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
     >
       <div className="absolute top-[8%] right-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
         {props.evnt.upcm(now) && (

@@ -4,6 +4,8 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
+import { BiBarChart } from "react-icons/bi";
+
 import { useAuth } from "@/components/app/auth/AuthContext";
 
 import { EventMenu } from "@/components/app/event/EventMenu";
@@ -17,6 +19,8 @@ import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+
+import { FormatNumber } from "@/modules/number/Format";
 
 interface Props {
   dadd: () => void;
@@ -35,6 +39,7 @@ export function EventFooter(props: Props) {
   const { user } = useUser();
 
   const now: Spacetime = spacetime.now();
+  const lin: number = props.evnt.linkAmnt();
 
   const dmax: boolean = props.desc.length >= 50; // description limit per event
   const ownr: boolean = props.evnt.ownr(user);   // current user is event owner
@@ -86,6 +91,23 @@ export function EventFooter(props: Props) {
         href={"/event/" + props.evnt.evnt()}
         className="w-full"
       />
+
+      {lin !== 0 && (
+        <div
+          className="flex flex-row w-fit items-center"
+        >
+          <span className="flex-1 w-fit text-xs whitespace-nowrap text-gray-500 dark:text-gray-500">
+            {FormatNumber(lin)}
+          </span>
+          <span
+            className="flex-1 p-3"
+          >
+            <BiBarChart
+              className="w-5 h-5 text-gray-500 dark:text-gray-500"
+            />
+          </span>
+        </div>
+      )}
 
       <EventMenu
         cadd={!dmax && !hpnd}

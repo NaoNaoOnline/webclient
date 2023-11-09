@@ -1,13 +1,13 @@
 import { usePathname } from "next/navigation";
 
-import { Event } from "@/components/app/event/Event";
+import { EventList } from "@/components/app/event/EventList";
 
 export default function Page() {
   const patnam = usePathname();
 
   return (
     <>
-      <Event
+      <EventList
         evnt={[lasEle(patnam)]}
         titl="Event"
       />

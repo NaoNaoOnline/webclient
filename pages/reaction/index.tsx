@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { Event } from "@/components/app/event/Event";
+import { EventList } from "@/components/app/event/EventList";
 
 import { useAuth } from "@/components/app/auth/AuthContext";
 
@@ -17,7 +17,7 @@ export default function Page() {
   }
 
   return (
-    <Event
+    <EventList
       rctn="page"
       strt={"0"}
       stop={"-1"}
