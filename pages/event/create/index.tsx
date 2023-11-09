@@ -1,7 +1,7 @@
 import { useState, FormEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import TextInput from "@/components/app/event/add/TextInput";
 import LabelInput from "@/components/app/event/add/LabelInput";
@@ -13,9 +13,9 @@ import { PageHeader } from "@/components/app/layout/PageHeader";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { EventCreate } from "@/modules/api/event/create/Create";
 import { NewEventCreateRequest } from "@/modules/api/event/create/Request";

@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 
 import { EventList } from "@/components/app/event/EventList";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 export default function Page() {
   const nxtrtr = useRouter();

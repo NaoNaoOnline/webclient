@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import type { AppProps } from "next/app"
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
-import { CacheProvider } from "@/components/app/cache/CacheContext";
-import { Sidebar } from "@/components/app/sidebar/Sidebar";
-import { ManualContext, getManual } from "@/components/app/theme/ManualTheme";
-import { SystemContext, getSystem } from "@/components/app/theme/SystemTheme";
-import { ToastProvider } from "@/components/app/toast/ToastContext";
-import { AuthProvider } from "@/components/app/auth/AuthContext";
+import { AuthProvider } from "@/components/app/auth/AuthProvider";
+import { CacheProvider } from "@/components/app/cache/CacheProvider";
+import { Sidebar } from "@/components/app/sidebar/SidebarProvider";
+import { ManualContext, getManual } from "@/components/app/theme/ManualThemeProvider";
+import { SystemContext, getSystem } from "@/components/app/theme/SystemThemeProvider";
+import { ToastProvider } from "@/components/app/toast/ToastProvider";
+import { TooltipProvider } from "@/components/app/tooltip/TooltipProvider";
 
 export default function App({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [manu, setManu] = useState<string>(getManual());
@@ -43,21 +44,23 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
       <AuthProvider>
         <CacheProvider>
           <ToastProvider>
-            <ManualContext.Provider value={[manu, setManu]}>
-              <SystemContext.Provider value={[syst, setSyst]}>
+            <TooltipProvider>
+              <ManualContext.Provider value={[manu, setManu]}>
+                <SystemContext.Provider value={[syst, setSyst]}>
 
-                <div className="mt-4 justify-items-center">
-                  <div className="m-auto w-full max-w-xl">
+                  <div className="mt-4 justify-items-center">
+                    <div className="m-auto w-full max-w-xl">
 
-                    <Component {...pageProps} />
+                      <Component {...pageProps} />
 
+                    </div>
                   </div>
-                </div>
 
-                <Sidebar />
+                  <Sidebar />
 
-              </SystemContext.Provider>
-            </ManualContext.Provider>
+                </SystemContext.Provider>
+              </ManualContext.Provider>
+            </TooltipProvider>
           </ToastProvider>
         </CacheProvider>
       </AuthProvider>

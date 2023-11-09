@@ -8,7 +8,7 @@ import { FaEthereum } from "react-icons/fa";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import WalletMenu from "@/components/app/settings/wallet/WalletMenu";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
@@ -16,9 +16,9 @@ import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCrea
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";

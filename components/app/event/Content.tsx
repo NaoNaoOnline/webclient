@@ -9,9 +9,9 @@ import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -140,41 +140,39 @@ export default function Content(props: Props) {
     });
   };
 
-  // If for whatever reason there is no description on an event anymore, we
-  // prevent the webapp from crashing and just return early.
-  if (props.desc.length === 0) {
-    return <></>;
-  }
-
   return (
     <div className="max-h-[404px] overflow-y-auto">
-      {!props.xpnd && (
-        <Description
-          amnt={props.desc.length}
-          desc={props.desc[0]}
-          drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
-          evnt={props.evnt}
-          radd={radd}
-          rrem={rrem}
-        />
-      )}
-      {props.xpnd && (
+      {props.desc && props.desc.length !== 0 && (
         <>
-          {props.desc.map((x, i) => (
+          {!props.xpnd && (
             <Description
-              key={i}
               amnt={props.desc.length}
-              desc={x}
+              desc={props.desc[0]}
               drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
               evnt={props.evnt}
               radd={radd}
               rrem={rrem}
             />
-          ))}
+          )}
+          {props.xpnd && (
+            <>
+              {props.desc.map((x, i) => (
+                <Description
+                  key={i}
+                  amnt={props.desc.length}
+                  desc={x}
+                  drem={(des: DescriptionSearchObject) => descriptionDelete(des)}
+                  evnt={props.evnt}
+                  radd={radd}
+                  rrem={rrem}
+                />
+              ))}
+            </>
+          )}
         </>
       )}
       {props.form && (
-        <div className="bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
+        <div className="h-fit bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between">
             <div className="flex-shrink-0 flex flex-row">
               <a

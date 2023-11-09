@@ -5,14 +5,14 @@ import { RiHome4Line } from "react-icons/ri";
 import { RiMenuAddLine } from "react-icons/ri";
 import { RiListUnordered } from "react-icons/ri";
 
-import { useCache } from "@/components/app/cache/CacheContext";
+import { useCache } from "@/components/app/cache/CacheProvider";
 
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 export function ListButtons() {
   const { list, user } = useCache();

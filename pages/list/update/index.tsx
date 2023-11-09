@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { ListOverview } from "@/components/app/list/page/ListOverview";
 import { PageHeader } from "@/components/app/layout/PageHeader";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 export default function Page() {
   const nxtrtr = useRouter();

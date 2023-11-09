@@ -6,8 +6,8 @@ import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { Mode } from "connectkit/build/types";
 
-import { getManual } from "@/components/app/theme/ManualTheme";
-import { NetworkContext, getChain, getNetwork } from "@/components/app/network/Network";
+import { getManual } from "@/components/app/theme/ManualThemeProvider";
+import { NetworkContext, getChain, getNetwork } from "@/components/app/network/NetworkProvider";
 
 import { PageHeader } from "@/components/app/layout/PageHeader";
 
@@ -17,7 +17,7 @@ import PolicySection from "@/components/app/settings/policy/PolicySection";
 import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 

@@ -13,13 +13,13 @@ import { TbSunHigh } from "react-icons/tb";
 
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 
-import { useManual } from "@/components/app/theme/ManualTheme";
-import { useSystem } from "@/components/app/theme/SystemTheme";
+import { useManual } from "@/components/app/theme/ManualThemeProvider";
+import { useSystem } from "@/components/app/theme/SystemThemeProvider";
 
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 export function UserButtons() {
   const { addInfo } = useToast();

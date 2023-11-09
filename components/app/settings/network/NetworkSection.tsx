@@ -6,7 +6,7 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { LinkIcon } from "@heroicons/react/24/outline";
 import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
 
-import { getChain, useNetwork } from "@/components/app/network/Network";
+import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 
 export default function NetworkSection() {
   const [netw, setNetw] = useNetwork();

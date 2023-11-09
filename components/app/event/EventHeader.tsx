@@ -4,14 +4,14 @@ import Link from "next/link";
 
 import { RiMenuAddLine } from "react-icons/ri";
 
-import { useAuth } from "@/components/app/auth/AuthContext";
+import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { EventLink } from "@/components/app/event/EventLink";
 
 import { ListDialog } from "@/components/app/list/dialog/ListDialog";
 
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastContext";
+import { useToast } from "@/components/app/toast/ToastProvider";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
