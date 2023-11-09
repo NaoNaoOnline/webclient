@@ -36,7 +36,10 @@ export default function LabelInput(props: Props) {
           desc={props.desc}
           side="right"
         >
-          <label htmlFor={`${props.name}-input`} className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50 group">
+          <label
+            htmlFor={`${props.name}-input`}
+            className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
+          >
             {ttlCas(props.name)}
           </label>
         </Tooltip>

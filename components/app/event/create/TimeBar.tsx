@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Cron } from "croner";
 import spacetime, { Spacetime } from "spacetime";
 
-import TimeSelect from "@/components/app/event/add/TimeSelect";
-import ZoneInput from "@/components/app/event/add/ZoneInput";
+import TimeSelect from "@/components/app/event/create/TimeSelect";
+import ZoneInput from "@/components/app/event/create/ZoneInput";
 
 import DateObject from "@/modules/date/Object";
 import { List, Locl, Zone } from "@/modules/date/TimeZone";

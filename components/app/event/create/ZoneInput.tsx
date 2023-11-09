@@ -104,7 +104,7 @@ export default function ZoneInput(props: Props) {
           side="right"
         >
           <label
-            htmlFor={inpt?.current?.id}
+            htmlFor={`${props.name}-input`}
             className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
             onClick={() => inpt?.current?.focus()}
           >
@@ -119,6 +119,8 @@ export default function ZoneInput(props: Props) {
       >
         <div className="relative">
           <Command.Input
+            id={`${props.name}-input`}
+            name={`${props.name}-input`}
             className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             onKeyDown={(e) => {
               if (e.key === "Escape") {

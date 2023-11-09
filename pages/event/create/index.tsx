@@ -3,10 +3,10 @@ import { useRouter } from "next/navigation";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 
-import TextInput from "@/components/app/event/add/TextInput";
-import LabelInput from "@/components/app/event/add/LabelInput";
-import LinkInput from "@/components/app/event/add/LinkInput";
-import TimeBar from "@/components/app/event/add/TimeBar";
+import TextInput from "@/components/app/event/create/TextInput";
+import LabelInput from "@/components/app/event/create/LabelInput";
+import LinkInput from "@/components/app/event/create/LinkInput";
+import TimeBar from "@/components/app/event/create/TimeBar";
 
 import { PageHeader } from "@/components/app/layout/PageHeader";
 
