@@ -62,7 +62,7 @@ export function EventHeader(props: Props) {
           className="p-3 outline-none group"
           type="button"
         >
-          <RiMenuAddLine className="w-4 h-4 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+          <RiMenuAddLine className="w-5 h-5 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
         </button>
       </div>
 

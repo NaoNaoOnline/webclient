@@ -1,6 +1,6 @@
 import { useAuth } from "@/components/app/auth/AuthContext";
 import { useCache } from "@/components/app/cache/CacheContext";
-import { Event } from "@/components/app/event/Event";
+import { EventList } from "@/components/app/event/EventList";
 
 import spacetime from "spacetime";
 
@@ -14,12 +14,12 @@ export default function Page() {
   return (
     <>
       {auth && user[0].home !== "" && user[0].home !== "/" && (
-        <Event
+        <EventList
           list={user[0].home}
         />
       )}
       {(!auth || !user[0].home || user[0].home === "" || user[0].home === "/") && (
-        <Event
+        <EventList
           strt={sta}
           stop={sto}
           time="page"

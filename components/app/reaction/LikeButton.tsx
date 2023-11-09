@@ -1,6 +1,8 @@
 import { RiHeart3Fill } from "react-icons/ri";
 import { RiHeart3Line } from "react-icons/ri";
 
+import { FormatNumber } from "@/modules/number/Format";
+
 interface ReactionButtonProps {
   amnt: number;                 // can update
   cupd: boolean;                // can update
@@ -23,9 +25,9 @@ export default function ReactionButton(props: ReactionButtonProps) {
   return (
     <li className="flex flex-row items-center">
       {props.amnt !== 0 && (
-        <div className="text-xs text-gray-500 dark:text-gray-500">
-          {fmtNum(props.amnt)}
-        </div>
+        <span className="text-xs text-gray-500 dark:text-gray-500">
+          {FormatNumber(props.amnt)}
+        </span>
       )}
       <button
         onClick={onClck}
@@ -57,14 +59,4 @@ export default function ReactionButton(props: ReactionButtonProps) {
       </button>
     </li>
   );
-}
-
-function fmtNum(num: number, pre: number = 2) {
-  if (num == 0) return "0";
-
-  const stp = 1000;
-  const fmt = ["", "K", "M", "B", "T"];
-  const ind = Math.floor(Math.log(num) / Math.log(stp));
-
-  return parseFloat((num / Math.pow(stp, ind)).toFixed(pre)) + " " + fmt[ind];
 }
