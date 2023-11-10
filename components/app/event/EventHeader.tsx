@@ -18,9 +18,11 @@ import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 interface Props {
+  cupd: (eve: MouseEvent<HTMLAnchorElement>) => void;
   evnt: EventSearchObject;
   desc: DescriptionSearchObject[];
   labl: LabelSearchResponse[];
+  stat: number;
 }
 
 export function EventHeader(props: Props) {
@@ -49,7 +51,11 @@ export function EventHeader(props: Props) {
 
       <div className="absolute right-0 flex bg-gray-50 dark:bg-gray-700 rounded-lg">
 
-        <EventLink evnt={props.evnt} />
+        <EventLink
+          cupd={props.cupd}
+          evnt={props.evnt}
+          stat={props.stat}
+        />
 
         <button
           onClick={(eve: MouseEvent<HTMLButtonElement>) => {

@@ -29,7 +29,7 @@ interface Props {
   desc: DescriptionSearchObject[];
   erem: (eve: EventSearchObject) => void;
   evnt: EventSearchObject;
-  indx: boolean;
+  idpg: boolean;
   labl: LabelSearchResponse[];
 }
 
@@ -66,7 +66,7 @@ export function EventFooter(props: Props) {
         // If an event gets deleted from the event page, there is nothing on the
         // event page anymore after the event itself got removed. In that case
         // we redirect to whatever default view is active for the user.
-        if (props.indx) nxtrtr.push("/");
+        if (props.idpg) nxtrtr.push("/");
       });
 
       addScss(scss);
