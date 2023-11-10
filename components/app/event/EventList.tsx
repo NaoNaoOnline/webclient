@@ -1,22 +1,14 @@
-import { MouseEvent, MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { usePathname } from "next/navigation";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
-
 import { useCache } from "@/components/app/cache/CacheProvider";
-
-import Content from "@/components/app/event/Content";
-import { EventFooter } from "@/components/app/event/EventFooter";
-import { EventHeader } from "@/components/app/event/EventHeader";
 
 import { PageHeader } from "@/components/app/layout/PageHeader";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
-import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
@@ -29,6 +21,7 @@ import EventSearchObject from "@/modules/api/event/search/Object";
 import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
+import { EventContainer } from "./EventContainer";
 
 interface Props {
   cate?: string[];
@@ -49,24 +42,18 @@ interface ToggleState {
 
 export function EventList(props: Props) {
   const { labl } = useCache();
-  const patnam = usePathname();
-  const { addErro, addInfo } = useToast();
-  const { auth, atkn } = useAuth();
+  const { addErro } = useToast();
+  const { atkn } = useAuth();
   const { user } = useUser();
 
   const qury: string = newQury(props);
-  const indx: boolean = indPag(patnam);
 
   const [desc, setDesc] = useState<DescriptionSearchObject[] | null>(null);
   const [evnt, setEvnt] = useState<EventSearchObject[] | null>(null);
-  const [form, setForm] = useState<ToggleState>({});
   const [ldng, setLdng] = useState<boolean>(true);
   const [salt, setSalt] = useState<string>(qury);
-  const [xpnd, setXpnd] = useState<ToggleState>({});
 
   const clld: MutableRefObject<boolean> = useRef(false);
-
-  const info: InfoPropsObject = new InfoPropsObject("The beavers need you to login if you want to add a new description.");
 
   const addDesc = (des: DescriptionSearchObject) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
@@ -109,20 +96,6 @@ export function EventList(props: Props) {
     });
   };
 
-  const tglForm = (evnt: string) => {
-    setForm((old) => ({
-      ...old,
-      [evnt]: !old[evnt] || false,
-    }));
-  };
-
-  const tglXpnd = (evnt: string) => {
-    setXpnd((old) => ({
-      ...old,
-      [evnt]: !old[evnt] || false,
-    }));
-  };
-
   let fltr: Record<string, DescriptionSearchObject[]> = {};
   if (evnt && desc) {
     evnt.forEach((x: EventSearchObject) => fltr[x.evnt()] = filDesc(x, [...desc]));
@@ -133,9 +106,9 @@ export function EventList(props: Props) {
     ltst = latEvnt(evnt);
   }
 
-  let past: EventSearchObject[] = evnt || [];
+  let hpnd: EventSearchObject[] = evnt || [];
   if (evnt && !props.evnt) {
-    past = pasEvnt(evnt);
+    hpnd = pasEvnt(evnt);
   }
 
   useEffect(() => {
@@ -322,127 +295,33 @@ export function EventList(props: Props) {
       {ltst.length !== 0 && (
         <ul>
           {ltst.map((x, i) => (
-            <li
-              key={i}
-              className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
-            >
-              <EventHeader
-                desc={fltr[x.evnt()]}
-                evnt={x}
-                labl={labl}
-              />
-
-              <Content
-                cncl={() => tglForm(x.evnt())}
-                desc={fltr[x.evnt()]}
-                dadd={(des: DescriptionSearchObject) => {
-                  if (fltr[x.evnt()]?.length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
-                  addDesc(des);
-                }}
-                drem={remDesc}
-                dupd={updDesc}
-                evnt={x}
-                form={form[x.evnt()]}
-                labl={labl}
-                xpnd={xpnd[x.evnt()] || indx}
-              />
-
-              {fltr[x.evnt()]?.length > 1 && !indx && (
-                <div className="relative w-full h-0 z-1 grid justify-items-center">
-                  <button
-                    className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
-                    type="button"
-                    onClick={(evn: MouseEvent<HTMLButtonElement>) => {
-                      evn.stopPropagation();
-                      if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
-                      tglXpnd(x.evnt());
-                    }}
-                  >
-                    <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
-                  </button>
-                </div>
-              )}
-
-              <EventFooter
-                dadd={() => {
-                  if (!auth) {
-                    addInfo(info);
-                  } else {
-                    tglForm(x.evnt());
-                  }
-                }}
-                desc={fltr[x.evnt()]}
-                erem={remEvnt}
-                evnt={x}
-                indx={indx}
-                labl={labl}
-              />
-            </li>
+            <EventContainer
+              key={x.evnt()}
+              dadd={addDesc}
+              desc={fltr[x.evnt()]}
+              drem={remDesc}
+              dupd={updDesc}
+              evnt={x}
+              erem={remEvnt}
+            />
           ))}
         </ul>
       )}
-      {!props.evnt && past.length !== 0 && labl && (
+      {!props.evnt && hpnd.length !== 0 && labl && (
         <>
           <PageHeader titl="Already Happened" />
 
           <ul>
-            {past.map((x, i) => (
-              <li
-                key={i}
-                className="rounded-md bg-gray-50 dark:bg-gray-700 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]"
-              >
-                <EventHeader
-                  desc={fltr[x.evnt()]}
-                  evnt={x}
-                  labl={labl}
-                />
-
-                <Content
-                  cncl={() => tglForm(x.evnt())}
-                  desc={fltr[x.evnt()]}
-                  dadd={(des: DescriptionSearchObject) => {
-                    if (fltr[x.evnt()]?.length === 1 && !xpnd[x.evnt()]) tglXpnd(x.evnt())
-                    addDesc(des);
-                  }}
-                  drem={remDesc}
-                  dupd={updDesc}
-                  evnt={x}
-                  form={form[x.evnt()]}
-                  labl={labl}
-                  xpnd={xpnd[x.evnt()] || indx}
-                />
-
-                {fltr[x.evnt()]?.length > 1 && !indx && (
-                  <div className="relative w-full h-0 z-1 grid justify-items-center">
-                    <button
-                      className={`absolute top-[-10px] bg-gray-50 dark:bg-gray-800 rounded-full shadow-gray-300 dark:shadow-gray-900 shadow-[0_0_1px_1px] outline-none group`}
-                      type="button"
-                      onClick={(evn: MouseEvent<HTMLButtonElement>) => {
-                        evn.stopPropagation();
-                        if (xpnd[x.evnt()] && form[x.evnt()]) tglForm(x.evnt());
-                        tglXpnd(x.evnt());
-                      }}
-                    >
-                      <ChevronDownIcon className={`w-5 h-4 mt-[1px] mx-2 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 ${xpnd[x.evnt()] ? "rotate-180" : ""}`} />
-                    </button>
-                  </div>
-                )}
-
-                <EventFooter
-                  dadd={() => {
-                    if (!auth) {
-                      addInfo(info);
-                    } else {
-                      tglForm(x.evnt());
-                    }
-                  }}
-                  desc={fltr[x.evnt()]}
-                  erem={remEvnt}
-                  evnt={x}
-                  indx={indx}
-                  labl={labl}
-                />
-              </li>
+            {hpnd.map((x, i) => (
+              <EventContainer
+                key={x.evnt()}
+                dadd={addDesc}
+                desc={fltr[x.evnt()]}
+                drem={remDesc}
+                dupd={updDesc}
+                evnt={x}
+                erem={remEvnt}
+              />
             ))}
           </ul>
         </>
@@ -488,21 +367,6 @@ const filDesc = (evn: EventSearchObject, des: DescriptionSearchObject[]): Descri
   });
 
   return des.filter((y: DescriptionSearchObject) => y.evnt() === evn.evnt());
-}
-
-// indPag expresses whether the URL path of the current page complies with the
-// URL format of the event page as shown below.
-//
-//     /event/1698943315449571
-//
-const indPag = function (str: string): boolean {
-  const spl = str.split('/');
-
-  if (spl.length >= 2 && spl[spl.length - 2] === "event") {
-    return !isNaN(Number(spl[spl.length - 1]))
-  }
-
-  return false;
 }
 
 // latEvnt returns a list of event objects for the events happening right now.

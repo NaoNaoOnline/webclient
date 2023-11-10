@@ -32,7 +32,7 @@ interface Props {
   xpnd: boolean;
 }
 
-export default function Content(props: Props) {
+export function EventBody(props: Props) {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { auth, atkn } = useAuth();
   const { user } = useUser();

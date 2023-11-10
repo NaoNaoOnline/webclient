@@ -1,80 +1,49 @@
-import { MouseEvent, ReactNode, useEffect, useState } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
-
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import EventSearchObject from "@/modules/api/event/search/Object";
-import { EventUpdate } from "@/modules/api/event/update/Update";
 
 interface Props {
+  cupd: (eve: MouseEvent<HTMLAnchorElement>) => void;
   evnt: EventSearchObject;
+  stat: number;
 }
 
 export function EventLink(props: Props) {
-  const { atkn, auth } = useAuth();
-
-  const [_, setRndr] = useState(true);
-
-  const now: Spacetime = spacetime.now();
-
-  const updateClick = async (eve: MouseEvent<HTMLAnchorElement>) => {
-    // We only want to track clicks on event links for authenticated users,
-    // because those are users we can prevent counting twice.
-    if (!auth) return;
-    // We only want to track clicks on event links as long as the event has not
-    // finished yet, because those are the clicks that effectively matter to
-    // people.
-    if (props.evnt.hpnd(now)) return;
-
-    try {
-      const [upd] = await EventUpdate([{ atkn: atkn, evnt: props.evnt.evnt(), link: "add" }]);
-    } catch (err) {
-      // Since we track event clicks silently, there are no toasts and no errors
-      // to be reported. We can simply log in the developer console.
-      console.error(err);
-    }
-  };
-
-  // Setup a periodic state change for updating the time based information in
-  // the user interface every 5 seconds. Every time the setInterval callback is
-  // executed the whole component re-renders using the updated clock time.
-  useEffect(() => {
-    const x = setInterval(() => {
-      setRndr((old: boolean) => !old);
-    }, 5 * 1000); // every 5 seconds
-
-    return () => clearInterval(x);
-  }, []);
-
   return (
     <Tooltip
-      desc={tipDesc(props.evnt, now)}
+      desc={tipDesc(props.evnt, props.stat)}
       side="left"
     >
       <Link
         href={props.evnt.link()}
-        onClick={updateClick}
+        onClick={props.cupd}
         target="_blank"
-        className={`relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium hover:underline group ${props.evnt.actv(now) ? "text-green-400" : "text-gray-400"}`}
+        className={`
+          relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium
+          hover:underline group
+          ${props.stat === 0 ? "text-green-400" : "text-gray-400"}
+        `}
       >
 
-        {props.evnt.dsplLink(now)}
+        {props.evnt.dsplLink(spacetime.now())}
 
       </Link>
     </Tooltip>
   );
 };
 
-const tipDesc = (eve: EventSearchObject, now: Spacetime): ReactNode => {
-  if (eve.upcm(now)) return disUpcm(eve, now);
-  if (eve.actv(now)) return disActv(eve, now);
+const tipDesc = (eve: EventSearchObject, sta: number): ReactNode => {
+  if (sta === -1) return disUpcm(eve, spacetime.now());
+  if (sta === 0) return disActv(eve, spacetime.now());
+  if (sta === +1) return disHpnd(eve, spacetime.now());
 
-  return disHpnd(eve, now);
+  return disHpnd(eve, spacetime.now());
 }
 
 const disActv = (eve: EventSearchObject, now: Spacetime): ReactNode => {

@@ -32,6 +32,7 @@ export function ListDialog(props: Props) {
   const { list, addList, remList } = useCache();
 
   const [cate, setCate] = useState<LabelSearchResponse[]>([]);
+  const [evnt, setEvnt] = useState<EventSearchObject[]>([]);
   const [host, setHost] = useState<LabelSearchResponse[]>([]);
   const [incl, setIncl] = useState<boolean>(true);
   const [like, setLike] = useState<UserSearchResponse[]>([]);
@@ -62,6 +63,20 @@ export function ListDialog(props: Props) {
 
             <div className="flex flex-row w-full h-[300px]">
               <div className="flex-1 w-full overflow-y-auto">
+
+                <h5 className="py-2 text-gray-900 dark:text-gray-50 text-sm font-medium">This Event</h5>
+
+                <RuleSelect
+                  key={salt + ":evnt:" + props.evnt.evnt()}
+                  chck={(che: boolean | "indeterminate") => {
+                    if (che === true) setEvnt([props.evnt]);
+                    if (che === false) setEvnt([]);
+                  }}
+                  name="evnt"
+                  rsrc={props.evnt.evnt()}
+                  salt={salt}
+                  text={"[" + props.evnt.evnt().slice(-4) + "]"}
+                />
 
                 <h5 className="py-2 text-gray-900 dark:text-gray-50 text-sm font-medium">Hosted By</h5>
 
@@ -157,6 +172,7 @@ export function ListDialog(props: Props) {
                 slct.length === 0 ||    // disable if no list is selected
                 (                       // disable if no rule is selected
                   cate.length === 0 &&
+                  evnt.length === 0 &&
                   host.length === 0 &&
                   like.length === 0 &&
                   user.length === 0
@@ -182,6 +198,7 @@ export function ListDialog(props: Props) {
               cate={cate}
               done={() => {
                 setCate([]);
+                setEvnt([]);
                 setHost([]);
                 setLike([]);
                 setSbmt(false)
@@ -192,8 +209,10 @@ export function ListDialog(props: Props) {
                 // we have successfully created a new list with valid rules.
                 setSalt(newSlt());
               }}
+              evnt={evnt}
               fail={() => {
                 setCate([]);
+                setEvnt([]);
                 setHost([]);
                 setLike([]);
                 setSbmt(false)

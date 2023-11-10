@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
 
+import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
@@ -16,6 +17,7 @@ import { RuleCreateRequest } from "@/modules/api/rule/create/Request";
 interface Props {
   cate: LabelSearchResponse[];
   done: () => void;
+  evnt: EventSearchObject[];
   fail: () => void;
   host: LabelSearchResponse[];
   incl: boolean;
