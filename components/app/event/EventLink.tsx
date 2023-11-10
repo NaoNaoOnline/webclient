@@ -39,12 +39,11 @@ export function EventLink(props: Props) {
 };
 
 const tipDesc = (eve: EventSearchObject, sta: number): ReactNode => {
-  if (sta === -2) return disHpnd(eve, spacetime.now());
   if (sta === -1) return disUpcm(eve, spacetime.now());
   if (sta === 0) return disActv(eve, spacetime.now());
   if (sta === +1) return disHpnd(eve, spacetime.now());
 
-  return "";
+  return disHpnd(eve, spacetime.now());
 }
 
 const disActv = (eve: EventSearchObject, now: Spacetime): ReactNode => {

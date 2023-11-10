@@ -81,14 +81,10 @@ export function EventContainer(props: Props) {
   //
   useEffect(() => {
     const x = setInterval(() => {
-      const now: Spacetime = spacetime.now();
+      const sta: number = defSta(props.evnt);
 
-      if (props.evnt.actv(now)) {
-        setStat(0);
-      }
-
-      if (props.evnt.hpnd(now)) {
-        setStat(+1);
+      if (sta !== stat) {
+        setStat(sta);
       }
     }, 5 * 1000); // every 5 seconds
 
