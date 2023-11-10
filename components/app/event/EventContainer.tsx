@@ -74,6 +74,7 @@ export function EventContainer(props: Props) {
   // executed the whole component re-renders using the updated clock time. We
   // track the event state in numerical terms as follows.
   //
+  //     -2, far out, display as +1
   //     -1, upcoming
   //      0, ongoing
   //     +1, happened
