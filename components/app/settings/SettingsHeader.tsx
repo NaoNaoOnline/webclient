@@ -1,4 +1,6 @@
-import { ReactElement, cloneElement } from "react";
+import { ReactElement } from "react";
+
+import { SettingsGrid } from "@/components/app/settings/SettingsGrid";
 
 interface Props {
   bttn?: ReactElement;
@@ -9,26 +11,15 @@ interface Props {
 
 export const SettingsHeader = (props: Props) => {
   return (
-    <div className="flex flex-row p-3 text-gray-900 dark:text-gray-50 items-center">
-      <div className="flex flex-1">
-
-        <div className="flex my-auto">
-          {props.icon && cloneElement(props.icon, {
-            className: `
-              w-5 h-5 text-gray-400 dark:text-gray-400
-            `,
-          })}
-          {props.link && cloneElement(props.link, {})}
-        </div>
-
-        <div className="flex-1 ml-3 whitespace-nowrap">
+    <SettingsGrid
+      icon={props.icon}
+      link={props.link}
+      subj={
+        <>
           {props.titl}
-        </div>
-      </div>
-
-      <div className="flex justify-end">
-        {props.bttn && cloneElement(props.bttn, {})}
-      </div>
-    </div>
+        </>
+      }
+      rigt={props.bttn}
+    />
   );
 };

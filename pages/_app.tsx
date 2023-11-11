@@ -48,6 +48,8 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
               <ManualContext.Provider value={[manu, setManu]}>
                 <SystemContext.Provider value={[syst, setSyst]}>
 
+                  <Sidebar />
+
                   <div className="mt-4 justify-items-center">
                     <div className="m-auto w-full max-w-xl">
 
@@ -55,8 +57,6 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
 
                     </div>
                   </div>
-
-                  <Sidebar />
 
                 </SystemContext.Provider>
               </ManualContext.Provider>

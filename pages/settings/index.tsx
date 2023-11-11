@@ -11,7 +11,7 @@ import { useCache } from "@/components/app/cache/CacheProvider";
 import { PageHeader } from "@/components/app/layout/PageHeader";
 import { NetworkContext, getChain, getNetwork } from "@/components/app/network/NetworkProvider";
 import { NetworkSection } from "@/components/app/settings/network/NetworkSection";
-import PolicySection from "@/components/app/settings/policy/PolicySection";
+import { PolicySection } from "@/components/app/settings/policy/PolicySection";
 import { getManual } from "@/components/app/theme/ManualThemeProvider";
 import { ThemeSection } from "@/components/app/settings/theme/ThemeSection";
 import { UserSection } from "@/components/app/settings/user/UserSection";

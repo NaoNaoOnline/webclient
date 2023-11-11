@@ -1,13 +1,15 @@
+import { memo } from "react";
+
 import { ConnectKitButton } from "connectkit";
 
 interface Props {
   dsbl: boolean;
 }
 
-export const WalletButtonConnect = (props: Props) => {
+export const WalletButtonConnect = memo((props: Props) => {
   return (
     <ConnectKitButton.Custom>
-      {({ isConnected, show, ensName, truncatedAddress }) => {
+      {({ isConnected, ensName, show, truncatedAddress }) => {
         return (
           <button
             className={`
@@ -17,9 +19,7 @@ export const WalletButtonConnect = (props: Props) => {
                 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800
               `}
             disabled={props.dsbl}
-            onClick={() => {
-              if (show) show();
-            }}
+            onClick={show}
           >
             {isConnected ? ensName ?? truncatedAddress : "Connect Wallet"}
           </button>
@@ -27,4 +27,4 @@ export const WalletButtonConnect = (props: Props) => {
       }}
     </ConnectKitButton.Custom>
   );
-};
+});
