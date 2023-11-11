@@ -25,9 +25,9 @@ export function EventLink(props: Props) {
         onClick={props.cupd}
         target="_blank"
         className={`
-          relative pl-2 py-2 items-center whitespace-nowrap text-lg font-medium
+          relative pl-2 py-2 items-center whitespace-nowrap text-lg
           hover:underline group
-          ${props.stat === 0 ? "text-green-400" : "text-gray-400"}
+          ${props.stat === 0 ? "text-green-400 font-bold" : "text-gray-400 dark:text-gray-400 font-medium"}
         `}
       >
 

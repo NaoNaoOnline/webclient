@@ -117,7 +117,7 @@ export default function WalletSection(props: Props) {
 
       {wllt && (
         <>
-          {srtWllt(wllt).map((x, i) => (
+          {wllt.map((x, i) => (
             <ul key={i} className="flex flex-row w-full">
               <li className={`flex items-center pl-3 py-3 rounded-lg ${x.public.addr === addr ? "text-gray-500 dark:text-gray-400" : "text-gray-400 dark:text-gray-500"}`}>
                 <span className="w-[20px] text-center text-sm font-mono"></span>
@@ -155,14 +155,4 @@ export default function WalletSection(props: Props) {
       )}
     </>
   );
-};
-
-const srtWllt = (lis: WalletSearchResponse[]): WalletSearchResponse[] => {
-  lis.sort((x: WalletSearchResponse, y: WalletSearchResponse) => {
-    if (x.public.addr < y.public.addr) return -1;
-    if (x.public.addr > y.public.addr) return +1;
-    return 0;
-  });
-
-  return lis;
 };

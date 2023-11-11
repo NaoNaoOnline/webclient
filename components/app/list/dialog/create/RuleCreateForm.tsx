@@ -67,40 +67,62 @@ export function RuleCreateForm(props: Props) {
 
     for (const x of props.list) {
       if (props.cate.length !== 0) {
+        const list: string = props.cate.map((y: LabelSearchResponse) => y.labl).join(',');
+
         rul.push({
           atkn: atkn,
-          excl: !props.incl ? props.cate.map((y: LabelSearchResponse) => y.labl).join(',') : "",
-          incl: props.incl ? props.cate.map((y: LabelSearchResponse) => y.labl).join(',') : "",
+          excl: !props.incl ? list : "",
+          incl: props.incl ? list : "",
           kind: "cate",
           list: x.list,
         });
       }
 
-      if (props.host.length !== 0) {
+      if (props.evnt.length !== 0) {
+        // Careful here, make sure to call the evnt() function to get the event
+        // ID since EventSearchObject is a class instance.
+        const list: string = props.evnt.map((y: EventSearchObject) => y.evnt()).join(',');
+
         rul.push({
           atkn: atkn,
-          excl: !props.incl ? props.host.map((y: LabelSearchResponse) => y.labl).join(',') : "",
-          incl: props.incl ? props.host.map((y: LabelSearchResponse) => y.labl).join(',') : "",
+          excl: !props.incl ? list : "",
+          incl: props.incl ? list : "",
+          kind: "evnt",
+          list: x.list,
+        });
+      }
+
+      if (props.host.length !== 0) {
+        const list: string = props.host.map((y: LabelSearchResponse) => y.labl).join(',');
+
+        rul.push({
+          atkn: atkn,
+          excl: !props.incl ? list : "",
+          incl: props.incl ? list : "",
           kind: "host",
           list: x.list,
         });
       }
 
       if (props.like.length !== 0) {
+        const list: string = props.like.map((y: UserSearchResponse) => y.user).join(',');
+
         rul.push({
           atkn: atkn,
-          excl: !props.incl ? props.like.map((y: UserSearchResponse) => y.user).join(',') : "",
-          incl: props.incl ? props.like.map((y: UserSearchResponse) => y.user).join(',') : "",
+          excl: !props.incl ? list : "",
+          incl: props.incl ? list : "",
           kind: "like",
           list: x.list,
         });
       }
 
       if (props.user.length !== 0) {
+        const list: string = props.user.map((y: UserSearchResponse) => y.user).join(',');
+
         rul.push({
           atkn: atkn,
-          excl: !props.incl ? props.user.map((y: UserSearchResponse) => y.user).join(',') : "",
-          incl: props.incl ? props.user.map((y: UserSearchResponse) => y.user).join(',') : "",
+          excl: !props.incl ? list : "",
+          incl: props.incl ? list : "",
           kind: "user",
           list: x.list,
         });

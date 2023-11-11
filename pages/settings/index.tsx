@@ -6,24 +6,24 @@ import { WagmiConfig, createConfig } from "wagmi";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { Mode } from "connectkit/build/types";
 
-import { getManual } from "@/components/app/theme/ManualThemeProvider";
-import { NetworkContext, getChain, getNetwork } from "@/components/app/network/NetworkProvider";
-
+import { useAuth } from "@/components/app/auth/AuthProvider";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { PageHeader } from "@/components/app/layout/PageHeader";
-
+import { NetworkContext, getChain, getNetwork } from "@/components/app/network/NetworkProvider";
 import SettingsHeader from "@/components/app/settings/header/SettingsHeader";
-import NetworkSection from "@/components/app/settings/network/NetworkSection";
+import { NetworkSection } from "@/components/app/settings/network/NetworkSection";
 import PolicySection from "@/components/app/settings/policy/PolicySection";
+import { getManual } from "@/components/app/theme/ManualThemeProvider";
 import ThemeSection from "@/components/app/settings/theme/ThemeSection";
 import WalletSection from "@/components/app/settings/wallet/WalletSection";
-
-import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
 export default function Page() {
   const nxtrtr = useRouter();
-  const { auth } = useAuth();
+
+  const { auth, uuid } = useAuth();
+  const { hasPlcy } = useCache();
 
   const [manu, setManu] = useState<string>(getManual());
   const [netw, setNetw] = useState<string>(getNetwork());
@@ -59,7 +59,9 @@ export default function Page() {
           <SettingsHeader />
           <ThemeSection />
           <WalletSection />
-          <PolicySection />
+          {hasPlcy(uuid) && (
+            < PolicySection />
+          )}
           <NetworkSection />
 
         </ConnectKitProvider>

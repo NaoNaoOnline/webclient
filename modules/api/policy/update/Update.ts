@@ -8,6 +8,7 @@ export async function PolicyUpdate(req: PolicyUpdateRequest[]): Promise<PolicyUp
       {
         object: req.map((x) => ({
           symbol: {
+            pntr: x.pntr,
             sync: x.sync,
           },
           update: [],
@@ -21,7 +22,10 @@ export async function PolicyUpdate(req: PolicyUpdateRequest[]): Promise<PolicyUp
     );
 
     return cal.response.object.map((x) => ({
+      // intern
       stts: x.intern?.stts || "",
+      // symbol
+      pntr: x.symbol?.pntr || "",
     }));
   } catch (err) {
     return Promise.reject(err);

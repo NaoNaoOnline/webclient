@@ -8,7 +8,7 @@ import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
 
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 
-export default function NetworkSection() {
+export function NetworkSection() {
   const [netw, setNetw] = useNetwork();
 
   const chns = getChain(netw);

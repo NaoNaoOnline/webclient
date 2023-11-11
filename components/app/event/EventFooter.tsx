@@ -7,22 +7,20 @@ import spacetime, { Spacetime } from "spacetime";
 import { BiBarChart } from "react-icons/bi";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
-
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { EventMenu } from "@/components/app/event/EventMenu";
-
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
-
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import { EventDelete } from "@/modules/api/event/delete/Delete";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
-
 import { FormatNumber } from "@/modules/number/Format";
+import { AccessDelete, SystemEvnt } from "@/modules/policy/Policy";
 
 interface Props {
   dadd: () => void;
@@ -35,7 +33,8 @@ interface Props {
 
 export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
-  const { atkn } = useAuth();
+  const { atkn, uuid } = useAuth();
+  const { hasAcce } = useCache();
 
   const { addErro, addPgrs, addScss } = useToast();
   const { user } = useUser();
@@ -43,9 +42,10 @@ export function EventFooter(props: Props) {
   const now: Spacetime = spacetime.now();
   const lin: number = props.evnt.linkAmnt();
 
-  const dmax: boolean = props.desc?.length >= 50; // description limit per event
-  const ownr: boolean = props.evnt?.ownr(user);   // current user is event owner
-  const hpnd: boolean = props.evnt?.hpnd(now);    // event already happened
+  const dmax: boolean = props.desc?.length >= 50;                // description limit per event
+  const hpnd: boolean = props.evnt?.hpnd(now);                   // event already happened
+  const ownr: boolean = props.evnt?.ownr(user);                  // current user is event owner
+  const mdrt: boolean = hasAcce(SystemEvnt, uuid, AccessDelete); // current user is moderator
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");
@@ -123,7 +123,7 @@ export function EventFooter(props: Props) {
 
       <EventMenu
         cadd={!dmax && !hpnd}
-        crem={ownr && !hpnd}
+        crem={mdrt || (ownr && !hpnd)}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
       />

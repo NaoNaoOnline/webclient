@@ -25,7 +25,7 @@ interface Props {
   desc: DescriptionSearchObject[];
   evnt: EventSearchObject;
   labl: LabelSearchResponse[];
-  show: boolean;                   // show dialog
+  sdlg: boolean;                   // show list dialog
 }
 
 export function ListDialog(props: Props) {
@@ -43,7 +43,7 @@ export function ListDialog(props: Props) {
 
   return (
     <Dialog.Root
-      open={props.show}
+      open={props.sdlg}
       onOpenChange={(ope: boolean) => {
         if (!ope) props.clos();
       }}

@@ -34,8 +34,12 @@ const defaultContextValue: {
   remWllt: (wal: WalletSearchResponse) => void;
 
   updList: (rem: ListSearchResponse, add: ListSearchResponse) => void;
+  updPlcy: (set: PolicySearchResponse[]) => void;
   updUser: (rem: UserSearchResponse, add: UserSearchResponse) => void;
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => void;
+
+  hasAcce: (sys: number, use: string, acc: number) => boolean;
+  hasPlcy: (use: string) => boolean;
 } = {
   labl: [],
   list: [],
@@ -55,9 +59,14 @@ const defaultContextValue: {
   remUser: (use: UserSearchResponse) => { },
   remWllt: (wal: WalletSearchResponse) => { },
 
+
   updList: (rem: ListSearchResponse, add: ListSearchResponse) => { },
+  updPlcy: (set: PolicySearchResponse[]) => { },
   updUser: (rem: UserSearchResponse, add: UserSearchResponse) => { },
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => { },
+
+  hasAcce: (sys: number, use: string, acc: number): boolean => { return false; },
+  hasPlcy: (use: string): boolean => { return false; },
 };
 
 const CacheContext = createContext(defaultContextValue);
@@ -182,6 +191,10 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const updPlcy = (set: PolicySearchResponse[]) => {
+    setPlcy(set);
+  };
+
   const updUser = (rem: UserSearchResponse, add: UserSearchResponse) => {
     setUser((old: UserSearchResponse[]) => {
       const upd: UserSearchResponse[] = old.filter((x) => x.user !== rem.user);
@@ -202,6 +215,17 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  // hasAcce returns whether the given user ID has the given access in the given
+  // system.
+  const hasAcce = (sys: number, use: string, acc: number): boolean => {
+    return plcy.some(x => x.user === use && x.syst === String(sys) && x.acce === String(acc));
+  };
+
+  // hasPlcy returns whether the given user ID is a policy member.
+  const hasPlcy = (use: string): boolean => {
+    return plcy.some(x => x.user === use);
+  };
+
   // We only want to render the injected child components if we have a label
   // response, since a lot of pages rely on the list of labels known to the
   // system.
@@ -214,9 +238,9 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
       value={{
         labl: labl,
         list: srtList(list),
-        plcy: plcy,
+        plcy: srtPlcy(plcy),
         user: user,
-        wllt: wllt,
+        wllt: srtWllt(wllt),
 
         addLabl: addLabl,
         addList: addList,
@@ -230,9 +254,14 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         remUser: remUser,
         remWllt: remWllt,
 
+
         updList: updList,
+        updPlcy: updPlcy,
         updUser: updUser,
         updWllt: updWllt,
+
+        hasAcce: hasAcce,
+        hasPlcy: hasPlcy,
       }}
     >
       {children}
@@ -248,6 +277,44 @@ const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {
   lis.sort((x: ListSearchResponse, y: ListSearchResponse) => {
     if (x.desc < y.desc) return -1;
     if (x.desc > y.desc) return +1;
+    return 0;
+  });
+
+  return lis;
+};
+
+const srtPlcy = (lis: PolicySearchResponse[]): PolicySearchResponse[] => {
+  lis.sort((x: PolicySearchResponse, y: PolicySearchResponse) => {
+    // Sort policies by SMA system in accending order with first priority.
+    const xsy = parseInt(x.syst, 10);
+    const ysy = parseInt(y.syst, 10);
+
+    if (xsy !== ysy) {
+      return xsy - ysy;
+    }
+
+    // Sort policies by SMA access in accending order with second priority.
+    const xac = parseInt(x.acce, 10);
+    const yac = parseInt(y.acce, 10);
+
+    if (xac !== yac) {
+      return xac - yac;
+    }
+
+    // Sort policies by SMA member in accending order with third priority.
+    if (x.memb < y.memb) return -1;
+    if (x.memb > y.memb) return +1;
+
+    return 0;
+  });
+
+  return lis;
+};
+
+const srtWllt = (lis: WalletSearchResponse[]): WalletSearchResponse[] => {
+  lis.sort((x: WalletSearchResponse, y: WalletSearchResponse) => {
+    if (x.public.addr < y.public.addr) return -1;
+    if (x.public.addr > y.public.addr) return +1;
     return 0;
   });
 
