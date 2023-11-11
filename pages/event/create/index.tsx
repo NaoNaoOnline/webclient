@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 
-import TextInput from "@/components/app/event/create/TextInput";
+import { TextInput } from "@/components/app/event/create/TextInput";
 import LabelInput from "@/components/app/event/create/LabelInput";
 import LinkInput from "@/components/app/event/create/LinkInput";
 import TimeBar from "@/components/app/event/create/TimeBar";
@@ -41,7 +41,7 @@ export default function Page() {
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("Hooray, event addedd milady!");
 
-  const handleSubmit = async (evn: FormEvent) => {
+  const handleSubmit = async (evn: FormEvent<HTMLFormElement>) => {
     evn.preventDefault();
 
     addPgrs(pgrs);

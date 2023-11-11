@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef } from "react";
+import { memo, useEffect } from "react";
 
-import { Address, useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
-import { fetchBalance } from "@wagmi/core";
+import { Address, useAccount } from "wagmi";
+import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
 import { parseGwei } from "viem";
 
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
-
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -13,105 +13,85 @@ import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { PolicyABI } from "@/modules/abi/PolicyABI";
-
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
-
 import { PolicyContract } from "@/modules/config/config";
 
 interface Props {
   done: (pol: PolicySearchResponse) => void;
   fail: () => void;
-  plcy: PolicySearchResponse;
+  plcy: PolicySearchResponse | null;
 }
 
-export default function PolicyCreateForm(props: Props) {
+const PolicyDeleteForm = memo((props: Props) => {
+  const { address } = useAccount();
+
+  const { remPlcy } = useCache();
   const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
 
-  const clld = useRef(false);
-
   const chid = getChain(netw)[0].id;
 
-  const pgrs: ProgressPropsObject = useMemo(() => new ProgressPropsObject("Removing Policy"), []);
+  const handleSubmit = async (pol: PolicySearchResponse) => {
+    if (!address) return;
 
-  let sys = "";
-  let mem = "";
-  let acc = "";
-  if (props.plcy) {
-    sys = props.plcy.syst;
-    mem = props.plcy.memb;
-    acc = props.plcy.acce;
-  }
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Policy");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Shnitty shnitty bang bang, this policy is tanking!");
+    const info: InfoPropsObject = new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!");
 
-  const { data, error: wriErr, write } = useContractWrite({
-    address: PolicyContract as Address,
-    abi: PolicyABI,
-    chainId: chid,
-    functionName: "deleteRecord",
-    maxFeePerGas: parseGwei("20"),
-  })
+    const sys: string = pol.syst;
+    const mem: string = pol.memb;
+    const acc: string = pol.acce;
 
-  const { error: waiErr, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  })
+    try {
+      addPgrs(pgrs);
 
-  useAccount({
-    async onConnect({ address, isReconnected }) {
-      if (!write || clld.current || !address || isReconnected) return;
-
+      pgrs.setCmpl(25);
       const bal = await fetchBalance({
         address: address,
       });
 
       if (bal.value === BigInt(0)) {
-        addInfo(new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!"));
-        props.fail();
+        addInfo(info);
         return;
       }
 
-      clld.current = true;
+      pgrs.setCmpl(30);
+      const pre = await prepareWriteContract({
+        address: PolicyContract as Address,
+        abi: PolicyABI,
+        chainId: chid,
+        functionName: "deleteRecord",
+        args: [{ sys: Number(sys), mem: mem, acc: Number(acc) }],
+        maxFeePerGas: parseGwei("200"),
+      })
 
-      addPgrs(pgrs);
+      pgrs.setCmpl(40);
+      const { hash } = await writeContract(pre)
 
-      write({
-        args: [{ sys: sys, mem: mem, acc: acc }],
-      });
-
-      pgrs.setCmpl(25);
-      await new Promise(r => setTimeout(r, 200));
       pgrs.setCmpl(50);
-      await new Promise(r => setTimeout(r, 200));
-    },
-  });
+      const tnx = await waitForTransaction({
+        hash: hash,
+      })
 
-  useEffect(() => {
-    let err: Error | null = null;
-    if (waiErr) {
-      err = waiErr;
-    }
-    if (wriErr) {
-      err = wriErr;
-    }
-
-    if (err) {
-      addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
-      props.fail();
-      clld.current = false;
-    }
-  }, [props, waiErr, wriErr, addErro]);
-
-  useEffect(() => {
-    if (isSuccess) {
+      addScss(scss);
       pgrs.setDone(() => {
-        if (props.plcy) props.done(props.plcy);
+        remPlcy(pol);
       });
-
-      addScss(new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!"));
-
-      clld.current = false;
+    } catch (err) {
+      addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
     }
-  }, [props, isSuccess, pgrs, addScss]);
+  };
+
+  useEffect(() => {
+    if (props.plcy) {
+      handleSubmit(props.plcy);
+    }
+  }, [props.plcy]);
 
   return <></>;
-};
+});
+
+PolicyDeleteForm.displayName = "PolicyDeleteForm";
+
+export { PolicyDeleteForm };

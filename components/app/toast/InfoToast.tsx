@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import * as Toast from "@radix-ui/react-toast";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -24,7 +26,7 @@ export class InfoPropsObject {
   }
 }
 
-export function InfoToast(props: { obj: InfoPropsObject }) {
+const InfoToast = memo((props: { obj: InfoPropsObject }) => {
   return (
     <>
       <Toast.Root
@@ -53,4 +55,8 @@ export function InfoToast(props: { obj: InfoPropsObject }) {
       <Toast.Viewport className="[--viewport-padding:_25px] fixed top-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
     </>
   );
-};
+});
+
+InfoToast.displayName = "InfoToast";
+
+export { InfoToast };
