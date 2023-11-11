@@ -1,103 +1,82 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { FormEvent, memo } from "react";
 
-import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
-import { fetchBalance, writeContract } from "@wagmi/core";
+import { Address, useAccount } from "wagmi";
+import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
 import { parseGwei } from "viem";
 
+import { RiAddLine } from "react-icons/ri";
+import { BiInfoCircle } from "react-icons/bi";
+
+import { useCache } from "@/components/app/cache/CacheProvider";
+import { TextInput } from "@/components/app/event/create/TextInput";
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
+import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
+import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { PolicyABI } from "@/modules/abi/PolicyABI";
-import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyContract } from "@/modules/config/config";
 
-interface Props {
-  actv: boolean;
-  cncl: (info: string) => void;
-  fail: (user: string, tech: Error | null) => void;
-  done: (pol: PolicySearchResponse, suc: string) => void;
-  form: MutableRefObject<HTMLFormElement | null>;
-}
+const PolicyCreateForm = memo(() => {
+  const { address } = useAccount();
 
-export default function PolicyCreateForm(props: Props) {
-  const { disconnect } = useDisconnect();
-  const { addPgrs } = useToast();
+  const { addPlcy } = useCache();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
 
-  const clld = useRef(false);
+  const chid: number = getChain(netw)[0].id;
 
-  const chid = getChain(netw)[0].id;
+  const handleSubmit = async (eve: FormEvent<HTMLFormElement>) => {
+    eve.preventDefault();
 
-  const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
+    if (!address) return;
 
-  let sys = "";
-  let mem = "";
-  let acc = "";
-  if (props.form?.current) {
-    const form = new FormData(props.form?.current);
+    const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Policy");
+    const scss: SuccessPropsObject = new SuccessPropsObject("Locked and loaded Mr. Smith, the policy's onchain!");
+    const info: InfoPropsObject = new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!");
 
-    sys = form.get("system-input")?.toString() || "";
-    mem = form.get("member-input")?.toString() || "";
-    acc = form.get("access-input")?.toString() || "";
-  }
+    const frm = new FormData(eve.target as HTMLFormElement);
 
-  const { data, error: wriErr, write } = useContractWrite({
-    address: PolicyContract as Address,
-    abi: PolicyABI,
-    chainId: chid,
-    functionName: "createRecord",
-    maxFeePerGas: parseGwei("200"),
-  })
+    const sys: string = frm.get("system-input")?.toString() || "";
+    const mem: string = frm.get("member-input")?.toString() || "";
+    const acc: string = frm.get("access-input")?.toString() || "";
 
-  const { error: waiErr, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  })
+    try {
+      addPgrs(pgrs);
 
-  useAccount({
-    async onConnect({ address, isReconnected }) {
-      if (!props.actv || !write || clld.current || !address || isReconnected) return;
-
+      pgrs.setCmpl(25);
       const bal = await fetchBalance({
         address: address,
       });
 
       if (bal.value === BigInt(0)) {
-        disconnect();
-        clld.current = false;
-        props.cncl("Got 0 ETH in that wallet. Can't fucking do it mate!");
+        addInfo(info);
         return;
       }
 
-      clld.current = true;
-
-      addPgrs(pgrs);
-
-      write({
+      pgrs.setCmpl(30);
+      const pre = await prepareWriteContract({
+        address: PolicyContract as Address,
+        abi: PolicyABI,
+        chainId: chid,
+        functionName: "createRecord",
         args: [{ sys: Number(sys), mem: mem, acc: Number(acc) }],
-      });
-    },
-  });
+        maxFeePerGas: parseGwei("200"),
+      })
 
-  useEffect(() => {
-    let err: Error | null = null;
-    if (waiErr) {
-      err = waiErr;
-    }
-    if (wriErr) {
-      err = wriErr;
-    }
+      pgrs.setCmpl(40);
+      const { hash } = await writeContract(pre)
 
-    if (err) {
-      disconnect();
-      clld.current = false;
-      props.fail("Can't fockin' doit mate, those bloody beavers I swear!", err as Error);
-    }
-  }, [props, waiErr, wriErr, disconnect]);
+      pgrs.setCmpl(50);
+      const tnx = await waitForTransaction({
+        hash: hash,
+      })
 
-  useEffect(() => {
-    if (isSuccess) {
       const newPlcy = {
         // local
         name: "",
@@ -113,14 +92,111 @@ export default function PolicyCreateForm(props: Props) {
         syst: sys,
       };
 
-      disconnect();
-      clld.current = false;
-
+      addScss(scss);
       pgrs.setDone(() => {
-        props.done(newPlcy, "Locked and loaded Mr. Smith, the policy's onchain!");
+        addPlcy(newPlcy);
       });
+    } catch (err) {
+      addErro(new ErrorPropsObject("Can't fockin' doit mate, those bloody beavers I swear!", err as Error));
     }
-  }, [props, disconnect, isSuccess, pgrs, chid, sys, mem, acc]);
+  };
 
-  return <></>;
-};
+  return (
+    <>
+      <SettingsHeader
+        icon={<RiAddLine />}
+        titl="Add Policy"
+        bttn={
+          <>
+            <Tooltip
+              desc={
+                <div>
+                  <div>use <b>submit</b> to add new policies</div>
+                  <div>
+                    please read the&nbsp;
+                    <a
+                      href="https://github.com/NaoNaoOnline/contracts"
+                      target="_blank"
+                      className="font-bold underline decoration-dashed"
+                    >
+                      contracts repo
+                    </a>
+                  </div>
+                </div>
+              }
+              side="left"
+            >
+              <BiInfoCircle
+                className="w-5 h-5 text-gray-400 dark:text-gray-500"
+              />
+            </Tooltip>
+
+            <button
+              form="policy-create-form"
+              type="submit"
+              className={`
+              ml-3 px-5 py-2.5 text-sm font-medium text-center rounded-lg outline-none
+              disabled:text-gray-50 disabled:dark:text-gray-700 disabled:bg-gray-200 disabled:dark:bg-gray-800
+              enabled:text-gray-50 enabled:dark:text-gray-50 enabled:bg-blue-600 enabled:dark:bg-blue-700
+              enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800
+            `}
+            >
+              Submit
+            </button>
+          </>
+        }
+      />
+
+      <div className="p-3">
+        <form
+          id="policy-create-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="grid gap-x-4 grid-cols-12">
+            <TextInput
+              desc="the SMA system to add"
+              maxl={10}
+              minl={10}
+              mono="font-mono"
+              name="system"
+              pldr="0"
+              ptrn={`^[0-9]$`}
+              span="col-span-2"
+              titl="allowed is a single number"
+              type="number"
+            />
+
+            <TextInput
+              desc="the SMA member to add"
+              maxl={42}
+              minl={42}
+              mono="font-mono"
+              name="member"
+              pldr="0xf39F••••2266"
+              ptrn={`^0x[A-Fa-f0-9]{40}$`}
+              span="col-span-8"
+              titl="allowed is a single Ethreum address"
+            />
+
+            <TextInput
+              desc="the SMA access to add"
+              maxl={10}
+              minl={10}
+              mono="font-mono"
+              name="access"
+              pldr="1"
+              ptrn={`^[0-9]$`}
+              span="col-span-2"
+              titl="allowed is a single number"
+              type="number"
+            />
+          </div>
+        </form>
+      </div>
+    </>
+  );
+});
+
+PolicyCreateForm.displayName = "PolicyCreateForm";
+
+export { PolicyCreateForm };

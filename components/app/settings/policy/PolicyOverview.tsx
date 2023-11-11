@@ -8,7 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
-import PolicyDeleteForm from "@/components/app/settings/policy/delete/PolicyDeleteForm";
+import { PolicyDeleteForm } from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 import { SettingsGrid } from "@/components/app/settings/SettingsGrid";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
@@ -22,59 +22,12 @@ import { truncateEthAddress } from "@/modules/wallet/Address";
 import { PolicySearch } from "@/modules/api/policy/search/Search";
 
 export const PolicyOverview = () => {
-  const { address } = useAccount();
-
-  const { atkn } = useAuth();
-  const { plcy, remPlcy, updPlcy } = useCache();
-  const { addErro, addInfo } = useToast();
+  const { plcy, remPlcy } = useCache();
 
   const [dltd, setDltd] = useState<PolicySearchResponse | null>(null);
-  const [pntr, setPntr] = useState<string>("");
   const [wusr, setWusr] = useState<PolicySearchResponse[]>([]);
 
   const clld: MutableRefObject<boolean> = useRef(false);
-
-  const updatePolicies = async () => {
-    const info: InfoPropsObject = new InfoPropsObject("Syncing state captain, this may take a moment!");
-
-    addInfo(info);
-
-    try {
-      const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
-      setPntr(upd.pntr);
-    } catch (err) {
-      addErro(new ErrorPropsObject("Oh they did it again, I mean, come on!!!", err as Error));
-    }
-  };
-
-  useEffect(() => {
-    if (pntr === "") return;
-
-    let timr: NodeJS.Timeout;
-
-    const poll = async () => {
-      try {
-        const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: pntr, sync: "default" }]);
-
-        const dsrd: string = upd.pntr;
-
-        if (dsrd !== pntr) {
-          const pol = await PolicySearch([{ atkn: atkn, ltst: "default" }]);
-          updPlcy(pol);
-          clearInterval(timr);
-          setPntr("");
-        }
-      } catch (err) {
-        addErro(new ErrorPropsObject("An error occurred during polling!", err as Error));
-      }
-    };
-
-    timr = setInterval(poll, 5000); // 5 seconds
-
-    return () => {
-      clearInterval(timr);
-    };
-  }, [pntr, atkn, addErro]);
 
   // Augment a list of policy records with user names, given their user IDs,
   // where available.
@@ -113,28 +66,28 @@ export const PolicyOverview = () => {
       {wusr?.map((x, i) => (
         <SettingsGrid
           key={i}
-          icon={
-            <Tooltip
-              desc={
-                <div>
-                  <div>currently connected wallet</div>
-                  <div>click to copy full address</div>
-                </div>
-              }
-              side="left"
-              vsbl={x.memb === String(address)}
-            >
-              <GoDotFill
-                className="fill-green-400"
-              />
-            </Tooltip>
-          }
           subj={
-            <CopyButton
-              className="text-sm font-mono underline underline-offset-2 decoration-dashed"
-              copy={x.memb}
-              text={truncateEthAddress(x.memb)}
-            />
+            <div className="flex w-full">
+              <div
+                className="flex-1 basis-2/4 mr-6 md:mr-3"
+              >
+                <CopyButton
+                  className="text-sm font-mono underline underline-offset-2 decoration-dashed"
+                  copy={x.memb}
+                  text={truncateEthAddress(x.memb)}
+                />
+              </div>
+              <div
+                className="flex-1 basis-1/4 text-sm font-mono"
+              >
+                S {x.syst}
+              </div>
+              <div
+                className="flex-1 basis-1/4 text-sm font-mono"
+              >
+                A {x.acce}
+              </div>
+            </div>
           }
           midl={
             <span className="text-sm font-mono">
@@ -160,21 +113,17 @@ export const PolicyOverview = () => {
         />
       ))}
 
-      {dltd && (
-        <PolicyDeleteForm
-          done={() => {
-            if (dltd) {
-              remPlcy(dltd);
-              setDltd(null);
-              updatePolicies();
-            }
-          }}
-          fail={() => {
-            setDltd(null);
-          }}
-          plcy={dltd}
-        />
-      )}
+      <PolicyDeleteForm
+        done={(pol: PolicySearchResponse) => {
+          setDltd(null);
+          remPlcy(pol);
+        }
+        }
+        fail={() => {
+          setDltd(null);
+        }}
+        plcy={dltd}
+      />
     </>
   )
 };

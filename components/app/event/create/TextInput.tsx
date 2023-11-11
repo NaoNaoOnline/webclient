@@ -15,7 +15,7 @@ interface Props {
   type?: string;
 }
 
-export default function TextInput(props: Props) {
+export const TextInput = (props: Props) => {
   return (
     <div className={`relative z-0 w-full ${props.span}`}>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -69,8 +69,7 @@ export class ProgressPropsObject {
   }
 }
 
-
-export function ProgressToast(props: { obj: ProgressPropsObject }) {
+const ProgressToast = memo((props: { obj: ProgressPropsObject }) => {
   const [open, setOpen] = useState<boolean>(true);
   // We render potentially multiple progress toasts if the action which requires
   // progress bars fails. Each of the rendered progress toasts may call the done
@@ -141,4 +140,8 @@ export function ProgressToast(props: { obj: ProgressPropsObject }) {
       <Toast.Viewport className="[--viewport-padding:_25px] fixed top-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
     </>
   );
-};
+});
+
+ProgressToast.displayName = "ProgressToast";
+
+export { ProgressToast };
