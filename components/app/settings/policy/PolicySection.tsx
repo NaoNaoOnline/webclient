@@ -77,7 +77,7 @@ export const PolicySection = (props: Props) => {
     return () => {
       clearInterval(timr);
     };
-  }, [pntr, atkn, addErro]);
+  }, [pntr, atkn, addErro, updPlcy]);
 
   return (
     <>

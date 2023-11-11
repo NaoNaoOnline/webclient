@@ -106,7 +106,7 @@ export const PolicyOverview = () => {
       clld.current = true;
       getData();
     }
-  }, []);
+  }, [plcy]);
 
   return (
     <>
