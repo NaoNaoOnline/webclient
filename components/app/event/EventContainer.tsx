@@ -1,11 +1,11 @@
 import { MouseEvent, useEffect, useState } from "react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { usePathname } from "next/navigation";
-
+import { RiMenuAddLine } from "react-icons/ri";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
@@ -13,6 +13,7 @@ import { useCache } from "@/components/app/cache/CacheProvider";
 import { EventBody } from "@/components/app/event/EventBody";
 import { EventFooter } from "@/components/app/event/EventFooter";
 import { EventHeader } from "@/components/app/event/EventHeader";
+import { ListDialog } from "@/components/app/list/dialog/ListDialog";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
@@ -37,6 +38,7 @@ export function EventContainer(props: Props) {
   const { addInfo } = useToast();
 
   const [form, setForm] = useState<boolean>(false);
+  const [sdlg, setSdlg] = useState<boolean>(false); // show list dialog
   const [stat, setStat] = useState<number>(defSta(props.evnt));
   const [xpnd, setXpnd] = useState<boolean>(false);
 
@@ -94,22 +96,51 @@ export function EventContainer(props: Props) {
   return (
     <li>
       <div
-        className="flex justify-end"
+        className="flex"
       >
-        <Link
-          href={props.evnt.link()}
-          onClick={updateClick}
-          target="_blank"
-          className={`
-          mr-2 mb-2 text-right text-4xl font-bold font-mono
-          hover:underline hover:underline-offset-8
-          ${stat === 0 ? "text-green-400" : "text-gray-400"}
-        `}
+
+        <div
+          className="flex-1"
+        >
+          <button
+            onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+              if (!auth) {
+                addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
+              } else {
+                setSdlg(true);
+              }
+            }}
+            className="relative h-full px-3 my-auto outline-none group"
+            type="button"
+          >
+            <RiMenuAddLine
+              className={`
+                w-5 h-5 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50
+              `}
+            />
+          </button>
+        </div>
+
+        <div
+          className="flex justify-end"
         >
 
-          [{props.evnt.evnt().slice(-4)}]
+          <Link
+            href={props.evnt.link()}
+            onClick={updateClick}
+            target="_blank"
+            className={`
+              m-3 mr-2 text-right text-3xl font-bold font-mono tracking-wider
+              hover:underline hover:underline-offset-8
+              ${stat === 0 ? "text-green-400" : "text-gray-400 dark:text-gray-400"}
+            `}
+          >
 
-        </Link>
+            [{props.evnt.evnt().slice(-4)}]
+
+          </Link>
+
+        </div>
       </div>
 
       <div
@@ -117,7 +148,6 @@ export function EventContainer(props: Props) {
       >
         <EventHeader
           cupd={updateClick}
-          desc={props.desc}
           evnt={props.evnt}
           labl={labl}
           stat={stat}
@@ -176,6 +206,14 @@ export function EventContainer(props: Props) {
           labl={labl}
         />
       </div>
+
+      <ListDialog
+        clos={() => setSdlg(false)}
+        desc={props.desc}
+        evnt={props.evnt}
+        labl={labl}
+        sdlg={sdlg}
+      />
     </li >
   );
 };

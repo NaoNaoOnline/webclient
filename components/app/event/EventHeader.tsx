@@ -1,35 +1,20 @@
-import { MouseEvent, useState } from "react";
+import { MouseEvent } from "react";
 
 import Link from "next/link";
 
-import { RiMenuAddLine } from "react-icons/ri";
-
-import { useAuth } from "@/components/app/auth/AuthProvider";
-
 import { EventLink } from "@/components/app/event/EventLink";
 
-import { ListDialog } from "@/components/app/list/dialog/ListDialog";
-
-import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastProvider";
-
-import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 interface Props {
   cupd: (eve: MouseEvent<HTMLAnchorElement>) => void;
   evnt: EventSearchObject;
-  desc: DescriptionSearchObject[];
   labl: LabelSearchResponse[];
   stat: number;
 }
 
 export function EventHeader(props: Props) {
-  const { auth } = useAuth();
-  const { addInfo } = useToast();
-  const [show, setShow] = useState<boolean>(false); // show list dialog
-
   return (
     <div className="relative flex flex-row w-full shadow-gray-400 dark:shadow-black shadow-[0px_1px_2px_-1px]">
       <div className="flex w-full overflow-hidden">
@@ -37,7 +22,9 @@ export function EventHeader(props: Props) {
           <Link
             key={i}
             href={`/event?host=${encodeURIComponent(x.name)}`}
-            className="ml-3 py-2 text-lg font-medium whitespace-nowrap text-gray-900 dark:text-gray-50 hover:underline"
+            className={`
+              ml-3 py-2 text-gray-900 dark:text-gray-50 font-medium text-lg whitespace-nowrap hover:underline
+            `}
           >
             @{x.name}
           </Link>
@@ -49,36 +36,13 @@ export function EventHeader(props: Props) {
         />
       </div>
 
-      <div className="absolute right-0 flex bg-gray-50 dark:bg-gray-700 rounded-lg">
-
+      <div className="absolute right-3 flex bg-gray-50 dark:bg-gray-700 rounded-lg">
         <EventLink
           cupd={props.cupd}
           evnt={props.evnt}
           stat={props.stat}
         />
-
-        <button
-          onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-            if (!auth) {
-              addInfo(new InfoPropsObject("Breh, you gotta login for that, mhh mhmhh!"));
-            } else {
-              setShow(true);
-            }
-          }}
-          className="p-3 outline-none group"
-          type="button"
-        >
-          <RiMenuAddLine className="w-5 h-5 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
-        </button>
       </div>
-
-      <ListDialog
-        clos={() => setShow(false)}
-        desc={props.desc}
-        evnt={props.evnt}
-        labl={props.labl}
-        show={show}
-      />
     </div>
   );
 };

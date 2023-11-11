@@ -1,5 +1,4 @@
-import { useRef, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useRef } from "react";
 
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { recoverPublicKey } from "viem";
@@ -26,11 +25,10 @@ interface Props {
 }
 
 export default function WalletCreateForm(props: Props) {
-  const { user } = useUser();
+  const { atkn, uuid } = useAuth();
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn } = useAuth();
 
   const clld = useRef(false);
 
@@ -54,7 +52,7 @@ export default function WalletCreateForm(props: Props) {
             time: wal.crtd,
           },
           crtd: wal.crtd,
-          user: user?.intern?.uuid || "",
+          user: uuid,
           wllt: wal.wllt,
         },
         public: {

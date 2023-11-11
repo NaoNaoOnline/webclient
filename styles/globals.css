@@ -8,6 +8,20 @@
   }
 }
 
+.dark {
+  /* bg-gray-700 */
+  background-color: rgb(55 65 81);
+}
+
+.light {
+  /* bg-gray-50 */
+  background-color: rgb(249 250 251);
+}
+
+/*
+Forms
+*/
+
 /*
 Using some third party components like Mantine Multiselect render some annoying
 borders when input fields are selected. Assigning tailwind classnames does not
@@ -17,12 +31,17 @@ input[type='text']:focus {
   box-shadow: none;
 }
 
-.dark {
-  /* bg-gray-700 */
-  background-color: rgb(55 65 81);
+
+/*
+Animations
+*/
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.light {
-  /* bg-gray-50 */
-  background-color: rgb(249 250 251);
+.spin-slow {
+  animation: spin 4s linear infinite;
 }
