@@ -43,7 +43,7 @@ export default function PolicySection(props: Props) {
   };
 
   const updatePolicies = async () => {
-    const info: InfoPropsObject = new InfoPropsObject("Syncing onchain and offchain state, this may take a moment!");
+    const info: InfoPropsObject = new InfoPropsObject("Syncing state captain, this may take a moment!");
 
     addInfo(info);
 
@@ -51,7 +51,7 @@ export default function PolicySection(props: Props) {
       const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
       setPntr(upd.pntr);
     } catch (err) {
-      addErro(new ErrorPropsObject("Oh fuck off, what is it again!? I mean, come on!!!", err as Error));
+      addErro(new ErrorPropsObject("Oh they did it again, I mean, come on!!!", err as Error));
     }
   };
 
