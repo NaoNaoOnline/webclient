@@ -9,6 +9,7 @@ interface TooltipProps {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   side: "top" | "right" | "bottom" | "left" | undefined;
+  vsbl?: boolean;
 }
 
 export function Tooltip({
@@ -18,6 +19,7 @@ export function Tooltip({
   defaultOpen,
   onOpenChange,
   side,
+  vsbl = true,
 }: TooltipProps) {
   return (
     <TooltipPrimitive.Root
@@ -26,7 +28,10 @@ export function Tooltip({
       onOpenChange={onOpenChange}
     >
       <TooltipPrimitive.Trigger
-        className="flex items-center"
+        className={`
+          flex items-center
+          ${vsbl ? "visible" : "invisible"}
+        `}
       >
 
         {children}
@@ -34,7 +39,9 @@ export function Tooltip({
       </TooltipPrimitive.Trigger>
       <TooltipPrimitive.Content
         className={`
-          max-w-[250px] px-2 py-1 text-xs font-medium font-mono rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900
+          max-w-[250px] px-2 py-1 rounded-lg
+          bg-gray-800 dark:bg-gray-200
+          text-gray-50 dark:text-gray-900 text-xs font-medium font-mono
           data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade
           data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade
           data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade

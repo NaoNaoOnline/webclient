@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useSignMessage } from "wagmi";
 import { recoverPublicKey } from "viem";
 import { hashMessage } from "viem";
 
@@ -18,19 +18,44 @@ import { WalletUpdate } from "@/modules/api/wallet/update/Update";
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
 interface Props {
+  addr: string;
   actv: boolean;
-  cncl: () => void;
   done: (wal: WalletSearchResponse) => void;
+  fail: () => void;
   wllt: WalletSearchResponse[] | null;
 }
 
 export default function WalletCreateForm(props: Props) {
   const { atkn, uuid } = useAuth();
-  const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
   const { addErro, addPgrs, addScss } = useToast();
 
   const clld = useRef(false);
+
+  const walletSign = async () => {
+    const curr = props.wllt?.find((x) => x.public.addr === (props.addr as string));
+
+    try {
+      const mess = rawMes(truncateEthAddress(props.addr));
+      const sign = await signMessageAsync({ message: mess });
+      const hash = hashMessage(mess);
+
+      const pubk = await recoverPublicKey({
+        hash: hash,
+        signature: sign,
+      });
+
+      if (!curr) {
+        await walletCreate(mess, pubk, sign, props.addr);
+      } else {
+        await walletUpdate(mess, pubk, sign, props.addr, curr);
+      }
+    } catch (err) {
+      addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
+      props.fail();
+      clld.current = false;
+    }
+  };
 
   const walletCreate = async (mess: string, pubk: string, sign: string, addr: string) => {
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Wallet");
@@ -61,20 +86,15 @@ export default function WalletCreateForm(props: Props) {
         },
       };
 
+      addScss(scss);
       pgrs.setDone(() => {
         props.done(newWllt);
+        clld.current = false;
       });
-
-      addScss(scss);
-      await new Promise(r => setTimeout(r, 200));
-
-      disconnect();
-      clld.current = false;
 
     } catch (err) {
       addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
-      props.cncl();
-      disconnect();
+      props.fail();
       clld.current = false;
     }
   };
@@ -108,54 +128,23 @@ export default function WalletCreateForm(props: Props) {
         },
       };
 
+      addScss(scss);
       pgrs.setDone(() => {
         props.done(newWllt);
+        clld.current = false;
       });
-
-      addScss(scss);
-      await new Promise(r => setTimeout(r, 200));
-      disconnect();
-      clld.current = false;
 
     } catch (err) {
       addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
-      props.cncl();
-      disconnect();
+      props.fail();
       clld.current = false;
     }
   };
 
-  useAccount({
-    async onConnect({ address, isReconnected }) {
-      if (!props.actv || clld.current || isReconnected) return;
-
-      const curr = props.wllt?.find((x) => x.public.addr === (address as string));
-
-      try {
-        clld.current = true;
-
-        const mess = rawMes(truncateEthAddress(address));
-        const sign = await signMessageAsync({ message: mess });
-        const hash = hashMessage(mess);
-
-        const pubk = await recoverPublicKey({
-          hash: hash,
-          signature: sign,
-        });
-
-        if (!curr) {
-          walletCreate(mess, pubk, sign, address as string);
-        } else {
-          walletUpdate(mess, pubk, sign, address as string, curr);
-        }
-      } catch (err) {
-        addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
-        props.cncl();
-        disconnect();
-        clld.current = false;
-      }
-    },
-  });
+  if (props.actv && !clld.current) {
+    clld.current = true;
+    walletSign();
+  }
 
   return (<></>);
 };

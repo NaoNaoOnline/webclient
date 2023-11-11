@@ -1,6 +1,6 @@
-import { MutableRefObject, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
-import { Address, useAccount, useContractWrite, useDisconnect, useWaitForTransaction } from "wagmi";
+import { Address, useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
 import { parseGwei } from "viem";
 
@@ -19,15 +19,12 @@ import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyContract } from "@/modules/config/config";
 
 interface Props {
-  actv: boolean;
-  cncl: () => void;
-  dltd: PolicySearchResponse | null;
-  done: () => void;
-  form: MutableRefObject<HTMLFormElement | null>;
+  done: (pol: PolicySearchResponse) => void;
+  fail: () => void;
+  plcy: PolicySearchResponse;
 }
 
 export default function PolicyCreateForm(props: Props) {
-  const { disconnect } = useDisconnect();
   const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
@@ -41,10 +38,10 @@ export default function PolicyCreateForm(props: Props) {
   let sys = "";
   let mem = "";
   let acc = "";
-  if (props.dltd) {
-    sys = props.dltd.syst;
-    mem = props.dltd.memb;
-    acc = props.dltd.acce;
+  if (props.plcy) {
+    sys = props.plcy.syst;
+    mem = props.plcy.memb;
+    acc = props.plcy.acce;
   }
 
   const { data, error: wriErr, write } = useContractWrite({
@@ -61,7 +58,7 @@ export default function PolicyCreateForm(props: Props) {
 
   useAccount({
     async onConnect({ address, isReconnected }) {
-      if (!props.actv || !write || clld.current || !address || isReconnected) return;
+      if (!write || clld.current || !address || isReconnected) return;
 
       const bal = await fetchBalance({
         address: address,
@@ -69,8 +66,7 @@ export default function PolicyCreateForm(props: Props) {
 
       if (bal.value === BigInt(0)) {
         addInfo(new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!"));
-        props.cncl();
-        disconnect();
+        props.fail();
         return;
       }
 
@@ -100,24 +96,22 @@ export default function PolicyCreateForm(props: Props) {
 
     if (err) {
       addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
-      props.cncl();
-      disconnect();
+      props.fail();
       clld.current = false;
     }
-  }, [props, disconnect, waiErr, wriErr, addErro]);
+  }, [props, waiErr, wriErr, addErro]);
 
   useEffect(() => {
     if (isSuccess) {
       pgrs.setDone(() => {
-        if (props.dltd) props.done();
+        if (props.plcy) props.done(props.plcy);
       });
 
       addScss(new SuccessPropsObject("Shnitty shnitty bang bang, the policy is gone!"));
 
       clld.current = false;
-      disconnect();
     }
-  }, [props, disconnect, isSuccess, pgrs, addScss]);
+  }, [props, isSuccess, pgrs, addScss]);
 
   return <></>;
 };
