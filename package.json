@@ -25,13 +25,13 @@
     "@radix-ui/react-toast": "^1.1.4",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "autoprefixer": "10.4.14",
+    "autoprefixer": "10.4.16",
     "cmdk": "^0.2.0",
     "connectkit": "^1.5.3",
     "croner": "^7.0.1",
     "eslint": "8.46.0",
-    "eslint-config-next": "13.4.12",
-    "next": "14.0.1",
+    "eslint-config-next": "14.0.2",
+    "next": "14.0.2",
     "postcss": "8.4.31",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
@@ -41,8 +41,8 @@
     "swr": "^2.2.2",
     "tailwindcss": "^3.3.5",
     "timezone-soft": "^1.5.1",
-    "viem": "^1.18.0",
-    "wagmi": "^1.4.2"
+    "viem": "^1.18.9",
+    "wagmi": "^1.4.6"
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",

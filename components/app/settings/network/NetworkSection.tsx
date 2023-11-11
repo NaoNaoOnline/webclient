@@ -7,6 +7,7 @@ import { LinkIcon } from "@heroicons/react/24/outline";
 import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
 
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
+import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
 
 export function NetworkSection() {
   const [netw, setNetw] = useNetwork();
@@ -16,12 +17,10 @@ export function NetworkSection() {
 
   return (
     <>
-      <ul className="flex flex-row relative w-full pt-4 mt-4 border-t border-gray-300 dark:border-gray-800">
-        <li className="flex items-center p-3 rounded-lg text-gray-900 dark:text-gray-50">
-          <LinkIcon className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-400" />
-          <span className="flex-1 ml-3 whitespace-nowrap">Platform Networks</span>
-        </li>
-      </ul>
+      <SettingsHeader
+        icon={<LinkIcon />}
+        titl="Platform Networks"
+      />
 
       <ToggleGroup.Root
         className="mb-6"
