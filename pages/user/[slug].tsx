@@ -7,7 +7,6 @@ import { LastElement } from "@/modules/path/LastElement";
 
 export default function Page() {
   const path: string = usePathname();
-
   const user: string = LastElement(path);
 
   return (
@@ -16,19 +15,19 @@ export default function Page() {
 
       <div className="grid grid-cols-2 gap-4">
         <UserProfileButton
-          href={"/event/user/" + user}
+          href={"/event/user/" + encodeURIComponent(user)}
           text="Events"
         />
         <UserProfileButton
-          href={"/event/like/" + user}
+          href={"/event/like/" + encodeURIComponent(user)}
           text="Likes"
         />
         <UserProfileButton
-          href={"/label/user/" + user}
+          href={"/label/user/" + encodeURIComponent(user)}
           text="Labels"
         />
         <UserProfileButton
-          href={"/list/user/" + user}
+          href={"/list/user/" + encodeURIComponent(user)}
           text="Lists"
         />
       </div>

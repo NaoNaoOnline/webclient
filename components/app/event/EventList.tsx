@@ -27,8 +27,8 @@ interface Props {
   cate?: string[];
   evnt?: string[];
   host?: string[];
+  like?: string;
   list?: string;
-  rctn?: string;
   strt?: string;
   stop?: string;
   time?: string;
@@ -121,8 +121,8 @@ export function EventList(props: Props) {
             cate: getLabl(labl, props.cate),
             evnt: "",
             host: getLabl(labl, props.host),
+            like: "",
             list: "",
-            rctn: "",
             strt: "",
             stop: "",
             time: "",
@@ -136,8 +136,8 @@ export function EventList(props: Props) {
             cate: "",
             evnt: x,
             host: "",
+            like: "",
             list: "",
-            rctn: "",
             strt: "",
             stop: "",
             time: "",
@@ -151,8 +151,8 @@ export function EventList(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            like: "",
             list: props.list,
-            rctn: "",
             strt: "",
             stop: "",
             time: "",
@@ -160,14 +160,15 @@ export function EventList(props: Props) {
           }];
         }
 
-        if (props.strt && props.stop && props.rctn) {
+        if (props.strt && props.stop && props.like) {
+          const usr = await UserSearch([{ user: "", name: props.like, self: false }]);
           req = [{
             atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
+            like: usr[0].user,
             list: "",
-            rctn: props.rctn,
             strt: props.strt,
             stop: props.stop,
             time: "",
@@ -181,8 +182,8 @@ export function EventList(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            like: "",
             list: "",
-            rctn: "",
             strt: props.strt,
             stop: props.stop,
             time: props.time,
@@ -197,8 +198,8 @@ export function EventList(props: Props) {
             cate: "",
             evnt: "",
             host: "",
+            like: "",
             list: "",
-            rctn: "",
             strt: "",
             stop: "",
             time: "",
@@ -388,8 +389,8 @@ const newQury = (props: Props): string => {
   if (props.cate) qry.push("cate", ...props.cate);
   if (props.evnt) qry.push("evnt", ...props.evnt);
   if (props.host) qry.push("host", ...props.host);
+  if (props.like) qry.push("like", props.like);
   if (props.list) qry.push("list", props.list);
-  if (props.rctn) qry.push("rctn", props.rctn);
   if (props.time) qry.push("time", props.time);
   if (props.user) qry.push("user", props.user);
 

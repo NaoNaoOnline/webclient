@@ -11,7 +11,7 @@ export interface EventSearchRequest {
   cate: string;
   host: string;
   // symbol
+  like: string;
   list: string;
-  rctn: string;
   time: string;
 }
