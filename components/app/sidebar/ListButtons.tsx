@@ -1,9 +1,7 @@
 import { MouseEvent } from "react";
 
 import { CgAddR } from "react-icons/cg";
-import { RiHeart3Line } from "react-icons/ri";
 import { RiHome4Line } from "react-icons/ri";
-import { RiMenuAddLine } from "react-icons/ri";
 import { RiListUnordered } from "react-icons/ri";
 import { RiTimeLine } from "react-icons/ri";
 

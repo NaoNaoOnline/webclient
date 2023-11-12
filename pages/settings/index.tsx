@@ -8,6 +8,7 @@ import { Mode } from "connectkit/build/types";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
+import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { PageHeader } from "@/components/app/layout/PageHeader";
 import { NetworkContext, getChain, getNetwork } from "@/components/app/network/NetworkProvider";
 import { NetworkSection } from "@/components/app/settings/network/NetworkSection";
@@ -16,7 +17,6 @@ import { getManual } from "@/components/app/theme/ManualThemeProvider";
 import { ThemeSection } from "@/components/app/settings/theme/ThemeSection";
 import { UserSection } from "@/components/app/settings/user/UserSection";
 import { WalletSection } from "@/components/app/settings/wallet/WalletSection";
-import { SettingsSeparator } from "@/components/app/settings/SettingsSeparator";
 
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
@@ -58,18 +58,18 @@ export default function Page() {
           <PageHeader titl="Settings" />
 
           <UserSection />
-          <SettingsSeparator />
+          <ListSeparator />
 
           <ThemeSection />
-          <SettingsSeparator />
+          <ListSeparator />
 
           <WalletSection />
-          <SettingsSeparator />
+          <ListSeparator />
 
           {hasPlcy(uuid) && (
             <>
               <PolicySection />
-              <SettingsSeparator />
+              <ListSeparator />
             </>
           )}
 

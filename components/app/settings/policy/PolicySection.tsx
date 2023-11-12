@@ -7,8 +7,8 @@ import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { PolicyCreateForm } from "@/components/app/settings/policy/create/PolicyCreateForm";
 import { PolicyOverview } from "@/components/app/settings/policy/PolicyOverview";
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
-import { SettingsSeparator } from "@/components/app/settings/SettingsSeparator";
+import { ListHeader } from "@/components/app/layout/ListHeader";
+import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
@@ -69,7 +69,7 @@ export const PolicySection = () => {
 
   return (
     <>
-      <SettingsHeader
+      <ListHeader
         icon={<RiLock2Line />}
         titl="Platform Policies"
         bttn={
@@ -93,7 +93,7 @@ export const PolicySection = () => {
 
       <PolicyOverview />
 
-      <SettingsSeparator />
+      <ListSeparator />
 
       <PolicyCreateForm />
     </>

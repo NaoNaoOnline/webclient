@@ -10,7 +10,7 @@ import { WalletButtonConnect } from "@/components/app/settings/wallet/button/Wal
 import { WalletButtonVerify } from "@/components/app/settings/wallet/button/WalletButtonVerify";
 import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
 import { WalletOverview } from "@/components/app/settings/wallet/WalletOverview";
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
@@ -24,7 +24,7 @@ export const WalletSection = () => {
 
   return (
     <>
-      <SettingsHeader
+      <ListHeader
         icon={<FaEthereum />}
         titl="My Wallets"
         bttn={

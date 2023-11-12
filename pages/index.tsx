@@ -2,7 +2,7 @@ import spacetime from "spacetime";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
-import { EventList } from "@/components/app/event/EventList";
+import { EventOverview } from "@/components/app/event/EventOverview";
 
 export default function Page() {
   const { auth } = useAuth();
@@ -14,12 +14,12 @@ export default function Page() {
   return (
     <>
       {auth && user[0].home !== "" && user[0].home !== "/" && (
-        <EventList
+        <EventOverview
           list={user[0].home}
         />
       )}
       {(!auth || !user[0].home || user[0].home === "" || user[0].home === "/") && (
-        <EventList
+        <EventOverview
           strt={sta}
           stop={sto}
           time="page"

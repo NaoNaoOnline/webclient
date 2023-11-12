@@ -1,6 +1,6 @@
 import * as Separator from "@radix-ui/react-separator";
 
-export const SettingsSeparator = () => {
+export const ListSeparator = () => {
   return (
     <Separator.Root
       className={`
