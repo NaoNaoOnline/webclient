@@ -15,7 +15,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
         object: req.map((x) => {
           if (x.evnt || x.user) return { intern: { evnt: x.evnt, user: x.user } }
           if (x.cate || x.host) return { public: { cate: x.cate, host: x.host } }
-          if (x.list || x.rctn || x.time) return { symbol: { list: x.list, rctn: x.rctn, time: x.time } }
+          if (x.like || x.list || x.time) return { symbol: { like: x.like, list: x.list, time: x.time } }
           return {};
         }),
       },

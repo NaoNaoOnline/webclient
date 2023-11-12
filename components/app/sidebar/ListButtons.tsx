@@ -37,15 +37,6 @@ export const ListButtons = () => {
         />
       </li>
 
-      <li>
-        <ActiveButton
-          href="/reaction"
-          text="My Likes"
-          icon={<RiHeart3Line />}
-          clck={reqAuth("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
-        />
-      </li>
-
       {list.map((x, i) => (
         <li key={x.list}>
           <ActiveButton
