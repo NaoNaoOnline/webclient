@@ -114,7 +114,7 @@ export const ListOverview = (props: Props) => {
         setData(lis);
         setLdng(false);
       } catch (err) {
-        addErro(new ErrorPropsObject("Gotta say it how it is comrade, the end is near", err as Error));
+        addErro(new ErrorPropsObject("Gotta say it how it is comrade, the end is near!", err as Error));
         setLdng(false);
       }
     };

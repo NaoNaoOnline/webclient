@@ -38,7 +38,7 @@ export const LabelOverview = (props: Props) => {
         setLabl(lab);
         setLdng(false);
       } catch (err) {
-        addErro(new ErrorPropsObject("Gotta say it how it is comrade, the end is near", err as Error));
+        addErro(new ErrorPropsObject("Haha, and you thought this would be easy!?", err as Error));
         setLdng(false);
       }
     };
