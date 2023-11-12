@@ -1,40 +1,39 @@
 import { MouseEvent } from "react";
 
+import { CgAddR } from "react-icons/cg";
 import { RiHeart3Line } from "react-icons/ri";
 import { RiHome4Line } from "react-icons/ri";
 import { RiMenuAddLine } from "react-icons/ri";
 import { RiListUnordered } from "react-icons/ri";
+import { RiTimeLine } from "react-icons/ri";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
-
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
-
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
-
-export function ListButtons() {
+export const ListButtons = () => {
   const { list, user } = useCache();
   const { addInfo } = useToast();
   const { auth } = useAuth();
 
-  const newOnLinkClick = (str: string) => {
+  const reqAuth = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
       if (!auth) {
         evn.preventDefault();
         addInfo(new InfoPropsObject(str));
       }
     };
-  }
+  };
 
   return (
     <ul>
       <li>
         <ActiveButton
-          href="/"
-          icon={<RiHome4Line />}
-          text="Default View"
+          href={user[0].home !== "" && user[0].home !== "/" ? "/latest" : "/"}
+          text="Latest Events"
+          icon={<RiTimeLine />}
         />
       </li>
 
@@ -43,13 +42,14 @@ export function ListButtons() {
           href="/reaction"
           text="My Likes"
           icon={<RiHeart3Line />}
-          clck={newOnLinkClick("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
+          clck={reqAuth("Login if you want to see the events you reacted to. The beavers are stubborn about it!")}
         />
       </li>
 
       {list.map((x, i) => (
         <li key={x.list}>
           <ActiveButton
+            actv={x.list === user[0].home}
             href={`/list/` + x.list}
             text={x.desc}
             icon={x.list === user[0].home ? <RiHome4Line /> : <RiListUnordered />}
@@ -59,10 +59,11 @@ export function ListButtons() {
 
       <li>
         <ActiveButton
-          href="/list/update"
-          text="Manage Lists"
-          icon={<RiMenuAddLine />}
-          clck={newOnLinkClick("You can't come in honey, maybe login and try again, maybe, but I don't know!")}
+          href="/event/create"
+          text="Add Event"
+          icon={<CgAddR />}
+          blue={true}
+          clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}
         />
       </li>
     </ul >

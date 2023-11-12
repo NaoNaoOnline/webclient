@@ -9,7 +9,6 @@ export default function Page() {
     <EventList
       cate={params.get("cate")?.toString().split(",")}
       host={params.get("host")?.toString().split(",")}
-      user={params.get("user")?.toString()}
     />
   );
 };

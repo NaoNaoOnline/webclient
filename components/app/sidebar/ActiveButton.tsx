@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 interface Props {
+  actv?: boolean;
   blue?: boolean;
   clck?: (eve: MouseEvent<HTMLAnchorElement>) => void;
   href: string;
@@ -16,7 +17,7 @@ export function ActiveButton(props: Props) {
   const path = usePathname();
   const qury = useSearchParams().toString();
 
-  const actv: boolean = props.href === href(path, qury);
+  const actv: boolean = (props.actv && path === "/") || (props.href === href(path, qury));
 
   return (
     <Link

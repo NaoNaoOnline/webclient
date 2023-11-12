@@ -54,7 +54,7 @@ export default function Description(props: Props) {
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
           <Link
-            href={`/event?user=${encodeURIComponent(props.desc.name())}`}
+            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
             className="flex items-center p-2"
           >
@@ -67,7 +67,7 @@ export default function Description(props: Props) {
             />
           </Link>
           <Link
-            href={`/event?user=${encodeURIComponent(props.desc.name())}`}
+            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
             onClick={onLinkClick}
             className="flex items-center py-2 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
           >

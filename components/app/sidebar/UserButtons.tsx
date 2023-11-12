@@ -1,9 +1,7 @@
 import { MouseEvent, useEffect, useState } from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 
-import { CgAddR } from "react-icons/cg";
 import { RiNotification2Line } from "react-icons/ri";
 import { FiLogIn } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
@@ -11,15 +9,12 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TbMoon } from "react-icons/tb";
 import { TbSunHigh } from "react-icons/tb";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
-
 import { useManual } from "@/components/app/theme/ManualThemeProvider";
 import { useSystem } from "@/components/app/theme/SystemThemeProvider";
-
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
-
-import { useAuth } from "@/components/app/auth/AuthProvider";
 
 export function UserButtons() {
   const { addInfo } = useToast();
@@ -36,7 +31,7 @@ export function UserButtons() {
         addInfo(new InfoPropsObject(str));
       }
     };
-  }
+  };
 
   const onClick = () => {
     setManu(manu === "light" ? "dark" : "light");
@@ -59,7 +54,7 @@ export function UserButtons() {
 
         {auth && (
           <ActiveButton
-            href="/comingsoon?page=profile"
+            href={"/user/" + name}
             text={name}
             icon={
               <Image
@@ -79,16 +74,6 @@ export function UserButtons() {
             text="Notifications"
             icon={<RiNotification2Line />}
             clck={reqAuth("Oh, this door is locked! Try logging in first.")}
-          />
-        </li>
-
-        <li>
-          <ActiveButton
-            href="/event/create"
-            text="Add Event"
-            icon={<CgAddR />}
-            blue={true}
-            clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}
           />
         </li>
 

@@ -71,11 +71,9 @@ export class ProgressPropsObject {
 
 export const ProgressToast = (props: { obj: ProgressPropsObject }) => {
   const [open, setOpen] = useState<boolean>(true);
-  // The render toggle here triggers a state change inside the toast provider so
-  // that changes made to the toast data use across the webapp can be reflected
-  // on demand in the UI. Any toast component may define a setter method and
-  // trigger component re-rendering based on their individual internal
-  // implementation details. See the ProgressToast component as an example.
+  // The render toggle here triggers a state change inside the progress toast
+  // instance so that changes made to the toast data across the webapp can be
+  // reflected on demand in the UI.
   //
   //     setRndr(val: () => void)
   //
