@@ -7,7 +7,7 @@ import { LinkIcon } from "@heroicons/react/24/outline";
 import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
 
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
 
 export function NetworkSection() {
   const [netw, setNetw] = useNetwork();
@@ -17,7 +17,7 @@ export function NetworkSection() {
 
   return (
     <>
-      <SettingsHeader
+      <ListHeader
         icon={<LinkIcon />}
         titl="Platform Networks"
       />

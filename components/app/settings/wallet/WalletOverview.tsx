@@ -7,7 +7,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
-import { SettingsGrid } from "@/components/app/settings/SettingsGrid";
+import { RowGrid } from "@/components/app/layout/RowGrid";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
@@ -56,8 +56,9 @@ export const WalletOverview = () => {
   return (
     <>
       {wllt?.map((x, i) => (
-        <SettingsGrid
+        <RowGrid
           key={i}
+          list={true}
           icon={
             <Tooltip
               desc={
@@ -76,7 +77,10 @@ export const WalletOverview = () => {
           }
           subj={
             <CopyButton
-              className="text-sm font-mono underline underline-offset-2 decoration-dashed"
+              className={`
+                text-sm font-mono
+                hover:underline hover:underline-offset-2 hover:decoration-dashed
+              `}
               copy={x.public.addr}
               text={truncateEthAddress(x.public.addr)}
             />
@@ -88,7 +92,7 @@ export const WalletOverview = () => {
           }
           rigt={
             <button
-              className="outline-none group"
+              className="outline-none invisible group-hover/RowGrid:visible"
               type="button"
               onClick={() => {
                 walletDelete(x);
@@ -97,7 +101,7 @@ export const WalletOverview = () => {
               <RiDeleteBinLine
                 className={`
                    w-5 h-5 text-gray-500 dark:text-gray-500
-                   group-hover:text-gray-900 dark:group-hover:text-gray-50
+                   hover:text-gray-900 dark:hover:text-gray-50
                 `}
               />
             </button>

@@ -1,31 +1,19 @@
 import { usePathname } from "next/navigation";
 
-import { EventList } from "@/components/app/event/EventList";
+import { EventOverview } from "@/components/app/event/EventOverview";
+
+import { LastElement } from "@/modules/path/LastElement";
 
 export default function Page() {
-  const patnam = usePathname();
+  const path: string = usePathname();
+  const evnt: string = LastElement(path);
 
   return (
     <>
-      <EventList
-        evnt={[lasEle(patnam)]}
-        titl="Event"
+      <EventOverview
+        evnt={[evnt]}
+        titl="Event Page"
       />
     </>
   );
 };
-
-// lasEle returns the last path element of the current page's URL, where the
-// page is supposed to be the event page compliant with the following format.
-//
-//     /event/1698943315449571
-//
-const lasEle = function (str: string): string {
-  const spl = str.split('/');
-
-  if (spl.length >= 2 && spl[spl.length - 2] === "event") {
-    return spl[spl.length - 1];
-  }
-
-  return "";
-}

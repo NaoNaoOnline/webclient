@@ -4,7 +4,7 @@ import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { LabelSearch } from "@/modules/api/label/search/Search";
-import { NewLabelSearchRequest } from "@/modules/api/label/search/Request";
+import { NewLabelKindSearchRequest } from "@/modules/api/label/search/Request";
 import { ListSearch } from "@/modules/api/list/search/Search";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 import { PolicySearch } from "@/modules/api/policy/search/Search";
@@ -91,7 +91,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
     labc.current = true;
 
-    LabelSearch(NewLabelSearchRequest("bltn", "cate", "host")).then((lab: LabelSearchResponse[]) => {
+    LabelSearch(NewLabelKindSearchRequest(["bltn", "cate", "host"])).then((lab: LabelSearchResponse[]) => {
       if (lab.length === 0) return;
       setLabl(lab);
     });
@@ -102,11 +102,11 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
     lisc.current = true;
 
-    ListSearch([{ atkn: atkn, user: uuid }]).then((lis: ListSearchResponse[]) => {
+    ListSearch([{ user: uuid }]).then((lis: ListSearchResponse[]) => {
       if (lis.length === 0) return;
       setList(lis);
     });
-  }, [atkn, auth, uuid]);
+  }, [auth, uuid]);
 
   useEffect(() => {
     if (polc.current || !auth) return;

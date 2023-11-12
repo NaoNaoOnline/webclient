@@ -3,4 +3,5 @@ export interface DescriptionSearchRequest {
   atkn: string;
   // intern
   evnt: string;
+  user: string;
 }

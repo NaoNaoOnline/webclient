@@ -1,13 +1,13 @@
 import Image from "next/image";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
 
 export const UserSection = () => {
   const { imag, name, uuid } = useAuth();
 
   return (
-    <SettingsHeader
+    <ListHeader
       link={
         <Image
           alt="profile picture"

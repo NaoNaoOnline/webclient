@@ -13,11 +13,6 @@ export async function ListSearch(req: ListSearchRequest[]): Promise<ListSearchRe
           public: {},
         })),
       },
-      {
-        meta: {
-          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
-        },
-      },
     );
 
     return call.response.object.map((x) => ({

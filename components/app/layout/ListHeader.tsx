@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { SettingsGrid } from "@/components/app/settings/SettingsGrid";
+import { RowGrid } from "@/components/app/layout/RowGrid";
 
 interface Props {
   bttn?: ReactElement;
@@ -9,9 +9,9 @@ interface Props {
   titl: string;
 }
 
-export const SettingsHeader = (props: Props) => {
+export const ListHeader = (props: Props) => {
   return (
-    <SettingsGrid
+    <RowGrid
       icon={props.icon}
       link={props.link}
       subj={

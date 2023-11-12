@@ -1,6 +1,7 @@
 import { ReactElement, cloneElement } from "react";
 
 interface Props {
+  list?: boolean;
   icon?: ReactElement;
   link?: ReactElement;
   subj?: ReactElement;
@@ -8,10 +9,16 @@ interface Props {
   rigt?: ReactElement;
 }
 
-export const SettingsGrid = (props: Props) => {
+export const RowGrid = (props: Props) => {
   return (
-    <div className="flex flex-row p-3 text-gray-900 dark:text-gray-50 items-center">
-      <div className="flex flex-1 basis-2/3">
+    <div
+      className={`
+        flex flex-row p-3 items-center group/RowGrid
+        ${props.list ? "odd:bg-gray-200/30 odd:dark:bg-gray-800/30" : ""}
+        text-gray-900 dark:text-gray-50
+      `}
+    >
+      <div className="flex flex-1 basis-2/4">
         <div className="flex w-5 my-auto">
           {props.icon && cloneElement(props.icon, {
             className: `
@@ -31,7 +38,7 @@ export const SettingsGrid = (props: Props) => {
       </div>
 
       {props.midl && (
-        <div className="flex-1 basis-1/3">
+        <div className="flex flex-1 basis-1/4">
           {cloneElement(props.midl, {
             className: `
               text-gray-400 dark:text-gray-500 ${props.midl.props.className || ""}

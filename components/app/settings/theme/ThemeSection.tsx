@@ -2,14 +2,14 @@ import * as Switch from "@radix-ui/react-switch";
 
 import { Half2Icon } from "@radix-ui/react-icons";
 
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
 import { useSystem } from "@/components/app/theme/SystemThemeProvider";
 
 export const ThemeSection = () => {
   const [syst, setSyst] = useSystem();
 
   return (
-    <SettingsHeader
+    <ListHeader
       icon={<Half2Icon />}
       titl="System Theme"
       bttn={

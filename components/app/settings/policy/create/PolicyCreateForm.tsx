@@ -10,7 +10,7 @@ import { BiInfoCircle } from "react-icons/bi";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { TextInput } from "@/components/app/event/create/TextInput";
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
-import { SettingsHeader } from "@/components/app/settings/SettingsHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -103,7 +103,7 @@ const PolicyCreateForm = memo(() => {
 
   return (
     <>
-      <SettingsHeader
+      <ListHeader
         icon={<RiAddLine />}
         titl="Add Policy"
         bttn={

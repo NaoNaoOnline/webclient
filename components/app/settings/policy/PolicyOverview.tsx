@@ -1,25 +1,15 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-import { useAccount } from "wagmi";
-
-import { GoDotFill } from "react-icons/go";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { PolicyDeleteForm } from "@/components/app/settings/policy/delete/PolicyDeleteForm";
-import { SettingsGrid } from "@/components/app/settings/SettingsGrid";
-import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
-import { InfoPropsObject } from "@/components/app/toast/InfoToast";
-import { useToast } from "@/components/app/toast/ToastProvider";
-import { Tooltip } from "@/components/app/tooltip/Tooltip";
+import { RowGrid } from "@/components/app/layout/RowGrid";
 
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
-import { PolicyUpdate } from "@/modules/api/policy/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { truncateEthAddress } from "@/modules/wallet/Address";
-import { PolicySearch } from "@/modules/api/policy/search/Search";
 
 export const PolicyOverview = () => {
   const { plcy, remPlcy } = useCache();
@@ -64,15 +54,19 @@ export const PolicyOverview = () => {
   return (
     <>
       {wusr?.map((x, i) => (
-        <SettingsGrid
+        <RowGrid
           key={i}
+          list={true}
           subj={
             <div className="flex w-full">
               <div
                 className="flex-1 basis-2/4 mr-6 md:mr-3"
               >
                 <CopyButton
-                  className="text-sm font-mono underline underline-offset-2 decoration-dashed"
+                  className={`
+                    text-sm font-mono
+                    hover:underline hover:underline-offset-2 hover:decoration-dashed
+                  `}
                   copy={x.memb}
                   text={truncateEthAddress(x.memb)}
                 />
@@ -96,7 +90,7 @@ export const PolicyOverview = () => {
           }
           rigt={
             <button
-              className="outline-none group"
+              className="outline-none invisible group-hover/RowGrid:visible"
               type="button"
               onClick={() => {
                 setDltd(x);
@@ -105,7 +99,7 @@ export const PolicyOverview = () => {
               <RiDeleteBinLine
                 className={`
                    w-5 h-5 text-gray-500 dark:text-gray-500
-                   group-hover:text-gray-900 dark:group-hover:text-gray-50
+                   hover:text-gray-900 dark:hover:text-gray-50
                 `}
               />
             </button>

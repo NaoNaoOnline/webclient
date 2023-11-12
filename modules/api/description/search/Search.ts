@@ -7,6 +7,7 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
     const cal = await API.search(
       {
         object: req.map((x) => {
+          if (x.user) return { intern: { user: x.user } }
           if (x.evnt) return { public: { evnt: x.evnt } }
           return {};
         }),

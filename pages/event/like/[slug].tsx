@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
 
-import { EventList } from "@/components/app/event/EventList";
+import { EventOverview } from "@/components/app/event/EventOverview";
 
 import { LastElement } from "@/modules/path/LastElement";
 
@@ -9,8 +9,8 @@ export default function Page() {
   const user: string = LastElement(path);
 
   return (
-    <EventList
-      like={decodeURIComponent(user)}
+    <EventOverview
+      like={user}
       strt={"0"}
       stop={"-1"}
     />

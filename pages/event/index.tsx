@@ -1,12 +1,12 @@
 import { useSearchParams } from "next/navigation";
 
-import { EventList } from "@/components/app/event/EventList";
+import { EventOverview } from "@/components/app/event/EventOverview";
 
 export default function Page() {
   const params = useSearchParams();
 
   return (
-    <EventList
+    <EventOverview
       cate={params.get("cate")?.toString().split(",")}
       host={params.get("host")?.toString().split(",")}
     />

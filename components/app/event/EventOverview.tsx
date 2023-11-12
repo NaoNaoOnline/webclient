@@ -4,14 +4,12 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
-
 import { PageHeader } from "@/components/app/layout/PageHeader";
-
+import { EventContainer } from "@/components/app/event/EventContainer";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
-
-import { useAuth } from "@/components/app/auth/AuthProvider";
 
 import { DescriptionSearch } from "@/modules/api/description/search/Search";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -21,7 +19,6 @@ import EventSearchObject from "@/modules/api/event/search/Object";
 import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
-import { EventContainer } from "./EventContainer";
 
 interface Props {
   cate?: string[];
@@ -36,11 +33,7 @@ interface Props {
   user?: string;
 }
 
-interface ToggleState {
-  [evnt: string]: boolean;
-}
-
-export function EventList(props: Props) {
+export const EventOverview = (props: Props) => {
   const { labl } = useCache();
   const { addErro } = useToast();
   const { atkn } = useAuth();
@@ -161,13 +154,13 @@ export function EventList(props: Props) {
         }
 
         if (props.strt && props.stop && props.like) {
-          const usr = await UserSearch([{ user: "", name: props.like, self: false }]);
+          const [use] = await UserSearch([{ user: "", name: props.like, self: false }]);
           req = [{
             atkn: atkn,
             cate: "",
             evnt: "",
             host: "",
-            like: usr[0].user,
+            like: use.user,
             list: "",
             strt: props.strt,
             stop: props.stop,
@@ -192,7 +185,7 @@ export function EventList(props: Props) {
         }
 
         if (props.user) {
-          const usr = await UserSearch([{ user: "", name: props.user, self: false }]);
+          const [use] = await UserSearch([{ user: "", name: props.user, self: false }]);
           req = [{
             atkn: atkn,
             cate: "",
@@ -203,7 +196,7 @@ export function EventList(props: Props) {
             strt: "",
             stop: "",
             time: "",
-            user: usr[0].user,
+            user: use.user,
           }];
         }
 
@@ -217,7 +210,7 @@ export function EventList(props: Props) {
 
         setEvnt(evn.map((x) => new EventSearchObject(x)));
 
-        const des = await DescriptionSearch(evn.map(x => ({ atkn: atkn, evnt: x.evnt })));
+        const des = await DescriptionSearch(evn.map(x => ({ atkn: atkn, evnt: x.evnt, user: "" })));
 
         // Since event and description objects are separate resources linked
         // together, their resource lifecycles are separate as well. The
@@ -229,10 +222,10 @@ export function EventList(props: Props) {
           return;
         }
 
-        const usr = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
+        const use = await UserSearch(uniUser(des).map(x => ({ user: x, name: "", self: false })));
 
         setDesc(des.map((x) => {
-          const u = usr.find(y => y.user === x.user);
+          const u = use.find(y => y.user === x.user);
           if (u) {
             return new DescriptionSearchObject({
               ...x,
@@ -283,14 +276,14 @@ export function EventList(props: Props) {
       <PageHeader titl={props.titl || "Latest Events"} />
 
       {ltst.length === 0 && (
-        <>
-          <div className="flex my-4 w-full text-4xl justify-center">
+        <div className="m-8">
+          <div className="flex mb-4 text-4xl justify-center">
             <span>🤨</span>
           </div>
-          <div className="flex mb-8 w-full text-2xl justify-center">
+          <div className="flex text-2xl justify-center">
             <span className="text-gray-400 dark:text-gray-500">There are no events. Beavers ate them all!</span>
           </div>
-        </>
+        </div>
       )}
 
       {ltst.length !== 0 && (
@@ -413,12 +406,12 @@ const pasEvnt = (evn: EventSearchObject[]): EventSearchObject[] => {
 // uniUser extracts unique user names from a list of descriptions and returns
 // them as a list of strings.
 const uniUser = (des: DescriptionSearchResponse[]): string[] => {
-  const usr: Record<string, boolean> = {};
+  const use: Record<string, boolean> = {};
   const uni: string[] = [];
 
   for (const x of des) {
-    if (!usr[x.user]) {
-      usr[x.user] = true;
+    if (!use[x.user]) {
+      use[x.user] = true;
       uni.push(x.user);
     }
   }
