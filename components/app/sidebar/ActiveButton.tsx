@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 interface Props {
+  blue?: boolean;
   clck?: (eve: MouseEvent<HTMLAnchorElement>) => void;
   href: string;
   icon: ReactElement;
@@ -15,6 +16,8 @@ export function ActiveButton(props: Props) {
   const path = usePathname();
   const qury = useSearchParams().toString();
 
+  const actv: boolean = props.href === href(path, qury);
+
   return (
     <Link
       href={props.href}
@@ -24,15 +27,19 @@ export function ActiveButton(props: Props) {
     >
       {props.icon && cloneElement(props.icon, {
         className: `
-          flex-shrink-0 w-5 h-5 rounded-full
-          ${props.href === href(path, qury) ? "text-gray-900 dark:text-gray-50" : "text-gray-500 dark:text-gray-500"}
+          w-5 h-5 rounded-full ${props.icon.props.className || ""}
+          ${props.blue && !actv ? "text-sky-400 font-medium" : ""}
+          ${!props.blue && !actv ? "text-gray-500 dark:text-gray-500" : ""}
+          ${actv ? "text-gray-900 dark:text-gray-50 font-medium" : ""}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `,
       })}
       <span
         className={`
           flex-1 ml-3 truncate max-w-[175px]
-          ${props.href === href(path, qury) ? "text-gray-900 dark:text-gray-50 font-medium" : "text-gray-500 dark:text-gray-500"}
+          ${props.blue && !actv ? "text-sky-400 font-medium" : ""}
+          ${!props.blue && !actv ? "text-gray-500 dark:text-gray-500" : ""}
+          ${actv ? "text-gray-900 dark:text-gray-50 font-medium" : ""}
           group-hover:text-gray-900 dark:group-hover:text-gray-50
         `}
       >

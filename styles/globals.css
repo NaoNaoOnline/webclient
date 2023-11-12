@@ -23,11 +23,20 @@ Forms
 */
 
 /*
+Since most of our layouts are flex based we need to make sure to not wrap button
+texts. It happens that neighbouring sections push against button elements and
+the below rule ensures the buttons remain intact without wrapping.
+ */
+button {
+  white-space: nowrap;
+}
+
+/*
 Using some third party components like Mantine Multiselect render some annoying
 borders when input fields are selected. Assigning tailwind classnames does not
 seam to be able to clear those properties. And so the reset goes here.
 */
-input[type='text']:focus {
+input[type="text"]:focus {
   box-shadow: none;
 }
 

@@ -215,10 +215,10 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // hasAcce returns whether the given user ID has the given access in the given
-  // system.
+  // hasAcce returns whether the given user ID has at least the given access in
+  // the given system. Note that zero is the highest access level.
   const hasAcce = (sys: number, use: string, acc: number): boolean => {
-    return plcy.some(x => x.user === use && x.syst === String(sys) && x.acce === String(acc));
+    return plcy.some(x => x.user === use && Number(x.syst) === sys && Number(x.acce) <= acc);
   };
 
   // hasPlcy returns whether the given user ID is a policy member.

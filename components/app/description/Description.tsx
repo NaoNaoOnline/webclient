@@ -6,17 +6,18 @@ import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import ReactionBar from "@/components/app/reaction/ReactionBar";
+import { useAuth } from "@/components/app/auth/AuthProvider";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { DescriptionUpdateForm } from "@/components/app/description/update/DescriptionUpdateForm";
 import DescriptionMenu from "@/components/app/description/DescriptionMenu";
-
+import ReactionBar from "@/components/app/reaction/ReactionBar";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
-
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
+import { AccessDelete, SystemDesc } from "@/modules/policy/Policy";
 
 function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
   evn.stopPropagation();
@@ -32,6 +33,8 @@ interface Props {
 }
 
 export default function Description(props: Props) {
+  const { uuid } = useAuth();
+  const { hasAcce } = useCache();
   const { addInfo } = useToast();
   const { user } = useUser();
 
@@ -40,10 +43,11 @@ export default function Description(props: Props) {
 
   const now: Spacetime = spacetime.now();
 
-  const only: boolean = props.amnt == 1;       // the event has only one description
-  const ownr: boolean = props.desc.ownr(user); // current user is description owner
-  const told: boolean = props.desc.cupd(now);  // description is too old
-  const hpnd: boolean = props.evnt.hpnd(now);  // event already happened
+  const hpnd: boolean = props.evnt.hpnd(now);                    // event already happened
+  const mdrt: boolean = hasAcce(SystemDesc, uuid, AccessDelete); // current user is moderator
+  const only: boolean = props.amnt == 1;                         // the event has only one description
+  const ownr: boolean = props.desc.ownr(user);                   // current user is description owner
+  const told: boolean = props.desc.cupd(now);                    // description is too old
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
@@ -93,7 +97,7 @@ export default function Description(props: Props) {
 
         <div>
           <DescriptionMenu
-            cdel={ownr && !told && !hpnd && !only}
+            cdel={mdrt || (ownr && !told && !hpnd && !only)}
             cupd={ownr && !told && !hpnd}
             desd={() => props.drem(props.desc)}
             desu={() => setForm((old: boolean) => !old)}

@@ -22,20 +22,6 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [pgrs, setPgrs] = useState<ProgressPropsObject[]>([]);
   const [scss, setScss] = useState<SuccessPropsObject[]>([]);
 
-  const [rndr, setRndr] = useState<boolean>(false);
-
-  // The render toggle here triggers a state change inside the toast provider so
-  // that changes made to the toast data use across the webapp can be reflected
-  // on demand in the UI. Any toast component may define a setter method and
-  // trigger component re-rendering based on their individual internal
-  // implementation details. See the ProgressToast component as an example.
-  //
-  //     setRndr(val: () => void)
-  //
-  const tglRndr = () => {
-    setRndr((old: boolean) => !old);
-  };
-
   const addErro = (err: ErrorPropsObject) => {
     setErro((old: ErrorPropsObject[]) => [...old, err]);
   };
@@ -45,7 +31,6 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addPgrs = (prp: ProgressPropsObject) => {
-    prp.setRndr(tglRndr);
     setPgrs((old: ProgressPropsObject[]) => [...old, prp]);
   };
 
