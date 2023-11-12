@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
 
 import { ListButtons } from "@/components/app/sidebar/ListButtons";
-import { GlobalButtons } from "@/components/app/sidebar/GlobalButtons";
 import { SocialButtons } from "@/components/app/sidebar/SocialButtons";
 import { UserButtons } from "@/components/app/sidebar/UserButtons";
 
@@ -33,16 +32,15 @@ export const Sidebar = () => {
   return (
     <div
       className={`
-            flex flex-row fixed top-0 left-0 w-64 h-screen transition-transform 6xl:translate-x-0
-            ${show ? "translate-x-0" : "-translate-x-full"}
-          `}
+        fixed top-0 left-0 flex flex-row w-64 h-screen transition-transform 6xl:translate-x-0
+        ${show ? "translate-x-0" : "-translate-x-full"}
+      `}
     >
       <div
         className="flex-none w-64 h-full px-4 py-4 bg-gray-200 dark:bg-gray-800 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto"
       >
 
         <ListButtons />
-        <GlobalButtons />
         <UserButtons />
         <SocialButtons />
 

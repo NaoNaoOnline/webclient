@@ -92,9 +92,8 @@ export function ListOverview() {
         >
           <div
             className={`
-                  absolute left-[-30px] h-[48px] flex items-center text-gray-500 dark:text-gray-500
-                  ${x.list === user[0].home ? "visible" : "invisible"}
-                `}
+              absolute left-[-30px] h-[48px] flex items-center text-gray-500 dark:text-gray-500
+            `}
           >
             <Tooltip
               desc={
@@ -103,7 +102,8 @@ export function ListOverview() {
                   <div>undo using the house icon</div>
                 </div>
               }
-              side="top"
+              side="left"
+              vsbl={x.list === user[0].home}
             >
               <BiInfoCircle
                 className="w-5 h-5 text-gray-500 dark:text-gray-500"

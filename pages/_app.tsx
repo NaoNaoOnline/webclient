@@ -6,7 +6,7 @@ import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 import { AuthProvider } from "@/components/app/auth/AuthProvider";
 import { CacheProvider } from "@/components/app/cache/CacheProvider";
-import { Sidebar } from "@/components/app/sidebar/SidebarProvider";
+import { Sidebar } from "@/components/app/sidebar/Sidebar";
 import { ManualContext, getManual } from "@/components/app/theme/ManualThemeProvider";
 import { SystemContext, getSystem } from "@/components/app/theme/SystemThemeProvider";
 import { ToastProvider } from "@/components/app/toast/ToastProvider";
@@ -48,6 +48,12 @@ export default function App({ Component, pageProps: { ...pageProps } }: AppProps
               <ManualContext.Provider value={[manu, setManu]}>
                 <SystemContext.Provider value={[syst, setSyst]}>
 
+                  {/*
+                  The sidebar component should remain above the rest of the
+                  child components because of the stacking order within the dom.
+                  Keeping the sidebar here ensures all of our tooltips are
+                  readable from anywhere any time.
+                  */}
                   <Sidebar />
 
                   <div className="mt-4 justify-items-center">
