@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -69,8 +69,17 @@ export class ProgressPropsObject {
   }
 }
 
-const ProgressToast = memo((props: { obj: ProgressPropsObject }) => {
+export const ProgressToast = (props: { obj: ProgressPropsObject }) => {
   const [open, setOpen] = useState<boolean>(true);
+  // The render toggle here triggers a state change inside the toast provider so
+  // that changes made to the toast data use across the webapp can be reflected
+  // on demand in the UI. Any toast component may define a setter method and
+  // trigger component re-rendering based on their individual internal
+  // implementation details. See the ProgressToast component as an example.
+  //
+  //     setRndr(val: () => void)
+  //
+  const [rndr, setRndr] = useState<boolean>(false);
   // We render potentially multiple progress toasts if the action which requires
   // progress bars fails. Each of the rendered progress toasts may call the done
   // callback, potentially affecting the timing of the others. For an orderly
@@ -79,6 +88,10 @@ const ProgressToast = memo((props: { obj: ProgressPropsObject }) => {
   // the progress toast instance that is supposed to finalize the action that
   // eventually succeeded.
   const [term, setTerm] = useState<boolean>(false);
+
+  props.obj.setRndr(() => {
+    setRndr((old: boolean) => !old);
+  });
 
   const cmpl: number = props.obj.getCmpl();
   const cncl: boolean = props.obj.getCncl();
@@ -140,8 +153,4 @@ const ProgressToast = memo((props: { obj: ProgressPropsObject }) => {
       <Toast.Viewport className="[--viewport-padding:_25px] fixed top-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
     </>
   );
-});
-
-ProgressToast.displayName = "ProgressToast";
-
-export { ProgressToast };
+};

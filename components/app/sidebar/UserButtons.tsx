@@ -87,6 +87,7 @@ export function UserButtons() {
             href="/event/create"
             text="Add Event"
             icon={<CgAddR />}
+            blue={true}
             clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}
           />
         </li>

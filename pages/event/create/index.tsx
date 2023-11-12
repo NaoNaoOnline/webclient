@@ -155,7 +155,7 @@ export default function Page() {
             labl={host}
             name="host"
             pldr="Flashbots"
-            titl="allowed are up to 5 comma separated host labels, each between 3 and 20 characters long, without special characters"
+            titl="allowed are up to 5 comma separated host labels, each between 2 and 25 characters long, without special characters"
           />
 
           <LabelInput
@@ -170,7 +170,7 @@ export default function Page() {
             labl={cate}
             name="category"
             pldr="Crypto, DeFi, MEV"
-            titl="allowed are up to 5 comma separated category labels, each between 3 and 20 characters long, without special characters"
+            titl="allowed are up to 5 comma separated category labels, each between 2 and 25 characters long, without special characters"
           />
 
           <TextInput

@@ -205,8 +205,8 @@ export function ListDialog(props: Props) {
                 setSlct([]);
                 setUser([]);
 
-                // We set a new random salt for all the checkboxes to clear once
-                // we have successfully created a new list with valid rules.
+                // We set a new random salt to reset all the checkboxes once we
+                // have successfully created a new list with valid rules.
                 setSalt(newSlt());
               }}
               evnt={evnt}

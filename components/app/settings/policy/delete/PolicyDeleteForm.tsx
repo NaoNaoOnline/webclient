@@ -53,6 +53,7 @@ const PolicyDeleteForm = memo((props: Props) => {
 
       if (bal.value === BigInt(0)) {
         addInfo(info);
+        props.fail();
         return;
       }
 
@@ -80,6 +81,7 @@ const PolicyDeleteForm = memo((props: Props) => {
       });
     } catch (err) {
       addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
+      props.fail();
     }
   };
 

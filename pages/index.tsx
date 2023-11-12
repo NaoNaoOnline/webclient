@@ -1,8 +1,8 @@
+import spacetime from "spacetime";
+
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { EventList } from "@/components/app/event/EventList";
-
-import spacetime from "spacetime";
 
 export default function Page() {
   const { auth } = useAuth();

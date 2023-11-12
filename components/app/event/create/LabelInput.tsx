@@ -14,7 +14,7 @@ interface Props {
   titl: string;
 }
 
-const expr = /^[A-Za-z0-9\s]{3,20}$/;
+const expr = /^[A-Za-z0-9\s.]{2,25}$/;
 
 export default function LabelInput(props: Props) {
   const [data, setData] = useState<{ value: string; label: string; }[]>(props.labl.map((x) => ({ value: x, label: x })));
