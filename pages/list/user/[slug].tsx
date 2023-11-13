@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
 
 import { PageHeader } from "@/components/app/layout/PageHeader";
-import { ListOverview } from "@/components/app/list/ListOverview";
+import { ListOverview } from "@/components/app/list/page/ListOverview";
 
 import { LastElement } from "@/modules/path/LastElement";
 

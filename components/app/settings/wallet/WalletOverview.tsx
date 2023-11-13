@@ -17,6 +17,7 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { truncateEthAddress } from "@/modules/wallet/Address";
+import { LabelButton } from "../../button/LabelButton";
 
 export const WalletOverview = () => {
   const { address, isConnected } = useAccount();
@@ -76,14 +77,55 @@ export const WalletOverview = () => {
             </Tooltip>
           }
           subj={
-            <CopyButton
-              className={`
-                text-sm font-mono
-                hover:underline hover:underline-offset-2 hover:decoration-dashed
-              `}
-              copy={x.public.addr}
-              text={truncateEthAddress(x.public.addr)}
-            />
+            <div className="flex w-full">
+              <div
+                className="flex-1 basis-2/4 mr-6 md:mr-3"
+              >
+                <CopyButton
+                  className={`
+                    text-sm font-mono
+                    hover:underline hover:underline-offset-2 hover:decoration-dashed
+                  `}
+                  copy={x.public.addr}
+                  text={truncateEthAddress(x.public.addr)}
+                />
+              </div>
+              <div
+                className="flex flex-1 basis-2/4 items-center"
+              >
+                {i === 0 ? (
+                  <Tooltip
+                    desc={
+                      <div>
+                        <div>this wallet is used</div>
+                        <div>for revenue sharing</div>
+                      </div>
+                    }
+                    side="right"
+                  >
+                    <LabelButton
+                      blue={true}
+                      text="ACCOUNTING"
+                    />
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    desc={
+                      <div>
+                        <div>this wallet is used</div>
+                        <div>for content moderation</div>
+                      </div>
+                    }
+                    side="right"
+                  >
+                    <LabelButton
+                      rose={true}
+                      text="MODERATION"
+                    />
+                  </Tooltip>
+                )}
+              </div>
+            </div>
           }
           midl={
             <span className="text-sm font-mono">

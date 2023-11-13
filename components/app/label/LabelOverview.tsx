@@ -89,7 +89,7 @@ export const LabelOverview = (props: Props) => {
 
   return (
     <>
-      {(!cate || cate.length === 0) || (!host || host.length === 0) && (
+      {(!cate || cate.length === 0) && (!host || host.length === 0) && (
         <>
           <ListHeader
             icon={<MdLabelOutline />}

@@ -9,6 +9,7 @@ import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   cncl: () => void;
@@ -78,7 +79,7 @@ export function ListUpdateForm(props: Props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-row p-1 w-full">
+      <form onSubmit={handleSubmit} className="flex flex-row w-full">
         <input
           type="text"
           id="description-input"
@@ -87,7 +88,15 @@ export function ListUpdateForm(props: Props) {
           maxLength={40}
           pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
           title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-          className="flex p-2 pb-[6px] w-full align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className={`
+            flex w-full
+            bg-transparent
+            text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500
+            border-0 border-r-2 border-gray-300 dark:border-gray-600
+            focus:border-blue-600 dark:focus:border-blue-500
+            focus:outline-none focus:ring-0
+            align-middle appearance-none peer
+          `}
           defaultValue={desc}
           ref={inpt}
           required
@@ -95,22 +104,33 @@ export function ListUpdateForm(props: Props) {
         />
 
         <button
+          className="ml-3 outline-none"
           type="submit"
           disabled={pgrs.getCmpl() !== 0}
-          className="flex w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
           onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
         >
-          Submit
+          <CheckIcon
+            className={`
+               w-5 h-5 text-gray-500 dark:text-gray-500
+               hover:text-gray-900 dark:hover:text-gray-50
+            `}
+          />
         </button>
 
         <button
+          className="ml-3 outline-none"
           onClick={props.cncl}
           type="button"
-          className="flex w-auto ml-2 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
           onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
         >
-          Cancel
+          <XMarkIcon
+            className={`
+               w-5 h-5 text-gray-500 dark:text-gray-500
+               hover:text-gray-900 dark:hover:text-gray-50
+            `}
+          />
         </button>
+
       </form>
     </>
   );
