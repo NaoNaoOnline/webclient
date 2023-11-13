@@ -126,7 +126,7 @@ export const ListOverview = (props: Props) => {
       clld.current = true;
       getData();
     }
-  }, [props, addErro]);
+  }, [props, uuid, addErro]);
 
   useEffect(() => {
     if (ownr) {

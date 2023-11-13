@@ -143,7 +143,7 @@ export function RuleCreateForm(props: Props) {
       clld.current = true;
       createRule();
     }
-  }, [props.sbmt]);
+  }, [props.sbmt, createRule]);
 
   return (
     <></>
