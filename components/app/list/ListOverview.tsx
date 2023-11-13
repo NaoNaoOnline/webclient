@@ -6,10 +6,12 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { RiHome4Line } from "react-icons/ri";
 import { BiInfoCircle } from "react-icons/bi";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { RiListUnordered } from "react-icons/ri";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
-import { PageHeader } from "@/components/app/layout/PageHeader";
+import { ListHeader } from "@/components/app/layout/ListHeader";
+import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { RowGrid } from "@/components/app/layout/RowGrid";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -135,6 +137,13 @@ export const ListOverview = (props: Props) => {
 
   return (
     <>
+      <ListHeader
+        icon={<RiListUnordered />}
+        titl="Lists"
+      />
+
+      <ListSeparator />
+
       {!data || data.length === 0 && (
         <div className="m-8">
           <div className="flex mb-4 text-4xl justify-center">

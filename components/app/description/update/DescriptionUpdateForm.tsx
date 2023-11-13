@@ -1,13 +1,12 @@
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 
-import { DescriptionUpdate } from "@/modules/api/description/update/Update";
-
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
+import { DescriptionUpdate } from "@/modules/api/description/update/Update";
 
 interface Props {
   cncl: () => void;

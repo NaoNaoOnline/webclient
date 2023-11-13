@@ -14,7 +14,7 @@ export default function Page() {
       <PageHeader titl="User Profile" />
 
       <LabelOverview
-        user={encodeURIComponent(user)}
+        user={user}
       />
     </>
   );

@@ -1,7 +1,8 @@
+import { UpdateI_Object } from "@naonaoonline/apitscode/src/description/update";
+
 import API from "@/modules/api/description/API";
 import { DescriptionUpdateRequest } from "@/modules/api/description/update/Request";
 import { DescriptionUpdateResponse } from "@/modules/api/description/update/Response";
-import { UpdateI_Object } from "@naonaoonline/apitscode/src/description/update";
 
 export async function DescriptionUpdate(req: DescriptionUpdateRequest[]): Promise<DescriptionUpdateResponse[]> {
   try {

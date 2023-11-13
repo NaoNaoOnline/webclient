@@ -124,6 +124,6 @@ export default function Description(props: Props) {
           {text}
         </p>
       )}
-    </div >
+    </div>
   );
 };
