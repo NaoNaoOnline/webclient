@@ -21,9 +21,11 @@ export function EventHeader(props: Props) {
         {props.evnt.host(props.labl).map((x, i) => (
           <Link
             key={i}
-            href={`/event?host=${encodeURIComponent(x.name)}`}
+            href={`/event/label/host/${encodeURIComponent(x.name)}`}
             className={`
-              ml-3 py-2 text-gray-900 dark:text-gray-50 font-medium text-lg whitespace-nowrap hover:underline
+              ml-3 py-2
+              text-gray-900 dark:text-gray-50 font-medium text-lg whitespace-nowrap
+              hover:underline hover:underline-offset-2
             `}
           >
             @{x.name}

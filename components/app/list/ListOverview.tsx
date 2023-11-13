@@ -178,6 +178,7 @@ export const ListOverview = (props: Props) => {
                 href={"/event/list/" + x.list}
                 className={`
                   text-sm font-mono
+                  truncate max-w-[250px]
                   hover:underline hover:underline-offset-2
                 `}
               >

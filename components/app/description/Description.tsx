@@ -19,10 +19,6 @@ import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { AccessDelete, SystemDesc } from "@/modules/policy/Policy";
 
-function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
-  evn.stopPropagation();
-}
-
 interface Props {
   amnt: number;
   drem: (des: DescriptionSearchObject) => void;
@@ -54,8 +50,7 @@ export default function Description(props: Props) {
       <div className="flex justify-between">
         <div className="flex-shrink-0 flex flex-row">
           <Link
-            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
-            onClick={onLinkClick}
+            href={"/user/" + encodeURIComponent(props.desc.name())}
             className="flex items-center p-2"
           >
             <Image
@@ -67,9 +62,13 @@ export default function Description(props: Props) {
             />
           </Link>
           <Link
-            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
-            onClick={onLinkClick}
-            className="flex items-center py-2 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+            href={"/user/" + encodeURIComponent(props.desc.name())}
+            className={`
+              flex py-2
+              text-gray-900 dark:text-gray-50
+              text-sm font-medium whitespace-nowrap
+              hover:underline hover:underline-offset-2
+            `}
           >
             {props.desc.name()}
           </Link>
@@ -105,26 +104,30 @@ export default function Description(props: Props) {
         </div>
       </div>
 
-      {form && (
-        <DescriptionUpdateForm
-          cncl={() => setForm(false)}
-          desc={props.desc.desc()}
-          done={(txt: string) => {
-            if (txt === text) {
-              addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
-            } else {
-              setText(txt);
-            }
-            setForm(false)
-          }}
-          text={text}
-        />
-      )}
-      {!form && (
-        <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
-          {text}
-        </p>
-      )}
-    </div>
+      {
+        form && (
+          <DescriptionUpdateForm
+            cncl={() => setForm(false)}
+            desc={props.desc.desc()}
+            done={(txt: string) => {
+              if (txt === text) {
+                addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
+              } else {
+                setText(txt);
+              }
+              setForm(false)
+            }}
+            text={text}
+          />
+        )
+      }
+      {
+        !form && (
+          <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
+            {text}
+          </p>
+        )
+      }
+    </div >
   );
 };

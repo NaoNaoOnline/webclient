@@ -172,7 +172,7 @@ export function EventBody(props: Props) {
         </>
       )}
       {props.form && (
-        <div className="h-fit bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
+        <div className="p-1 h-fit bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between">
             <div className="flex-shrink-0 flex flex-row">
               <a
@@ -191,7 +191,12 @@ export function EventBody(props: Props) {
               <a
                 href={`/user/${user?.public?.name}`}
                 onClick={onLinkClick}
-                className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+                className={`
+                  flex pl-2 py-3
+                  text-gray-900 dark:text-gray-50
+                  text-sm font-medium whitespace-nowrap
+                  hover:underline hover:underline-offset-2
+                `}
               >
                 {user?.public?.name}
               </a>

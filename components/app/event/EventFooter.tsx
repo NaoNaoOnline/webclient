@@ -82,8 +82,12 @@ export function EventFooter(props: Props) {
       {props.evnt.cate(props.labl).map((x, i) => (
         <Link
           key={i}
-          href={`/event?cate=${encodeURIComponent(x.name)}`}
-          className="flex-1 ml-3 py-3 text-sm font-medium whitespace-nowrap text-sky-500 hover:underline"
+          href={`/event/label/cate/${encodeURIComponent(x.name)}`}
+          className={`
+            flex-1 ml-3 py-3
+            text-sm font-medium whitespace-nowrap text-sky-500
+            hover:underline hover:underline-offset-2
+          `}
         >
           #{x.name}
         </Link>
