@@ -91,7 +91,7 @@ export function EventContainer(props: Props) {
     }, 5 * 1000); // every 5 seconds
 
     return () => clearInterval(x);
-  }, []);
+  }, [props.evnt, stat]);
 
   return (
     <li>

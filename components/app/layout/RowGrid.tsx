@@ -18,7 +18,12 @@ export const RowGrid = (props: Props) => {
         text-gray-900 dark:text-gray-50
       `}
     >
-      <div className="flex flex-1 basis-2/4">
+      <div
+        className={`
+          flex flex-1
+          ${props.midl ? "basis-2/4" : "basis-3/4"}
+        `}
+      >
         <div className="flex w-5 my-auto">
           {props.icon && cloneElement(props.icon, {
             className: `

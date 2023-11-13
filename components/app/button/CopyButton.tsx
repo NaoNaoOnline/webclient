@@ -11,7 +11,7 @@ interface Props {
   text?: string;
 }
 
-export function CopyButton(props: Props) {
+export const CopyButton = (props: Props) => {
   const [chck, setChck] = useState<boolean>(false);
   const [time, setTime] = useState<NodeJS.Timeout[]>([]);
 

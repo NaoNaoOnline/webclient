@@ -89,7 +89,7 @@ const PolicyDeleteForm = memo((props: Props) => {
     if (props.plcy) {
       handleSubmit(props.plcy);
     }
-  }, [props.plcy]);
+  }, [props.plcy, handleSubmit]);
 
   return <></>;
 });
