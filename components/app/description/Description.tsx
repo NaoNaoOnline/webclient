@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
@@ -46,12 +46,12 @@ export default function Description(props: Props) {
   const told: boolean = props.desc.cupd(now);                    // description is too old
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
-      <div className="flex justify-between">
-        <div className="flex-shrink-0 flex flex-row">
+    <div className="p-1 bg-gray-200 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
+      <div className="flex">
+        <div className="flex flex-row items-center">
           <Link
             href={"/user/" + encodeURIComponent(props.desc.name())}
-            className="flex items-center p-2"
+            className="flex-1 p-2"
           >
             <Image
               alt="profile picture"
@@ -64,7 +64,7 @@ export default function Description(props: Props) {
           <Link
             href={"/user/" + encodeURIComponent(props.desc.name())}
             className={`
-              flex py-2
+              flex-1
               text-gray-900 dark:text-gray-50
               text-sm font-medium whitespace-nowrap
               hover:underline hover:underline-offset-2
@@ -104,30 +104,26 @@ export default function Description(props: Props) {
         </div>
       </div>
 
-      {
-        form && (
-          <DescriptionUpdateForm
-            cncl={() => setForm(false)}
-            desc={props.desc.desc()}
-            done={(txt: string) => {
-              if (txt === text) {
-                addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
-              } else {
-                setText(txt);
-              }
-              setForm(false)
-            }}
-            text={text}
-          />
-        )
-      }
-      {
-        !form && (
-          <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
-            {text}
-          </p>
-        )
-      }
+      {form && (
+        <DescriptionUpdateForm
+          cncl={() => setForm(false)}
+          desc={props.desc.desc()}
+          done={(txt: string) => {
+            if (txt === text) {
+              addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
+            } else {
+              setText(txt);
+            }
+            setForm(false)
+          }}
+          text={text}
+        />
+      )}
+      {!form && (
+        <p className="px-2 pb-2 text-sm text-gray-900 dark:text-gray-50">
+          {text}
+        </p>
+      )}
     </div >
   );
 };

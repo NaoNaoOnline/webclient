@@ -38,7 +38,6 @@ export function DescriptionUpdateForm(props: Props) {
       return;
     }
 
-
     addPgrs(pgrs);
 
     try {
@@ -81,7 +80,7 @@ export function DescriptionUpdateForm(props: Props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="px-2 pb-2 bg-gray-50 dark:bg-gray-800">
+      <form onSubmit={handleSubmit} className="px-2 pb-2 bg-gray-200 dark:bg-gray-800">
         <input
           type="text"
           id="description-input"
@@ -90,7 +89,7 @@ export function DescriptionUpdateForm(props: Props) {
           maxLength={120}
           pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
           title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-          className="flex-1 px-0 pt-0 w-full text-sm align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="flex px-0 pt-0 w-full text-sm align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           defaultValue={text}
           ref={inpt}
           required
