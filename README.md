@@ -13,6 +13,7 @@ ROUTE                        |    DESCRIPTION
 /event/like/xh3b4sd          |    events liked by the user xh3b4sd
 /event/list/1234             |    events in the list 1234
                              |
+/event/1234                  |    specific event
 /label/cate/EVM              |    specific category label
 /label/host/Kain             |    specific host label
 /list/1234                   |    specific list

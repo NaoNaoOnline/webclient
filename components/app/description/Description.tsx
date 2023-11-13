@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
@@ -18,10 +18,6 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { AccessDelete, SystemDesc } from "@/modules/policy/Policy";
-
-function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
-  evn.stopPropagation();
-}
 
 interface Props {
   amnt: number;
@@ -50,13 +46,12 @@ export default function Description(props: Props) {
   const told: boolean = props.desc.cupd(now);                    // description is too old
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 p-1 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
-      <div className="flex justify-between">
-        <div className="flex-shrink-0 flex flex-row">
+    <div className="p-1 bg-gray-200 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
+      <div className="flex">
+        <div className="flex flex-row items-center">
           <Link
-            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
-            onClick={onLinkClick}
-            className="flex items-center p-2"
+            href={"/user/" + encodeURIComponent(props.desc.name())}
+            className="flex-1 p-2"
           >
             <Image
               alt="profile picture"
@@ -67,9 +62,13 @@ export default function Description(props: Props) {
             />
           </Link>
           <Link
-            href={`/event/user/${encodeURIComponent(props.desc.name())}`}
-            onClick={onLinkClick}
-            className="flex items-center py-2 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+            href={"/user/" + encodeURIComponent(props.desc.name())}
+            className={`
+              flex-1
+              text-gray-900 dark:text-gray-50
+              text-sm font-medium whitespace-nowrap
+              hover:underline hover:underline-offset-2
+            `}
           >
             {props.desc.name()}
           </Link>

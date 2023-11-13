@@ -15,7 +15,7 @@ interface Props {
   erem: () => void; // event remove callback
 }
 
-export function EventMenu(props: Props) {
+export const EventMenu = (props: Props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>

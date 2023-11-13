@@ -68,15 +68,6 @@ export function UserButtons() {
           />
         )}
 
-        <li>
-          <ActiveButton
-            href="/comingsoon?page=notifications"
-            text="Notifications"
-            icon={<RiNotification2Line />}
-            clck={reqAuth("Oh, this door is locked! Try logging in first.")}
-          />
-        </li>
-
         {rndr && (
           <div
             onClick={onClick}

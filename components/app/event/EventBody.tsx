@@ -1,17 +1,16 @@
 import { MouseEvent } from "react";
 import Image from "next/image";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import Link from "next/link";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { DescriptionCreateForm } from "@/components/app/description/create/DescriptionCreateForm";
 import Description from "@/components/app/description/Description";
-
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
-
-import { useAuth } from "@/components/app/auth/AuthProvider";
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { DescriptionDelete } from "@/modules/api/description/delete/Delete";
 import DescriptionSearchObject from "@/modules/api/description/search/Object";
@@ -34,8 +33,7 @@ interface Props {
 
 export function EventBody(props: Props) {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
-  const { auth, atkn } = useAuth();
-  const { user } = useUser();
+  const { auth, atkn, imag, name, uuid } = useAuth();
 
   const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Description");
@@ -172,36 +170,41 @@ export function EventBody(props: Props) {
         </>
       )}
       {props.form && (
-        <div className="h-fit bg-gray-50 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-200 dark:border-gray-700">
-          <div className="flex justify-between">
-            <div className="flex-shrink-0 flex flex-row">
-              <a
-                href={`/user/${user?.public?.name}`}
-                onClick={onLinkClick}
-                className="flex items-center pl-2"
+        <div className="p-1 h-fit bg-gray-200 dark:bg-gray-800 first:border-none border-t-solid border-t border-gray-50 dark:border-gray-700">
+          <div className="flex">
+            <div className="flex flex-row items-center">
+              <Link
+                href={"/user/" + encodeURIComponent(name)}
+                className="flex-1 p-2"
               >
                 <Image
                   alt="profile picture"
                   className="w-7 h-7 rounded-full"
                   height={28}
                   width={28}
-                  src={user?.picture || ""}
+                  src={imag}
                 />
-              </a>
-              <a
-                href={`/user/${user?.public?.name}`}
-                onClick={onLinkClick}
-                className="flex items-center pl-2 py-3 text-gray-900 dark:text-gray-50 text-sm font-medium whitespace-nowrap hover:underline"
+              </Link>
+              <Link
+                href={"/user/" + encodeURIComponent(name)}
+                className={`
+              flex-1
+              text-gray-900 dark:text-gray-50
+              text-sm font-medium whitespace-nowrap
+              hover:underline hover:underline-offset-2
+            `}
               >
-                {user?.public?.name}
-              </a>
-              {user?.intern?.uuid === props.evnt.user() && (
-                <span className="relative inline-block flex items-center rounded mx-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
-                  EC
-                  <div className="absolute top-[-50%] left-[105%] ml-2 z-10 whitespace-nowrap invisible group-hover:visible p-2 text-sm font-medium rounded-lg bg-gray-800 dark:bg-gray-200 text-gray-50 dark:text-gray-900">
-                    Event Creator
-                  </div>
-                </span>
+                {name}
+              </Link>
+              {uuid === props.evnt.user() && (
+                <Tooltip
+                  desc="Event Creator"
+                  side="right"
+                >
+                  <span className="rounded mx-2 my-auto px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer">
+                    EC
+                  </span>
+                </Tooltip>
               )}
             </div>
           </div>

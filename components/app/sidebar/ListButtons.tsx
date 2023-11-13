@@ -29,7 +29,7 @@ export const ListButtons = () => {
     <ul>
       <li>
         <ActiveButton
-          href={user[0].home !== "" && user[0].home !== "/" ? "/latest" : "/"}
+          href={user[0].home !== "" && user[0].home !== "/" ? "/event/latest" : "/"}
           text="Latest Events"
           icon={<RiTimeLine />}
         />

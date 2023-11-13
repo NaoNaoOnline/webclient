@@ -1,15 +1,14 @@
 import { useEffect, useRef, FormEvent, KeyboardEvent } from "react";
 
-import { DescriptionCreate } from "@/modules/api/description/create/Create";
-import { NewDescriptionCreateRequestFromFormData } from "@/modules/api/description/create/Request";
-import DescriptionSearchObject from "@/modules/api/description/search/Object";
-
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
+import { DescriptionCreate } from "@/modules/api/description/create/Create";
+import { NewDescriptionCreateRequestFromFormData } from "@/modules/api/description/create/Request";
+import DescriptionSearchObject from "@/modules/api/description/search/Object";
 
 interface Props {
   cncl: () => void;
@@ -86,7 +85,7 @@ export function DescriptionCreateForm(props: Props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="px-2 pb-2 bg-gray-50 dark:bg-gray-800">
+      <form onSubmit={handleSubmit} className="px-2 pb-2 bg-gray-200 dark:bg-gray-800">
         <input
           type="text"
           id="description-input"
@@ -95,10 +94,11 @@ export function DescriptionCreateForm(props: Props) {
           maxLength={120}
           pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
           title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
-          className="flex-1 px-0 pt-0 w-full text-sm align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          className="flex px-0 pt-0 w-full text-sm align-middle text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           placeholder="dicussing how EIP-4844 will change L2 economics forever"
           ref={inpt}
           required
+          onKeyDown={(eve: KeyboardEvent<HTMLInputElement>) => { if (eve.key === "Escape") props.cncl() }}
         />
 
         <div className="flex flex-row pt-2">
