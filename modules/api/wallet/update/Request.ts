@@ -7,4 +7,8 @@ export interface WalletUpdateRequest {
   mess: string;
   pubk: string;
   sign: string;
+  // update
+  oper: string[];
+  path: string[];
+  valu: string[];
 }

@@ -33,7 +33,7 @@ interface Props {
 
 export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
-  const { atkn, uuid } = useAuth();
+  const { atkn } = useAuth();
   const { hasAcce } = useCache();
 
   const { addErro, addPgrs, addScss } = useToast();
@@ -42,10 +42,10 @@ export function EventFooter(props: Props) {
   const now: Spacetime = spacetime.now();
   const lin: number = props.evnt.linkAmnt();
 
-  const dmax: boolean = props.desc?.length >= 50;                // description limit per event
-  const hpnd: boolean = props.evnt?.hpnd(now);                   // event already happened
-  const ownr: boolean = props.evnt?.ownr(user);                  // current user is event owner
-  const mdrt: boolean = hasAcce(SystemEvnt, uuid, AccessDelete); // current user is moderator
+  const dmax: boolean = props.desc?.length >= 50;          // description limit per event
+  const hpnd: boolean = props.evnt?.hpnd(now);             // event already happened
+  const mdrt: boolean = hasAcce(SystemEvnt, AccessDelete); // current user is moderator
+  const ownr: boolean = props.evnt?.ownr(user);            // current user is event owner
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");

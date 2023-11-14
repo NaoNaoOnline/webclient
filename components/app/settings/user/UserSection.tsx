@@ -19,7 +19,7 @@ export const UserSection = () => {
       }
       titl={name}
       bttn={
-        <span className="text-sm font-mono whitespace-nowrap text-gray-400 dark:text-gray-500">
+        <span className="text-sm font-mono whitespace-nowrap text-gray-500 dark:text-gray-500">
           {uuid}
         </span>
       }

@@ -18,13 +18,15 @@ import { ThemeSection } from "@/components/app/settings/theme/ThemeSection";
 import { UserSection } from "@/components/app/settings/user/UserSection";
 import { WalletSection } from "@/components/app/settings/wallet/WalletSection";
 
+import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
+
 import { AlchemyAPIKey, WalletConnectProjectID } from "@/modules/config/config";
 
 export default function Page() {
   const nxtrtr = useRouter();
 
-  const { auth, uuid } = useAuth();
-  const { hasPlcy } = useCache();
+  const { auth } = useAuth();
+  const { plcy, hasMemb } = useCache();
 
   const [manu, setManu] = useState<string>(getManual());
   const [netw, setNetw] = useState<string>(getNetwork());
@@ -66,7 +68,7 @@ export default function Page() {
           <WalletSection />
           <ListSeparator />
 
-          {hasPlcy(uuid) && (
+          {plcy.some((x: PolicySearchResponse) => hasMemb(x.memb)) && (
             <>
               <PolicySection />
               <ListSeparator />

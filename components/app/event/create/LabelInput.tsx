@@ -84,7 +84,7 @@ export default function LabelInput(props: Props) {
         classNames={{
           defaultValue: "h-[28px] mx-0 pl-0 pr-3 text-gray-900 dark:text-gray-50 bg-gray-50 dark:bg-gray-700",
           defaultValueLabel: "text-sm font-normal",
-          defaultValueRemove: "w-5 h-5 min-w-0 min-h-0 mx-0.5 border-0 text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-50",
+          defaultValueRemove: "w-5 h-5 min-w-0 min-h-0 mx-0.5 border-0 text-gray-500 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-50",
           dropdown: "bg-gray-50 dark:bg-gray-700 border-0 shadow-gray-400 dark:shadow-black shadow-[0_0_2px]",
           rightSection: "invisible",
           item: "text-gray-900 dark:text-gray-50 data-[hovered]:bg-gray-200 data-[hovered]:text-gray-900 dark:data-[hovered]:bg-gray-800 dark:data-[hovered]:text-gray-50",

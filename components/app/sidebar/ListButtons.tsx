@@ -29,7 +29,7 @@ export const ListButtons = () => {
     <ul>
       <li>
         <ActiveButton
-          href={user[0].home !== "" && user[0].home !== "/" ? "/event/latest" : "/"}
+          href={user[0]?.home !== "" && user[0]?.home !== "/" ? "/event/latest" : "/"}
           text="Latest Events"
           icon={<RiTimeLine />}
         />
@@ -38,10 +38,10 @@ export const ListButtons = () => {
       {list.map((x, i) => (
         <li key={x.list}>
           <ActiveButton
-            actv={x.list === user[0].home}
+            actv={x.list === user[0]?.home}
             href={`/list/` + x.list}
             text={x.desc}
-            icon={x.list === user[0].home ? <RiHome4Line /> : <RiListUnordered />}
+            icon={x.list === user[0]?.home ? <RiHome4Line /> : <RiListUnordered />}
           />
         </li>
       ))}

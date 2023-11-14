@@ -8,7 +8,7 @@ import { FaEthereum } from "react-icons/fa";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { WalletButtonConnect } from "@/components/app/settings/wallet/button/WalletButtonConnect";
 import { WalletButtonVerify } from "@/components/app/settings/wallet/button/WalletButtonVerify";
-import WalletCreateForm from "@/components/app/settings/wallet/create/WalletCreateForm";
+import { WalletCreateForm } from "@/components/app/settings/wallet/create/WalletCreateForm";
 import { WalletOverview } from "@/components/app/settings/wallet/WalletOverview";
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
@@ -16,7 +16,7 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 export const WalletSection = () => {
-  const { address, isConnected, isDisconnected } = useAccount();
+  const { address, isConnected } = useAccount();
 
   const { wllt, updWllt } = useCache();
 
@@ -38,7 +38,7 @@ export const WalletSection = () => {
               side="left"
             >
               <BiInfoCircle
-                className="w-5 h-5 text-gray-400 dark:text-gray-500"
+                className="w-5 h-5 text-gray-500 dark:text-gray-500"
               />
             </Tooltip>
 

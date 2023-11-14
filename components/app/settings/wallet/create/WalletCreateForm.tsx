@@ -1,8 +1,7 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 
-import { useSignMessage } from "wagmi";
-import { recoverPublicKey } from "viem";
-import { hashMessage } from "viem";
+import { signMessage } from "@wagmi/core";
+import { hashMessage, recoverPublicKey } from "viem";
 
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
@@ -16,18 +15,18 @@ import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { WalletUpdate } from "@/modules/api/wallet/update/Update";
 
 import { truncateEthAddress } from "@/modules/wallet/Address";
+import { WalletUpdateRequest } from "@/modules/api/wallet/update/Request";
 
 interface Props {
-  addr: string;
   actv: boolean;
+  addr: string;
   done: (wal: WalletSearchResponse) => void;
   fail: () => void;
   wllt: WalletSearchResponse[] | null;
 }
 
-export default function WalletCreateForm(props: Props) {
+const WalletCreateForm = memo((props: Props) => {
   const { atkn, uuid } = useAuth();
-  const { signMessageAsync } = useSignMessage();
   const { addErro, addPgrs, addScss } = useToast();
 
   const clld = useRef(false);
@@ -37,7 +36,7 @@ export default function WalletCreateForm(props: Props) {
 
     try {
       const mess = rawMes(truncateEthAddress(props.addr));
-      const sign = await signMessageAsync({ message: mess });
+      const sign = await signMessage({ message: mess });
       const hash = hashMessage(mess);
 
       const pubk = await recoverPublicKey({
@@ -48,7 +47,7 @@ export default function WalletCreateForm(props: Props) {
       if (!curr) {
         await walletCreate(mess, pubk, sign, props.addr);
       } else {
-        await walletUpdate(mess, pubk, sign, props.addr, curr);
+        await walletUpdateSign(mess, pubk, sign, props.addr, curr);
       }
     } catch (err) {
       addErro(new ErrorPropsObject("Holy moly, some things ain't right around the dam!", err as Error));
@@ -77,12 +76,16 @@ export default function WalletCreateForm(props: Props) {
             time: wal.crtd,
           },
           crtd: wal.crtd,
+          labl: {
+            time: "",
+          },
           user: uuid,
           wllt: wal.wllt,
         },
         public: {
           addr: addr,
           kind: "eth",
+          labl: "",
         },
       };
 
@@ -99,7 +102,7 @@ export default function WalletCreateForm(props: Props) {
     }
   };
 
-  const walletUpdate = async (mess: string, pubk: string, sign: string, addr: string, curr: WalletSearchResponse) => {
+  const walletUpdateSign = async (mess: string, pubk: string, sign: string, addr: string, curr: WalletSearchResponse) => {
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Wallet");
     const scss: SuccessPropsObject = new SuccessPropsObject("Lecko Mio, the wallet's in pirate!");
 
@@ -111,7 +114,22 @@ export default function WalletCreateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [wal] = await WalletUpdate([{ atkn: atkn, mess: mess, pubk: pubk, sign: sign, wllt: curr.intern.wllt }]);
+      const req: WalletUpdateRequest = {
+        // local
+        atkn: atkn,
+        // intern
+        wllt: curr.intern.wllt,
+        // public
+        mess: mess,
+        pubk: pubk,
+        sign: sign,
+        // update
+        oper: [],
+        path: [],
+        valu: [],
+      };
+
+      const [wal] = await WalletUpdate([req]);
 
       const newWllt = {
         intern: {
@@ -119,12 +137,16 @@ export default function WalletCreateForm(props: Props) {
             time: wal.intern.addr.time,
           },
           crtd: curr.intern.crtd,
+          labl: {
+            time: wal.intern.labl.time,
+          },
           user: curr.intern.user,
           wllt: curr.intern.wllt,
         },
         public: {
           addr: curr.public.addr,
           kind: curr.public.kind,
+          labl: curr.public.labl,
         },
       };
 
@@ -147,7 +169,12 @@ export default function WalletCreateForm(props: Props) {
   }
 
   return (<></>);
-};
+});
+
+WalletCreateForm.displayName = "WalletCreateForm";
+
+export { WalletCreateForm };
+
 
 const rawMes = (add: string) => {
   return `signing ownership of ${add} at ${Math.floor(Date.now() / 1000)}`;

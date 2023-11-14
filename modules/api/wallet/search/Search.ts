@@ -25,12 +25,16 @@ export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSe
           time: x.intern?.addr?.time || "",
         },
         crtd: x.intern?.crtd || "",
+        labl: {
+          time: x.intern?.labl?.time || "",
+        },
         user: x.intern?.user || "",
         wllt: x.intern?.wllt || "",
       },
       public: {
         addr: x.public?.addr || "",
         kind: x.public?.kind || "",
+        labl: x.public?.labl || "",
       },
     }));
   } catch (err) {

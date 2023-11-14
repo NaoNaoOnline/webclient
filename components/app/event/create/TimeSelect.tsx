@@ -101,7 +101,7 @@ export default function TimeSelect(props: Props) {
             value={props.slct.format("iso").slice(0, -6) + offs}
           />
           <span
-            className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-400 dark:text-gray-500"
+            className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-500 dark:text-gray-500"
           >
             {props.dspl(props.slct)[1]}
           </span>
