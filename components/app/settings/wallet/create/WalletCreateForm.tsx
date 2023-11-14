@@ -131,7 +131,6 @@ const WalletCreateForm = memo((props: Props) => {
 
       const [wal] = await WalletUpdate([req]);
 
-      // TODO check labl time returned if unset
       console.log(2, wal.intern.labl.time)
 
       const newWllt = {
