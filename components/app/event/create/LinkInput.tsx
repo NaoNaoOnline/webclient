@@ -52,7 +52,7 @@ export default function LinkInput(props: Props) {
       </div>
 
       <div className="relative">
-        <div className={`absolute py-2 px-0 z-0 text-sm bg-transparent appearance-none ${fcsd || stld ? "text-gray-900 dark:text-gray-50 " : "text-gray-400 dark:text-gray-500"}`}>
+        <div className={`absolute py-2 px-0 z-0 text-sm bg-transparent appearance-none ${fcsd || stld ? "text-gray-900 dark:text-gray-50 " : "text-gray-500 dark:text-gray-500"}`}>
           https://
         </div>
         <input

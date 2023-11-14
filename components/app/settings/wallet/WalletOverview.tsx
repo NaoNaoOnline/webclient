@@ -6,8 +6,9 @@ import { RiDeleteBinLine } from "react-icons/ri";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
-import { useCache } from "@/components/app/cache/CacheProvider";
+import { hasLabl, useCache } from "@/components/app/cache/CacheProvider";
 import { RowGrid } from "@/components/app/layout/RowGrid";
+import { WalletUpdateForm } from "@/components/app/settings/wallet/update/WalletUpdateForm";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
@@ -17,13 +18,13 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 import { WalletDelete } from "@/modules/api/wallet/delete/Delete";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { truncateEthAddress } from "@/modules/wallet/Address";
-import { LabelButton } from "../../button/LabelButton";
+import { WalletLabelAccounting, WalletLabelModeration } from "@/modules/wallet/Label";
 
 export const WalletOverview = () => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const { disconnect } = useDisconnect();
 
-  const { wllt, remWllt } = useCache();
+  const { wllt, remWllt, updWllt } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useAuth();
 
@@ -93,37 +94,18 @@ export const WalletOverview = () => {
               <div
                 className="flex flex-1 basis-2/4 items-center"
               >
-                {i === 0 ? (
-                  <Tooltip
-                    desc={
-                      <div>
-                        <div>this wallet is used</div>
-                        <div>for revenue sharing</div>
-                      </div>
-                    }
-                    side="right"
-                  >
-                    <LabelButton
-                      blue={true}
-                      text="ACCOUNTING"
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    desc={
-                      <div>
-                        <div>this wallet is used</div>
-                        <div>for content moderation</div>
-                      </div>
-                    }
-                    side="right"
-                  >
-                    <LabelButton
-                      rose={true}
-                      text="MODERATION"
-                    />
-                  </Tooltip>
-                )}
+                <WalletUpdateForm
+                  done={(wal: WalletSearchResponse) => {
+                    // We update the given wallet with itself, since the update
+                    // removes by wallet ID, replacing the same object with,
+                    // e.g. an updated timestamp should not be a problem.
+                    updWllt(wal, wal);
+                  }}
+                  fail={() => {
+                  }}
+                  hacc={wllt.some((x: WalletSearchResponse) => hasLabl(x, WalletLabelAccounting))}
+                  wllt={x}
+                />
               </div>
             </div>
           }

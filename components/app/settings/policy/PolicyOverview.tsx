@@ -1,18 +1,20 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
+import { GoDotFill } from "react-icons/go";
 import { RiDeleteBinLine } from "react-icons/ri";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { PolicyDeleteForm } from "@/components/app/settings/policy/delete/PolicyDeleteForm";
 import { RowGrid } from "@/components/app/layout/RowGrid";
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { truncateEthAddress } from "@/modules/wallet/Address";
 
 export const PolicyOverview = () => {
-  const { plcy, remPlcy } = useCache();
+  const { plcy, remPlcy, hasMemb } = useCache();
 
   const [dltd, setDltd] = useState<PolicySearchResponse | null>(null);
   const [wusr, setWusr] = useState<PolicySearchResponse[]>([]);
@@ -57,6 +59,22 @@ export const PolicyOverview = () => {
         <RowGrid
           key={i}
           list={true}
+          icon={
+            <Tooltip
+              desc={
+                <div>
+                  <div>your active permission</div>
+                  <div>for content moderation</div>
+                </div>
+              }
+              side="left"
+              vsbl={hasMemb(x.memb)}
+            >
+              <GoDotFill
+                className="fill-rose-600"
+              />
+            </Tooltip>
+          }
           subj={
             <div className="flex w-full">
               <div

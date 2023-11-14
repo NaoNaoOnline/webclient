@@ -151,7 +151,7 @@ export const ListOverview = (props: Props) => {
             <span>🤨</span>
           </div>
           <div className="flex text-2xl justify-center">
-            <span className="text-gray-400 dark:text-gray-500">There are no lists. Beavers ate them all!</span>
+            <span className="text-gray-500 dark:text-gray-500">There are no lists. Beavers ate them all!</span>
           </div>
         </div>
       )}

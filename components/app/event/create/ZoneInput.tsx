@@ -146,7 +146,7 @@ export default function ZoneInput(props: Props) {
           />
           {!open && (
             <span
-              className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-400 dark:text-gray-500"
+              className="absolute py-2 px-0 right-0 text-sm bg-transparent appearance-none text-gray-500 dark:text-gray-500"
             >
               {srch[0] === "{" ? JSON.parse(srch).name : ""}
             </span>

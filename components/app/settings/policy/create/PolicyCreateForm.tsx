@@ -127,7 +127,7 @@ const PolicyCreateForm = memo(() => {
               side="left"
             >
               <BiInfoCircle
-                className="w-5 h-5 text-gray-400 dark:text-gray-500"
+                className="w-5 h-5 text-gray-500 dark:text-gray-500"
               />
             </Tooltip>
 

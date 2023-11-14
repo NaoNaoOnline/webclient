@@ -13,6 +13,7 @@ import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
+import { WalletLabelModeration } from "@/modules/wallet/Label";
 
 const defaultContextValue: {
   labl: LabelSearchResponse[];
@@ -38,8 +39,8 @@ const defaultContextValue: {
   updUser: (rem: UserSearchResponse, add: UserSearchResponse) => void;
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => void;
 
-  hasAcce: (sys: number, use: string, acc: number) => boolean;
-  hasPlcy: (use: string) => boolean;
+  hasAcce: (sys: number, acc: number) => boolean;
+  hasMemb: (use: string) => boolean;
 } = {
   labl: [],
   list: [],
@@ -65,8 +66,8 @@ const defaultContextValue: {
   updUser: (rem: UserSearchResponse, add: UserSearchResponse) => { },
   updWllt: (rem: WalletSearchResponse, add: WalletSearchResponse) => { },
 
-  hasAcce: (sys: number, use: string, acc: number): boolean => { return false; },
-  hasPlcy: (use: string): boolean => { return false; },
+  hasAcce: (sys: number, acc: number): boolean => { return false; },
+  hasMemb: (use: string): boolean => { return false; },
 };
 
 const CacheContext = createContext(defaultContextValue);
@@ -215,15 +216,21 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // hasAcce returns whether the given user ID has at least the given access in
-  // the given system. Note that zero is the highest access level.
-  const hasAcce = (sys: number, use: string, acc: number): boolean => {
-    return plcy.some(x => x.user === use && Number(x.syst) === sys && Number(x.acce) <= acc);
+  // hasAcce expresses whether the current user has at least the given access in
+  // the given system. Note that zero is the highest access level. Access must
+  // be granted in two ways. First, permissions have to be recorded onchain
+  // within the policy smart contracts. Second, user wallets must be labelled
+  // for moderation.
+  const hasAcce = (sys: number, acc: number): boolean => {
+    return plcy.some((x: PolicySearchResponse) => Number(x.syst) === sys && hasMemb(x.memb) && Number(x.acce) <= acc);
   };
 
-  // hasPlcy returns whether the given user ID is a policy member.
-  const hasPlcy = (use: string): boolean => {
-    return plcy.some(x => x.user === use);
+  // hasMemb expresses whether any of the current user's moderation wallets
+  // matches the given member.
+  const hasMemb = (mem: string): boolean => {
+    // Look for all current user wallets labelled for moderation.
+    const mdrt: WalletSearchResponse[] = wllt.filter((x: WalletSearchResponse) => hasLabl(x, WalletLabelModeration));
+    return mdrt.some((y: WalletSearchResponse) => y.public.addr === mem);
   };
 
   // We only want to render the injected child components if we have a label
@@ -261,7 +268,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         updWllt: updWllt,
 
         hasAcce: hasAcce,
-        hasPlcy: hasPlcy,
+        hasMemb: hasMemb,
       }}
     >
       {children}
@@ -271,6 +278,14 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
 export const useCache = () => {
   return useContext(CacheContext);
+};
+
+export const hasLabl = (wal: WalletSearchResponse, lab: string): boolean => {
+  for (const x of wal.public.labl.split(",")) {
+    if (x === lab) return true;
+  }
+
+  return false;
 };
 
 const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {
