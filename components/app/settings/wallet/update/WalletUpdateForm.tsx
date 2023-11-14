@@ -65,9 +65,11 @@ const WalletUpdateForm = memo((props: Props) => {
       const curr: string[] = props.wllt.public.labl.split(",");
 
       for (const x of curr) {
-        if (x !== "") {
+        const ind: number = curr.findIndex((y: string) => x === y && x !== lab)
+
+        if (x !== "" && ind !== -1) {
           req.oper.push("remove");
-          req.path.push(String(curr.findIndex((y: string) => x === y)));
+          req.path.push(String(ind));
           req.valu.push(x);
         }
       }
