@@ -35,7 +35,7 @@ const newObct = (x: DescriptionUpdateRequest): UpdateI_Object => {
       update: [
         {
           ope: "replace",
-          pat: "/text",
+          pat: "/text/data",
           val: x.text,
         },
       ],

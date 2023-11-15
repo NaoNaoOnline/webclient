@@ -10,7 +10,7 @@ export async function ListUpdate(req: ListUpdateRequest[]): Promise<ListUpdateRe
           intern: {
             list: x.list,
           },
-          update: (x.desc ? [{ ope: "replace", pat: "/desc", val: x.desc }] : []),
+          update: (x.desc ? [{ ope: "replace", pat: "/desc/data", val: x.desc }] : []),
         })),
       },
       {
