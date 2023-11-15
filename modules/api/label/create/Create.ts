@@ -9,11 +9,8 @@ export async function LabelCreate(req: LabelCreateRequest[]): Promise<LabelCreat
         object: req.map((x) => ({
           intern: {},
           public: {
-            desc: "",
-            disc: "",
             kind: x.kind,
             name: x.name,
-            twit: "",
           },
         })),
       },
