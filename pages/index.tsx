@@ -8,20 +8,20 @@ export default function Page() {
   const { auth } = useAuth();
   const { user } = useCache();
 
-  const sta: string = String(Math.floor(spacetime.now().goto("GMT").subtract(1, "week").epoch / 1000));
-  const sto: string = String(Math.ceil(spacetime.now().goto("GMT").add(1, "week").epoch / 1000));
+  const home: string = user[0]?.home;
+  const strt: string = String(Math.floor(spacetime.now().goto("GMT").subtract(1, "week").epoch / 1000));
+  const stop: string = String(Math.ceil(spacetime.now().goto("GMT").add(1, "week").epoch / 1000));
 
   return (
     <>
-      {auth && user[0].home !== "" && user[0].home !== "/" && (
+      {auth && home && home !== "" && home !== "/" ? (
         <EventOverview
-          list={user[0].home}
+          list={home}
         />
-      )}
-      {(!auth || !user[0].home || user[0].home === "" || user[0].home === "/") && (
+      ) : (
         <EventOverview
-          strt={sta}
-          stop={sto}
+          strt={strt}
+          stop={stop}
           time="page"
         />
       )}

@@ -1,7 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { GoDotFill } from "react-icons/go";
-import { RiDeleteBinLine } from "react-icons/ri";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
@@ -16,7 +15,6 @@ import { truncateEthAddress } from "@/modules/wallet/Address";
 export const PolicyOverview = () => {
   const { plcy, remPlcy, hasMemb } = useCache();
 
-  const [dltd, setDltd] = useState<PolicySearchResponse | null>(null);
   const [wusr, setWusr] = useState<PolicySearchResponse[]>([]);
 
   const clld: MutableRefObject<boolean> = useRef(false);
@@ -107,35 +105,17 @@ export const PolicyOverview = () => {
             </span>
           }
           rigt={
-            <button
-              className="outline-none invisible group-hover/RowGrid:visible"
-              type="button"
-              onClick={() => {
-                setDltd(x);
+            <PolicyDeleteForm
+              done={() => {
+                remPlcy(x);
               }}
-            >
-              <RiDeleteBinLine
-                className={`
-                   w-5 h-5 text-gray-500 dark:text-gray-500
-                   hover:text-gray-900 dark:hover:text-gray-50
-                `}
-              />
-            </button>
+              fail={() => {
+              }}
+              plcy={x}
+            />
           }
         />
       ))}
-
-      <PolicyDeleteForm
-        done={(pol: PolicySearchResponse) => {
-          setDltd(null);
-          remPlcy(pol);
-        }
-        }
-        fail={() => {
-          setDltd(null);
-        }}
-        plcy={dltd}
-      />
     </>
   )
 };

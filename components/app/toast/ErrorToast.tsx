@@ -48,6 +48,10 @@ export const ErrorToast = (props: { obj: ErrorPropsObject }) => {
     desc = props.obj.getTech()?.message || "";
   }
 
+  {
+    console.error(desc);
+  }
+
   return (
     <>
       <Toast.Root

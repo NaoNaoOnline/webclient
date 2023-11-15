@@ -17,8 +17,7 @@ export function ActiveButton(props: Props) {
   const path = usePathname();
   const qury = useSearchParams().toString();
 
-  const actv: boolean = (props.actv && path === "/") || (props.href === href(path, qury));
-
+  const actv: boolean = (props.actv && path === "/") || (props.href == "/" && trmSLsh(path) == "/event/latest") || (props.href === cmbHref(path, qury));
   return (
     <Link
       href={props.href}
@@ -50,8 +49,16 @@ export function ActiveButton(props: Props) {
   );
 };
 
-const href = (pat: string, qry: string): string => {
+const cmbHref = (pat: string, qry: string): string => {
   if (qry === "") return pat;
 
   return pat + "?" + qry;
 }
+
+const trmSLsh = (str: string): string => {
+  if (str.endsWith('/')) {
+    str = str.slice(0, -1);
+  }
+
+  return str;
+};
