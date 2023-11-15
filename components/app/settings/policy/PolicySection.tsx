@@ -67,7 +67,7 @@ export const PolicySection = () => {
     return () => {
       clearInterval(timr);
     };
-  }, [pntr, atkn, addErro, updPlcy]);
+  }, [pntr, atkn, addErro, addScss, updPlcy]);
 
   return (
     <>
