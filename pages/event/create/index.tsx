@@ -69,7 +69,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          labl.push({ labl: nci[i], kind: "cate", name: dcn[i] });
+          labl.push({ labl: nci[i], kind: "cate", name: dcn[i], prfl: {} });
         }
 
         pgrs.setCmpl(25);
@@ -87,7 +87,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          labl.push({ labl: nhi[i], kind: "host", name: dhn[i] });
+          labl.push({ labl: nhi[i], kind: "host", name: dhn[i], prfl: {} });
         }
 
         pgrs.setCmpl(50);
