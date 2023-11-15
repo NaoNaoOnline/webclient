@@ -88,58 +88,133 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
   const walc = useRef(false);
 
   useEffect(() => {
-    if (labc.current) return;
+    if (labc.current) {
+      return;
+    }
 
-    labc.current = true;
+    {
+      labc.current = true;
+    }
 
-    LabelSearch(NewLabelKindSearchRequest(["bltn", "cate", "host"])).then((lab: LabelSearchResponse[]) => {
-      if (lab.length === 0) return;
-      setLabl(lab);
-    });
+    const getData = async () => {
+      try {
+        const lab: LabelSearchResponse[] = await LabelSearch(NewLabelKindSearchRequest(["bltn", "cate", "host"]));
+
+        if (lab.length !== 0) {
+          setLabl(lab);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
   }, []);
 
   useEffect(() => {
-    if (lisc.current || !auth) return;
+    if (lisc.current || !auth) {
+      return;
+    }
 
-    lisc.current = true;
+    {
+      lisc.current = true;
+    }
 
-    ListSearch([{ user: uuid }]).then((lis: ListSearchResponse[]) => {
-      if (lis.length === 0) return;
-      setList(lis);
-    });
+    const getData = async () => {
+      try {
+        const lis: ListSearchResponse[] = await ListSearch([{ user: uuid }]);
+
+        if (lis.length !== 0) {
+          setList(lis);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
   }, [auth, uuid]);
 
   useEffect(() => {
-    if (polc.current || !auth) return;
+    if (polc.current || !auth) {
+      return;
+    }
 
-    polc.current = true;
+    {
+      polc.current = true;
+    }
 
-    PolicySearch([{ atkn: atkn, ltst: "default" }]).then((pol: PolicySearchResponse[]) => {
-      if (pol.length === 0) return;
-      setPlcy(pol);
-    });
+    const getData = async () => {
+      try {
+        const pol: PolicySearchResponse[] = await PolicySearch([{ atkn: atkn, ltst: "default" }]);
+
+        if (pol.length !== 0) {
+          setPlcy(pol);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
   }, [atkn, auth]);
 
   useEffect(() => {
-    if (usec.current || !auth) return;
+    if (usec.current || !auth) {
+      return;
+    }
 
-    usec.current = true;
+    {
+      usec.current = true;
+    }
 
-    UserSearch([{ user: uuid, name: "", self: false }]).then((use: UserSearchResponse[]) => {
-      if (use.length === 0) return;
-      setUser(use);
-    });
+    const getData = async () => {
+      try {
+        const use: UserSearchResponse[] = await UserSearch([{ user: uuid, name: "", self: false }]);
+
+        if (use.length !== 0) {
+          setUser(use);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
   }, [atkn, auth, uuid]);
 
   useEffect(() => {
-    if (walc.current || !auth) return;
+    if (walc.current || !auth) {
+      return;
+    }
 
-    walc.current = true;
+    {
+      walc.current = true;
+    }
 
-    WalletSearch([{ atkn: atkn, kind: "eth", wllt: "" }]).then((wal: WalletSearchResponse[]) => {
-      if (wal.length === 0) return;
-      setWllt(wal);
-    });
+    const getData = async () => {
+      try {
+        const wal: WalletSearchResponse[] = await WalletSearch([{ atkn: atkn, kind: "eth", wllt: "" }]);
+
+        if (wal.length !== 0) {
+          setWllt(wal);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
   }, [atkn, auth]);
 
   const addLabl = (lab: LabelSearchResponse) => {

@@ -15,14 +15,13 @@ export default function Page() {
 
   return (
     <>
-      {evnt === "latest" && (
+      {trmSLsh(evnt) === "latest" ? (
         <EventOverview
           strt={strt}
           stop={stop}
           time="page"
         />
-      )}
-      {evnt !== "latest" && (
+      ) : (
         <EventOverview
           evnt={[evnt]}
           titl="Event Page"
@@ -30,4 +29,12 @@ export default function Page() {
       )}
     </>
   );
+};
+
+const trmSLsh = (str: string): string => {
+  if (str.endsWith('/')) {
+    str = str.slice(0, -1);
+  }
+
+  return str;
 };

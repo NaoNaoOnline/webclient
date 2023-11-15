@@ -1,4 +1,6 @@
-import { FormEvent, memo } from "react";
+import { FormEvent, memo, useState } from "react";
+
+import spacetime from "spacetime";
 
 import { Address, useAccount } from "wagmi";
 import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
@@ -28,6 +30,8 @@ const PolicyCreateForm = memo(() => {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
+
+  const [salt, setSalt] = useState<string>(newSlt());
 
   const chid: number = getChain(netw)[0].id;
 
@@ -66,7 +70,6 @@ const PolicyCreateForm = memo(() => {
         chainId: chid,
         functionName: "createRecord",
         args: [{ sys: Number(sys), mem: mem, acc: Number(acc) }],
-        maxFeePerGas: parseGwei("200"),
       })
 
       pgrs.setCmpl(40);
@@ -95,6 +98,9 @@ const PolicyCreateForm = memo(() => {
       addScss(scss);
       pgrs.setDone(() => {
         addPlcy(newPlcy);
+        // We set a new random salt to reset all input fields once we have
+        // successfully created a new policy record onchain.
+        setSalt(newSlt());
       });
     } catch (err) {
       addErro(new ErrorPropsObject("Can't fockin' doit mate, those bloody beavers I swear!", err as Error));
@@ -154,6 +160,7 @@ const PolicyCreateForm = memo(() => {
         >
           <div className="grid gap-x-4 grid-cols-12">
             <TextInput
+              key={salt + ":policy-create-form:system"}
               desc="the SMA system to add"
               maxl={10}
               minl={10}
@@ -167,6 +174,7 @@ const PolicyCreateForm = memo(() => {
             />
 
             <TextInput
+              key={salt + ":policy-create-form:member"}
               desc="the SMA member to add"
               maxl={42}
               minl={42}
@@ -179,6 +187,7 @@ const PolicyCreateForm = memo(() => {
             />
 
             <TextInput
+              key={salt + ":policy-create-form:access"}
               desc="the SMA access to add"
               maxl={10}
               minl={10}
@@ -200,3 +209,7 @@ const PolicyCreateForm = memo(() => {
 PolicyCreateForm.displayName = "PolicyCreateForm";
 
 export { PolicyCreateForm };
+
+const newSlt = function (): string {
+  return String(spacetime.now().goto("GMT").epoch)
+};

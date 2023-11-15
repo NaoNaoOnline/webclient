@@ -4,7 +4,8 @@ import { Address, useAccount } from "wagmi";
 import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
 import { parseGwei } from "viem";
 
-import { useCache } from "@/components/app/cache/CacheProvider";
+import { RiDeleteBinLine } from "react-icons/ri";
+
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
@@ -17,15 +18,14 @@ import { PolicySearchResponse } from "@/modules/api/policy/search/Response";
 import { PolicyContract } from "@/modules/config/config";
 
 interface Props {
-  done: (pol: PolicySearchResponse) => void;
+  done: () => void;
   fail: () => void;
-  plcy: PolicySearchResponse | null;
+  plcy: PolicySearchResponse;
 }
 
 const PolicyDeleteForm = memo((props: Props) => {
   const { address } = useAccount();
 
-  const { remPlcy } = useCache();
   const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const [netw, setNetw] = useNetwork();
@@ -64,7 +64,6 @@ const PolicyDeleteForm = memo((props: Props) => {
         chainId: chid,
         functionName: "deleteRecord",
         args: [{ sys: Number(sys), mem: mem, acc: Number(acc) }],
-        maxFeePerGas: parseGwei("200"),
       })
 
       pgrs.setCmpl(40);
@@ -77,7 +76,6 @@ const PolicyDeleteForm = memo((props: Props) => {
 
       addScss(scss);
       pgrs.setDone(() => {
-        remPlcy(pol);
       });
     } catch (err) {
       addErro(new ErrorPropsObject("Runnin' out of luck lately, the dam's about to burst!", err as Error));
@@ -85,13 +83,22 @@ const PolicyDeleteForm = memo((props: Props) => {
     }
   };
 
-  useEffect(() => {
-    if (props.plcy) {
-      handleSubmit(props.plcy);
-    }
-  }, [props.plcy, handleSubmit]);
-
-  return <></>;
+  return (
+    <button
+      className="outline-none invisible group-hover/RowGrid:visible"
+      type="button"
+      onClick={() => {
+        handleSubmit(props.plcy);
+      }}
+    >
+      <RiDeleteBinLine
+        className={`
+           w-5 h-5 text-gray-500 dark:text-gray-500
+           hover:text-gray-900 dark:hover:text-gray-50
+        `}
+      />
+    </button>
+  );
 });
 
 PolicyDeleteForm.displayName = "PolicyDeleteForm";

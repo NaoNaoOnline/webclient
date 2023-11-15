@@ -11,6 +11,7 @@ import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
+import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { PolicyUpdate } from "@/modules/api/policy/update/Update";
@@ -19,7 +20,7 @@ import { PolicySearch } from "@/modules/api/policy/search/Search";
 export const PolicySection = () => {
   const { atkn } = useAuth();
   const { updPlcy } = useCache();
-  const { addErro, addInfo } = useToast();
+  const { addErro, addInfo, addScss } = useToast();
 
   const [pntr, setPntr] = useState<string>("");
 
@@ -54,6 +55,7 @@ export const PolicySection = () => {
           updPlcy(pol);
           clearInterval(timr);
           setPntr("");
+          addScss(new SuccessPropsObject("Good as gold, all synced up!"));
         }
       } catch (err) {
         addErro(new ErrorPropsObject("An error occurred during polling!", err as Error));
