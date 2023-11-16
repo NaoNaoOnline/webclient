@@ -137,13 +137,16 @@ export function RuleCreateForm(props: Props) {
   // creates a progress toast that starts the rendering process within our toast
   // provider which is wrapping us. And so if we were to add the toast before
   // this component here was finished rendering iteself, then we would get funky
-  // react errors.
+  // react errors. Note that we leave out the dependency array because adding it
+  // seems to have super complicated side effects. If anything is wrong with
+  // that and somebody has a better way of doing things, please create a pull
+  // request.
   useEffect(() => {
     if (props.sbmt && !clld.current) {
       clld.current = true;
       createRule();
     }
-  }, [props.sbmt, createRule]);
+  });
 
   return (
     <></>

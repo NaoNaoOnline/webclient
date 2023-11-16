@@ -50,7 +50,7 @@ const LabelDetail = memo((props: Props) => {
     if (props.kind && props.name) {
       getData(props.kind, props.name);
     }
-  }, [props.kind, props.name]);
+  }, [props.kind, props.name, uuid, addErro]);
 
   useEffect(() => {
     const getData = async function (use: string): Promise<void> {
@@ -65,7 +65,7 @@ const LabelDetail = memo((props: Props) => {
     if (labl && labl.user) {
       getData(labl.user);
     }
-  }, [labl]);
+  }, [labl, addErro]);
 
   return (
     <>

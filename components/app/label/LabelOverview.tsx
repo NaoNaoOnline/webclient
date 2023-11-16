@@ -63,7 +63,7 @@ export const LabelOverview = (props: Props) => {
     const getData = async function (): Promise<void> {
       try {
         const [use] = await UserSearch([{ user: "", name: props.user, self: false }]);
-        const lab = await LabelSearch([{ labl: "", user: use.user, kind: "" }]);
+        const lab = await LabelSearch([{ labl: "", user: use.user, kind: "", name: "" }]);
 
         if (lab.length === 0) {
           setLdng(false);
