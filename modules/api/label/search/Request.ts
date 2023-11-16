@@ -4,6 +4,7 @@ export interface LabelSearchRequest {
   user: string;
   // public
   kind: string;
+  name: string;
 }
 
 export const NewLabelKindSearchRequest = (kin: string[]): LabelSearchRequest[] => {
@@ -14,6 +15,7 @@ export const NewLabelKindSearchRequest = (kin: string[]): LabelSearchRequest[] =
       labl: "",
       user: "",
       kind: x,
+      name: "",
     });
   }
 

@@ -8,4 +8,4 @@ export const LastElement = (str: string): string => {
   }
 
   return "";
-}
+};

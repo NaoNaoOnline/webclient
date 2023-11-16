@@ -1,8 +1,8 @@
 import { UpdateI_Object } from "@naonaoonline/apitscode/src/wallet/update";
 
-import API from '@/modules/api/wallet/API';
-import { WalletUpdateRequest } from '@/modules/api/wallet/update/Request';
-import { WalletUpdateResponse } from '@/modules/api/wallet/update/Response';
+import API from "@/modules/api/wallet/API";
+import { WalletUpdateRequest } from "@/modules/api/wallet/update/Request";
+import { WalletUpdateResponse } from "@/modules/api/wallet/update/Response";
 
 export async function WalletUpdate(req: WalletUpdateRequest[]): Promise<WalletUpdateResponse[]> {
   try {

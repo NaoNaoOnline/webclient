@@ -9,7 +9,8 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
         object: req.map((x) => {
           if (x.labl) return { intern: { labl: x.labl, user: "" } }
           if (x.user) return { intern: { user: x.user, labl: "" } }
-          if (x.kind) return { public: { kind: x.kind } }
+          if (x.kind && !x.name) return { public: { kind: x.kind, name: "" } }
+          if (x.kind && x.name) return { public: { kind: x.kind, name: x.name } }
           return {};
         }),
       },
@@ -17,7 +18,9 @@ export async function LabelSearch(req: LabelSearchRequest[]): Promise<LabelSearc
 
     return call.response.object.map((x) => ({
       // intern
+      crtd: x.intern?.crtd || "",
       labl: x.intern?.labl || "",
+      user: x.intern?.user || "",
       // public
       kind: x.public?.kind || "",
       name: x.public?.name || "",

@@ -27,9 +27,9 @@ import { LabelCreateResponse } from "@/modules/api/label/create/Response";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 
 export default function Page() {
+  const { atkn, auth, uuid } = useAuth();
   const { labl } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn, auth } = useAuth();
   const nxtrtr = useRouter();
 
   const [blck, setBlck] = useState<string[]>([]);
@@ -69,7 +69,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          labl.push({ labl: nci[i], kind: "cate", name: dcn[i], prfl: {} });
+          labl.push({ crtd: res[i].crtd, labl: nci[i], user: uuid, kind: "cate", name: dcn[i], prfl: {} });
         }
 
         pgrs.setCmpl(25);
@@ -87,7 +87,7 @@ export default function Page() {
         // got created before the event creation failed is not causing problems
         // if the user submits the form again.
         for (let i = 0; i < res.length; i++) {
-          labl.push({ labl: nhi[i], kind: "host", name: dhn[i], prfl: {} });
+          labl.push({ crtd: res[i].crtd, labl: nhi[i], user: uuid, kind: "host", name: dhn[i], prfl: {} });
         }
 
         pgrs.setCmpl(50);
