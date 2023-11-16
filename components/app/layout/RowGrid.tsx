@@ -21,7 +21,7 @@ export const RowGrid = (props: Props) => {
       <div
         className={`
           flex flex-1
-          ${props.midl ? "basis-2/4" : ""}
+          ${props.midl ? "basis-2/4 max-w-[60%]" : ""}
           ${!props.midl && props.rigt ? "basis-3/4" : ""}
           ${!props.midl && !props.rigt ? "basis-4/4" : ""}
         `}

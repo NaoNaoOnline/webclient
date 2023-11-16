@@ -103,13 +103,11 @@ export default function ZoneInput(props: Props) {
           desc={props.desc}
           side="right"
         >
-          <label
-            htmlFor={`${props.name}-input`}
+          <div
             className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
-            onClick={() => inpt?.current?.focus()}
           >
             {ttlCas(props.name)}
-          </label>
+          </div>
         </Tooltip>
       </div>
 

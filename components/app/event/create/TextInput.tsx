@@ -24,9 +24,9 @@ export const TextInput = (props: Props) => {
           desc={props.desc}
           side="right"
         >
-          <label htmlFor={`${props.name}-input`} className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50">
+          <div className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50">
             {ttlCas(props.name)}
-          </label>
+          </div>
         </Tooltip>
       </div>
 

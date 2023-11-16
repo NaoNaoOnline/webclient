@@ -56,13 +56,11 @@ export default function TimeSelect(props: Props) {
           desc={props.desc}
           side="right"
         >
-          <label
-            htmlFor={`${props.name}-input`}
+          <div
             className="mb-2 text-sm underline decoration-dashed cursor-pointer font-medium text-gray-900 dark:text-gray-50"
-            onClick={() => inpt?.current?.focus()}
           >
             {ttlCas(props.name)}
-          </label>
+          </div>
         </Tooltip>
       </div>
 
@@ -72,8 +70,6 @@ export default function TimeSelect(props: Props) {
       >
         <div className="relative">
           <Command.Input
-            id={`${props.name}-input`}
-            name={`${props.name}-input`}
             className="relative py-2 px-0 w-full text-sm text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 cursor-pointer peer"
             onKeyDown={(e) => {
               if (e.key === "Escape") {
@@ -95,6 +91,11 @@ export default function TimeSelect(props: Props) {
             readOnly={true}
             ref={inpt}
           />
+          {/*
+          The hidden input field contains the spacetime iso formatted date
+          string used to calculate event start and end time. It is important to
+          keep the input name and value fields intact.
+          */}
           <input
             type="hidden"
             name={`${props.name}-input`}
