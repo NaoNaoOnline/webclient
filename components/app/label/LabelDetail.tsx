@@ -2,14 +2,20 @@ import { memo, useEffect, useState } from "react";
 
 import Link from "next/link";
 
+import { BiInfoCircle } from "react-icons/bi";
+
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { LabelButtonAdd } from "@/components/app/label/button/LabelButtonAdd";
+import { LabelButtonCancel } from "@/components/app/label/button/LabelButtonCancel";
 import { LabelProfileUpdateForm } from "@/components/app/label/update/LabelProfileUpdateForm";
+import { LabelProfileCreateForm } from "@/components/app/label/create/LabelProfileCreateForm";
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { RowGrid } from "@/components/app/layout/RowGrid";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
+import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
 import { LabelSearch } from "@/modules/api/label/search/Search";
@@ -25,7 +31,7 @@ const LabelDetail = memo((props: Props) => {
   const { uuid } = useAuth();
   const { addErro, addInfo } = useToast();
 
-  const [form, setForm] = useState<string>("");
+  const [crea, setCrea] = useState<boolean>(false);
   const [labl, setLabl] = useState<LabelSearchResponse | null>(null);
   const [ownr, setOwnr] = useState<boolean>(false);
   const [user, setUser] = useState<UserSearchResponse | null>(null);
@@ -108,12 +114,51 @@ const LabelDetail = memo((props: Props) => {
 
       <ListHeader
         titl="Profiles"
+        bttn={ownr ? (
+          <>
+            {!crea ? (
+              <>
+                <Tooltip
+                  desc={
+                    <div>
+                      <div>use <b>add</b> to link an external</div>
+                      <div>account to this label here</div>
+                    </div>
+                  }
+                  side="left"
+                >
+                  <BiInfoCircle
+                    className="w-5 h-5 text-gray-500 dark:text-gray-500"
+                  />
+                </Tooltip>
+
+                <LabelButtonAdd
+                  clck={() => {
+                    setCrea(true);
+                  }}
+                />
+              </>
+            ) : (
+              <LabelButtonCancel
+                clck={() => {
+                  setCrea(false);
+                }}
+              />
+            )}
+          </>
+        ) : (
+          undefined
+        )}
       />
 
       <div>
         {labl && Object.entries(labl.prfl).map(([k, v]) => (
           <LabelProfileUpdateForm
             key={k}
+            dltd={(key: string) => {
+              delete labl.prfl[key];
+              setLabl(labl);
+            }}
             done={(val: string) => {
               if (val === v) {
                 addInfo(new InfoPropsObject("Nothing to change here, don't worry mate. No biggie at all!"));
@@ -128,7 +173,21 @@ const LabelDetail = memo((props: Props) => {
             pval={v}
           />
         ))}
-      </div>
+
+        {labl && crea && (
+          <LabelProfileCreateForm
+            cncl={() => {
+              setCrea(false);
+            }}
+            done={(key: string, val: string) => {
+              labl.prfl[key] = val;
+              setLabl(labl);
+              setCrea(false);
+            }}
+            labl={labl.labl}
+          />
+        )}
+      </div >
 
       <ListSeparator />
 
