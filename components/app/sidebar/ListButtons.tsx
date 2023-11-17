@@ -3,9 +3,9 @@ import { MouseEvent } from "react";
 import { CgAddR } from "react-icons/cg";
 import { RiHome4Line } from "react-icons/ri";
 import { RiListUnordered } from "react-icons/ri";
-import { RiTimeLine } from "react-icons/ri";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { NaoNaoIcon } from "@/components/app/icon/NaoNaoIcon";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
@@ -32,8 +32,8 @@ export const ListButtons = () => {
       <li>
         <ActiveButton
           href={!home || home === "" || home === "/" ? "/" : "/event/latest"}
-          text="Latest Events"
-          icon={<RiTimeLine />}
+          text="NaoNao"
+          icon={<NaoNaoIcon className="rounded-none" />}
         />
       </li>
 
