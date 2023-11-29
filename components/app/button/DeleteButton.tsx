@@ -46,13 +46,13 @@ export const DeleteButton = (props: Props) => {
               {props.desc}
             </AlertDialog.Description>
 
-            <div className="flex justify-end gap-[25px]">
+            <div className="flex gap-x-4">
               <AlertDialog.Cancel
                 onClick={cancel}
                 asChild
               >
                 <button
-                  className="flex-1 w-full md:w-auto mr-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+                  className="flex-1 w-full md:w-auto px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-blue-700 enabled:dark:bg-blue-700 enabled:hover:bg-blue-800 enabled:dark:hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
                 >
                   Cancel
                 </button>
@@ -62,7 +62,7 @@ export const DeleteButton = (props: Props) => {
                 asChild
               >
                 <button
-                  className="flex-1 w-full md:w-auto ml-1 px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
+                  className="flex-1 w-full md:w-auto px-5 py-2.5 text-gray-50 bg-gray-200 dark:bg-gray-800 enabled:bg-red-700 enabled:dark:bg-red-700 enabled:hover:bg-red-800 enabled:dark:hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center"
                 >
                   Delete
                 </button>
