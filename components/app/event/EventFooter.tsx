@@ -130,6 +130,7 @@ export function EventFooter(props: Props) {
         crem={mdrt || (ownr && !hpnd)}
         dadd={props.dadd}
         erem={() => eventDelete(props.evnt)}
+        evnt={props.evnt}
       />
     </div >
   );

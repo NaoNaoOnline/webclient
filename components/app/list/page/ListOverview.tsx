@@ -10,6 +10,7 @@ import { RiListUnordered } from "react-icons/ri";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
+import { DeleteButton } from "@/components/app/button/DeleteButton";
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { RowGrid } from "@/components/app/layout/RowGrid";
@@ -36,9 +37,10 @@ export const ListOverview = (props: Props) => {
   const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { atkn, uuid } = useAuth();
 
-  const [form, setForm] = useState<string>("");
   const [data, setData] = useState<ListSearchResponse[] | null>(null); // "data" due to naming conflict
+  const [form, setForm] = useState<string>("");
   const [ldng, setLdng] = useState<boolean>(true);
+  const [open, setOpen] = useState<string>("");
   const [ownr, setOwnr] = useState<boolean>(false);
 
   const clld: MutableRefObject<boolean> = useRef(false);
@@ -265,7 +267,7 @@ export const ListOverview = (props: Props) => {
                     className="ml-3 outline-none invisible group-hover/RowGrid:visible"
                     type="button"
                     onClick={() => {
-                      deleteList(x);
+                      setOpen(x.list);
                     }}
                   >
                     <RiDeleteBinLine
@@ -275,6 +277,14 @@ export const ListOverview = (props: Props) => {
                     `}
                     />
                   </button>
+
+                  <DeleteButton
+                    actn={() => deleteList(x)}
+                    clse={() => setOpen("")}
+                    desc="This cannot be undone. We'll smash it the fuck to bits."
+                    open={open === x.list}
+                    titl={"Delete List " + x.desc}
+                  />
                 </div>
               ) : (
                 undefined

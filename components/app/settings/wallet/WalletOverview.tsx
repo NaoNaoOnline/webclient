@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import spacetime from "spacetime";
 import { useAccount, useDisconnect } from "wagmi";
 
@@ -6,6 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
+import { DeleteButton } from "@/components/app/button/DeleteButton";
 import { hasLabl, useCache } from "@/components/app/cache/CacheProvider";
 import { RowGrid } from "@/components/app/layout/RowGrid";
 import { WalletUpdateForm } from "@/components/app/settings/wallet/update/WalletUpdateForm";
@@ -27,6 +30,8 @@ export const WalletOverview = () => {
   const { wllt, remWllt, updWllt } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useAuth();
+
+  const [open, setOpen] = useState<string>("");
 
   const walletDelete = async (wal: WalletSearchResponse) => {
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Wallet");
@@ -115,20 +120,30 @@ export const WalletOverview = () => {
             </span>
           }
           rigt={
-            <button
-              className="outline-none invisible group-hover/RowGrid:visible"
-              type="button"
-              onClick={() => {
-                walletDelete(x);
-              }}
-            >
-              <RiDeleteBinLine
-                className={`
+            <div>
+              <button
+                className="outline-none invisible group-hover/RowGrid:visible"
+                type="button"
+                onClick={() => {
+                  setOpen(x.intern.wllt);
+                }}
+              >
+                <RiDeleteBinLine
+                  className={`
                    w-5 h-5 text-gray-500 dark:text-gray-500
                    hover:text-gray-900 dark:hover:text-gray-50
                 `}
+                />
+              </button>
+
+              <DeleteButton
+                actn={() => walletDelete(x)}
+                clse={() => setOpen("")}
+                desc="Removing your wallet does not affect any of your funds. We will merely purge your proof of ownership from the system. You can add your wallet again any time, and designate it for any purpose. All you have to do is to verify your ownership again, by signing a message."
+                open={open === x.intern.wllt}
+                titl={"Remove Wallet " + truncateEthAddress(x.public.addr)}
               />
-            </button>
+            </div>
           }
         />
       ))}
