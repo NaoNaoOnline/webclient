@@ -1,6 +1,7 @@
 import * as Switch from "@radix-ui/react-switch";
 
 import { Half2Icon } from "@radix-ui/react-icons";
+import { MdContrast } from "react-icons/md";
 
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { useSystem } from "@/components/app/theme/SystemThemeProvider";
@@ -10,7 +11,7 @@ export const ThemeSection = () => {
 
   return (
     <ListHeader
-      icon={<Half2Icon />}
+      icon={<MdContrast />}
       titl="System Theme"
       bttn={
         <Switch.Root

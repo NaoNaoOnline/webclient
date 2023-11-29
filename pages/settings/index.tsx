@@ -14,6 +14,7 @@ import { NetworkContext, getChain, getNetwork } from "@/components/app/network/N
 import { NetworkSection } from "@/components/app/settings/network/NetworkSection";
 import { PolicySection } from "@/components/app/settings/policy/PolicySection";
 import { getManual } from "@/components/app/theme/ManualThemeProvider";
+import { SubscriptionSection } from "@/components/app/settings/subscription/SubscriptionSection";
 import { ThemeSection } from "@/components/app/settings/theme/ThemeSection";
 import { UserSection } from "@/components/app/settings/user/UserSection";
 import { WalletSection } from "@/components/app/settings/wallet/WalletSection";
@@ -66,6 +67,9 @@ export default function Page() {
           <ListSeparator />
 
           <WalletSection />
+          <ListSeparator />
+
+          <SubscriptionSection />
           <ListSeparator />
 
           {plcy.some((x: PolicySearchResponse) => hasMemb(x.memb)) && (

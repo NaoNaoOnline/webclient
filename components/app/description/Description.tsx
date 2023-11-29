@@ -8,7 +8,7 @@ import spacetime, { Spacetime } from "spacetime";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { DescriptionUpdateForm } from "@/components/app/description/update/DescriptionUpdateForm";
-import DescriptionMenu from "@/components/app/description/DescriptionMenu";
+import { DescriptionMenu } from "@/components/app/description/DescriptionMenu";
 import ReactionBar from "@/components/app/reaction/ReactionBar";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
@@ -94,10 +94,10 @@ export default function Description(props: Props) {
 
         <div>
           <DescriptionMenu
-            cdel={mdrt || (ownr && !told && !hpnd && !only)}
+            crem={mdrt || (ownr && !told && !hpnd && !only)}
             cupd={ownr && !told && !hpnd}
-            desd={() => props.drem(props.desc)}
-            desu={() => setForm((old: boolean) => !old)}
+            drem={() => props.drem(props.desc)}
+            dupd={() => setForm((old: boolean) => !old)}
           />
         </div>
       </div>
