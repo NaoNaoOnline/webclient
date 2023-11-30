@@ -34,6 +34,7 @@ const newObct = (x: LabelUpdateRequest): UpdateI_Object => {
       },
       update: x.valu.map((y, i) => {
         return {
+          frm: "",
           ope: x.oper[i], // add or remove
           pat: x.path[i], // e.g. /prfl/Twitter/data
           val: x.valu[i], // e.g. FlashbotsFDN
