@@ -18,7 +18,7 @@ interface Props {
 
 export function DescriptionCreateForm(props: Props) {
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn, uuid } = useAuth();
+  const { atkn, imag, name, prem, uuid } = useAuth();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 
@@ -42,8 +42,9 @@ export function DescriptionCreateForm(props: Props) {
 
       const newDesc = new DescriptionSearchObject({
         // local
-        imag: "",
-        name: "",
+        imag: imag,
+        name: name,
+        prem: prem,
         // extern
         extern: [],
         // intern

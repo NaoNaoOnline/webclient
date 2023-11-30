@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 import spacetime, { Spacetime } from "spacetime";
 
@@ -33,11 +32,10 @@ interface Props {
 
 export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
-  const { atkn } = useAuth();
+  const { atkn, uuid } = useAuth();
   const { hasAcce } = useCache();
 
   const { addErro, addPgrs, addScss } = useToast();
-  const { user } = useUser();
 
   const now: Spacetime = spacetime.now();
   const lin: number = props.evnt.linkAmnt();
@@ -45,7 +43,7 @@ export function EventFooter(props: Props) {
   const dmax: boolean = props.desc?.length >= 50;          // description limit per event
   const hpnd: boolean = props.evnt?.hpnd(now);             // event already happened
   const mdrt: boolean = hasAcce(SystemEvnt, AccessDelete); // current user is moderator
-  const ownr: boolean = props.evnt?.ownr(user);            // current user is event owner
+  const ownr: boolean = props.evnt?.ownr(uuid);            // current user is event owner
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Event");
   const scss: SuccessPropsObject = new SuccessPropsObject("You are crushing it bb, that event's gone for good!");

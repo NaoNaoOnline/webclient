@@ -2,8 +2,9 @@ export interface DescriptionSearchResponse {
   // extern
   extern: DescriptionSearchResponseExtern[]
   // local
-  imag: string; // used for user image
-  name: string; // used for user name
+  imag: string;  // used for user image
+  name: string;  // used for user name
+  prem: boolean; // used for premium flag
   // intern
   crtd: string;
   desc: string;

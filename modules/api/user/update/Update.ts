@@ -10,7 +10,7 @@ export async function UserUpdate(req: UserUpdateRequest[]): Promise<UserUpdateRe
           intern: {
             user: x.user,
           },
-          update: (x.home || x.name ? [{ ope: "replace", pat: newPat(x), val: newVal(x) }] : []),
+          update: (x.home || x.name ? [{ frm: "", ope: "replace", pat: newPat(x), val: newVal(x) }] : []),
         })),
       },
       {

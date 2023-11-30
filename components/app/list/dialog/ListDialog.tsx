@@ -252,6 +252,7 @@ const srtUser = (evn: EventSearchObject, des: DescriptionSearchObject[]): UserSe
       uni.push({
         // intern
         crtd: "",
+        prem: "",
         user: x.user(),
         // public
         home: "",

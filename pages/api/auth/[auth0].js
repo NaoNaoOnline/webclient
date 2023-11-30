@@ -16,6 +16,7 @@ const afterCallback = async (req, res, session, state) => {
     const usr = await UserCreate([{ atkn: atkn, imag: imag, name: name }])
 
     session.user.intern = {
+      prem: usr[0].prem,
       uuid: usr[0].user,
     }
 

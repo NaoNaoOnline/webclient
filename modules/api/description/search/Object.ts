@@ -3,6 +3,7 @@ import { UserProfile } from "@auth0/nextjs-auth0/dist/client";
 import spacetime, { Spacetime } from "spacetime";
 
 import { DescriptionSearchResponse } from "@/modules/api/description/search/Response";
+import { hasPrm } from "@/components/app/auth/AuthProvider";
 
 export default class DescriptionSearchObject {
   private res: DescriptionSearchResponse;
@@ -39,6 +40,12 @@ export default class DescriptionSearchObject {
   // desc returns the object ID of this description.
   desc(): string {
     return this.res.desc;
+  }
+
+  // prem expresses whether the user having created this description has a
+  // premium subscription.
+  prem(): boolean {
+    return this.res.prem;
   }
 
   // user returns the object ID of the user that created this description.
@@ -107,8 +114,8 @@ export default class DescriptionSearchObject {
   //
 
   // ownr expresses whether the given user is the owner of this description.
-  ownr(use: UserProfile | undefined): boolean {
-    return this.user() === use?.intern?.uuid;
+  ownr(uid: string): boolean {
+    return this.user() === uid;
   }
 
   //
