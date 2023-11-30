@@ -29,7 +29,7 @@ export async function DescriptionSearch(req: DescriptionSearchRequest[]): Promis
       // local
       imag: "",
       name: "",
-      prem: "",
+      prem: false,
       // intern
       crtd: x.intern?.crtd || "",
       desc: x.intern?.desc || "",
