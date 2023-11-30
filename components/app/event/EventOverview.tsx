@@ -34,7 +34,7 @@ interface Props {
 export const EventOverview = (props: Props) => {
   const { labl } = useCache();
   const { addErro } = useToast();
-  const { atkn, imag, name, prem, uuid } = useAuth();
+  const { atkn } = useAuth();
 
   const qury: string = newQury(props);
 
@@ -47,21 +47,7 @@ export const EventOverview = (props: Props) => {
 
   const addDesc = (des: DescriptionSearchObject) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
-      if (old) return [...old, new DescriptionSearchObject({
-        // local
-        imag: imag,
-        name: name,
-        prem: prem,
-        // extern
-        extern: [],
-        // intern
-        crtd: des.unix(),
-        desc: des.desc(),
-        user: uuid,
-        // public
-        evnt: des.evnt(),
-        text: des.text(),
-      })];
+      if (old) return [...old, des];
       return old;
     });
   };
