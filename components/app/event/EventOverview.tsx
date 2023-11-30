@@ -1,10 +1,8 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
-
 import spacetime, { Spacetime } from "spacetime";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
+import { hasPrm, useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { PageHeader } from "@/components/app/layout/PageHeader";
 import { EventContainer } from "@/components/app/event/EventContainer";
@@ -36,8 +34,7 @@ interface Props {
 export const EventOverview = (props: Props) => {
   const { labl } = useCache();
   const { addErro } = useToast();
-  const { atkn } = useAuth();
-  const { user } = useUser();
+  const { atkn, imag, name, prem, uuid } = useAuth();
 
   const qury: string = newQury(props);
 
@@ -52,14 +49,15 @@ export const EventOverview = (props: Props) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
       if (old) return [...old, new DescriptionSearchObject({
         // local
-        imag: user?.picture || "",
-        name: user?.public?.name || "",
+        imag: imag,
+        name: name,
+        prem: prem,
         // extern
         extern: [],
         // intern
         crtd: des.unix(),
         desc: des.desc(),
-        user: user?.intern?.uuid || "",
+        user: uuid,
         // public
         evnt: des.evnt(),
         text: des.text(),
@@ -231,6 +229,7 @@ export const EventOverview = (props: Props) => {
               ...x,
               imag: u.imag,
               name: u.name,
+              prem: hasPrm(u.prem, Date.now() / 1000),
             });
           } else {
             return new DescriptionSearchObject(x);

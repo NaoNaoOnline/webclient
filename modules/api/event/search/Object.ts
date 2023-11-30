@@ -111,8 +111,8 @@ export default class EventSearchObject {
   //
 
   // ownr expresses whether the given user is the owner of this event.
-  ownr(use: UserProfile | undefined): boolean {
-    return this.user() === use?.intern?.uuid;
+  ownr(uid: string): boolean {
+    return this.user() === uid;
   }
 
 

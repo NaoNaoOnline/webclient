@@ -1,6 +1,5 @@
 import * as Switch from "@radix-ui/react-switch";
 
-import { Half2Icon } from "@radix-ui/react-icons";
 import { MdContrast } from "react-icons/md";
 
 import { ListHeader } from "@/components/app/layout/ListHeader";

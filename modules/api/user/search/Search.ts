@@ -18,6 +18,7 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
     return cal.response.object.map((x) => ({
       // intern
       crtd: x.intern?.crtd || "",
+      prem: x.intern?.prem || "",
       user: x.intern?.user || "",
       // public
       home: x.public?.home || "",

@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
 import Link from "next/link";
 
 import spacetime, { Spacetime } from "spacetime";
 
+import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { DescriptionUpdateForm } from "@/components/app/description/update/DescriptionUpdateForm";
 import { DescriptionMenu } from "@/components/app/description/DescriptionMenu";
@@ -28,9 +28,9 @@ interface Props {
 }
 
 export default function Description(props: Props) {
+  const { uuid } = useAuth();
   const { hasAcce } = useCache();
   const { addInfo } = useToast();
-  const { user } = useUser();
 
   const [form, setForm] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.desc.text());
@@ -40,7 +40,7 @@ export default function Description(props: Props) {
   const hpnd: boolean = props.evnt.hpnd(now);              // event already happened
   const mdrt: boolean = hasAcce(SystemDesc, AccessDelete); // current user is moderator
   const only: boolean = props.amnt == 1;                   // the event has only one description
-  const ownr: boolean = props.desc.ownr(user);             // current user is description owner
+  const ownr: boolean = props.desc.ownr(uuid);             // current user is description owner
   const told: boolean = props.desc.cupd(now);              // description is too old
 
   return (
@@ -53,7 +53,10 @@ export default function Description(props: Props) {
           >
             <Image
               alt="profile picture"
-              className="w-7 h-7 rounded-full"
+              className={`
+                w-7 h-7
+                ${props.desc.prem() ? "rounded-lg border-2 border-sky-300" : "rounded-full"}
+              `}
               height={28}
               width={28}
               src={props.desc.imag()}
