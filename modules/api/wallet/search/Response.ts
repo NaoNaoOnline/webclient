@@ -4,6 +4,9 @@ export interface WalletSearchResponse {
 }
 
 export interface WalletSearchResponseIntern {
+  // local
+  name: string; // TODO
+  // intern
   addr: WalletSearchResponseInternAddr;
   crtd: string;
   labl: WalletSearchResponseInternLabl;

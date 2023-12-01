@@ -15,7 +15,7 @@ interface Props {
   text: string;                                   // label text to show for the rendered resource
 }
 
-export function RuleSelect(props: Props) {
+export const RuleSelect = (props: Props) => {
   return (
     <div
       className="flex flex-row group"
@@ -52,4 +52,4 @@ export function RuleSelect(props: Props) {
       />
     </div>
   );
-}
+};

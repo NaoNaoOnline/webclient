@@ -85,6 +85,7 @@ const WalletUpdateForm = memo((props: Props) => {
           labl: {
             time: wal.intern.labl.time,
           },
+          name: "",
           user: props.wllt.intern.user,
           wllt: props.wllt.intern.wllt,
         },

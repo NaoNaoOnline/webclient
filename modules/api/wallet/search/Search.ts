@@ -9,6 +9,7 @@ export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSe
         object: req.map((x) => {
           if (x.wllt) return { intern: { wllt: x.wllt } }
           if (x.kind) return { public: { kind: x.kind } }
+          if (x.crtr) return { symbol: { crtr: x.crtr } }
           return {};
         }),
       },
@@ -21,6 +22,9 @@ export async function WalletSearch(req: WalletSearchRequest[]): Promise<WalletSe
 
     return call.response.object.map((x) => ({
       intern: {
+        // local
+        name: "",
+        // intern
         addr: {
           time: x.intern?.addr?.time || "",
         },

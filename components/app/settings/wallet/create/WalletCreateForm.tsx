@@ -79,6 +79,7 @@ const WalletCreateForm = memo((props: Props) => {
           labl: {
             time: "",
           },
+          name: "",
           user: uuid,
           wllt: wal.wllt,
         },
@@ -140,6 +141,7 @@ const WalletCreateForm = memo((props: Props) => {
           labl: {
             time: wal.intern.labl.time,
           },
+          name: "",
           user: curr.intern.user,
           wllt: curr.intern.wllt,
         },
