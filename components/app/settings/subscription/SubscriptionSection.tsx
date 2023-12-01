@@ -160,7 +160,7 @@ export const SubscriptionSection = () => {
           }
         });
 
-        setCrtr(wob);
+        setCrtr(aug);
         clld.current = false;
       } catch (err) {
         console.error(err);
