@@ -42,6 +42,18 @@ export function ListSelect(props: Props) {
     // the checked state and apply to the item.
     let chck: boolean = slct && slct.includes(x) ? true : false;
 
+    // onClick is some ugly hack to make clicking directly on the checkbox icon
+    // work. For some reason the current setup does not manage the checked state
+    // properly when the box icon is clicked. Clicking anywhere on the item and
+    // the label work just fine. There wasn't a great idea that fixed the issue
+    // easily so this is just a workaround. If somebody can improve this awful
+    // situation please create a pull request.
+    const onClick = () => {
+      {
+        chck = !chck;
+      }
+    };
+
     const onSelect = () => {
       setSlct((old: ListSearchResponse[]) => {
         if (old.length !== 0 && chck === false) return [...old, x];
@@ -54,12 +66,8 @@ export function ListSelect(props: Props) {
     };
 
     const onCheckedChange = (che: boolean | "indeterminate") => {
-      if (che === true) {
-        chck = true;
-      }
-
-      if (che === false) {
-        chck = false;
+      {
+        chck = !che;
       }
 
       setSlct((old: ListSearchResponse[]) => {
@@ -81,6 +89,7 @@ export function ListSelect(props: Props) {
           className="w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
           checked={chck}
           onCheckedChange={onCheckedChange}
+          onClick={onClick}
           id={salt + ":" + i}
         >
           <Checkbox.Indicator>

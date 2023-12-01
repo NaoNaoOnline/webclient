@@ -3,7 +3,6 @@ import { ReactNode, createContext, useContext } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 import useSWR from "swr";
-import spacetime, { Spacetime } from "spacetime";
 
 const fetcher = async (url: string): Promise<string> => {
   const res = await fetch(url);

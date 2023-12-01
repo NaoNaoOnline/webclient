@@ -202,7 +202,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
     const getData = async () => {
       try {
-        const wal: WalletSearchResponse[] = await WalletSearch([{ atkn: atkn, kind: "eth", wllt: "" }]);
+        const wal: WalletSearchResponse[] = await WalletSearch([{ atkn: atkn, crtr: "", kind: "eth", wllt: "" }]);
 
         if (wal.length !== 0) {
           setWllt(wal);

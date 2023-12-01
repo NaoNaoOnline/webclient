@@ -5,4 +5,6 @@ export interface WalletSearchRequest {
   wllt: string;
   // public
   kind: string;
+  // symbol
+  crtr: string;
 }

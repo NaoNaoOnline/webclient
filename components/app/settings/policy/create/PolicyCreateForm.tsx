@@ -11,8 +11,8 @@ import { BiInfoCircle } from "react-icons/bi";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { TextInput } from "@/components/app/event/create/TextInput";
-import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 import { ListHeader } from "@/components/app/layout/ListHeader";
+import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
