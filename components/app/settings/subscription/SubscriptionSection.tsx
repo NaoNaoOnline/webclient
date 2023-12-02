@@ -1,7 +1,10 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
+import spacetime, { Spacetime } from "spacetime";
+
 import { Address, useAccount } from "wagmi";
 import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
+import { parseEther } from "viem";
 
 import { BiInfoCircle } from "react-icons/bi";
 import { BsCurrencyDollar } from "react-icons/bs";
@@ -20,7 +23,9 @@ import { useToast } from "@/components/app/toast/ToastProvider";
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { SubscriptionABI } from "@/modules/abi/SubscriptionABI";
-import { FeeAddress, SubscriptionContract } from "@/modules/config/config";
+import { SubscriptionContract } from "@/modules/config/config";
+import { SubscriptionSearch } from "@/modules/api/subscription/search/Search";
+import { SubscriptionCreate } from "@/modules/api/subscription/create/Create";
 import { SubscriptionSearchResponse } from "@/modules/api/subscription/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
@@ -31,7 +36,6 @@ export const SubscriptionSection = () => {
 
   const { atkn, uuid } = useAuth();
 
-  const [crea, setCrea] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [subs, setSubs] = useState<SubscriptionSearchResponse[]>([]);
   const [crtr, setCrtr] = useState<WalletSearchResponse[]>([]);
@@ -44,6 +48,11 @@ export const SubscriptionSection = () => {
 
   const clld: MutableRefObject<boolean> = useRef(false);
 
+  const time: Spacetime = spacetime.now().goto("GMT");
+
+  const iren: boolean = renSub(subs, time);       // is renewal
+  const csub: boolean = canSub(subs, time, iren); // can subscribe
+
   const handleSubmit = async (wal: WalletSearchResponse[]) => {
     if (!address) return;
 
@@ -51,6 +60,16 @@ export const SubscriptionSection = () => {
     const scss: SuccessPropsObject = new SuccessPropsObject("Enjoy your premium features, you magnificant beast!");
     const info: InfoPropsObject = new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!");
 
+    // rcvr is the user ID of the user receiving the premium subscription.
+    // This can be the current user ID "uuid", or the ID of another user, if
+    // the subscription should be gifted to someone else.
+    const rcvr: string = uuid; // TODO allow people to gift subscriptions
+
+    const addr: string[] = walAdd(wal)
+
+    const unix: string = subUni(time, iren);
+
+    // Ensure the wallet is not empty.
     try {
       addPgrs(pgrs);
 
@@ -63,26 +82,32 @@ export const SubscriptionSection = () => {
         addInfo(info);
         return;
       }
+    } catch (err) {
+      addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+    }
 
-      // rec is the user ID of the user receiving the premium subscription. This
-      // can be the current user ID "uuid", or the ID of another user, if the
-      // subscription should be gifted to someone else.
-      const rec: string = uuid;
+    // Create the offchain subscription refernce first.
+    let crtd: string = "";
+    let suid: string = "";
+    try {
+      const [sub] = await SubscriptionCreate([{ atkn: atkn, crtr: addr.join(","), payr: uuid, rcvr: rcvr, unix: unix }]);
+      crtd = sub.crtd
+      suid = sub.subs
+    } catch (err) {
+      addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+    }
 
-      const add: string[] = walAdd(wal)
-
-      // TODO subscription timestamp
-      const uni: string = "";
-
+    // Create the onchain subscription refernce second.
+    try {
       let fnc: string = "";
       if (wal.length === 1) fnc = "subOne";
       if (wal.length === 2) fnc = "subTwo";
       if (wal.length === 3) fnc = "subThr";
 
       let arg: any = [];
-      if (wal.length === 1) arg = [rec, wal[0].public.addr, uni];
-      if (wal.length === 2) arg = [rec, ...mrgAlo(add, [50, 50]), uni];
-      if (wal.length === 3) arg = [rec, ...mrgAlo(add, [33, 33, 34]), uni];
+      if (wal.length === 1) arg = [rcvr, wal[0].public.addr, unix];
+      if (wal.length === 2) arg = [rcvr, ...mrgAlo(addr, [50, 50]), unix];
+      if (wal.length === 3) arg = [rcvr, ...mrgAlo(addr, [33, 33, 34]), unix];
 
       pgrs.setCmpl(30);
       const pre = await prepareWriteContract({
@@ -91,6 +116,7 @@ export const SubscriptionSection = () => {
         chainId: chid,
         functionName: fnc,
         args: arg,
+        value: parseEther("0.003"),
       })
 
       pgrs.setCmpl(40);
@@ -101,19 +127,18 @@ export const SubscriptionSection = () => {
         hash: hash,
       })
 
-      // TODO
       const newSubs = {
         // intern
-        crtd: "",
+        crtd: crtd,
         fail: "",
-        stts: "",
-        subs: "",
-        user: "",
+        stts: "created",
+        subs: suid,
+        user: uuid,
         // public
-        crtr: "",
-        payr: "",
-        rcvr: "",
-        unix: "",
+        crtr: addr.join(","),
+        payr: uuid,
+        rcvr: rcvr,
+        unix: unix,
       };
 
       addScss(scss);
@@ -130,6 +155,10 @@ export const SubscriptionSection = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        const sub = await SubscriptionSearch([{ atkn: atkn, subs: "", user: "", payr: "", rcvr: uuid }]);
+
+        setSubs(sub);
+
         const wob = await WalletSearch([{ atkn: atkn, crtr: "default", kind: "", wllt: "" }]);
 
         // Especially in the beginning it may happen that there is no content
@@ -138,7 +167,6 @@ export const SubscriptionSection = () => {
         // should be content creators users can pay directly and the platform
         // fee address should become irrelevant as a main beneficiary.
         if (wob.length === 0) {
-          setCrtr(pltFrm(FeeAddress));
           clld.current = false;
           return;
         }
@@ -183,12 +211,25 @@ export const SubscriptionSection = () => {
             <Tooltip
               desc={
                 <div>
-                  <div>
-                    connect your ETH wallet and
-                  </div>
-                  <div>
-                    enable all premium features
-                  </div>
+                  {csub ? (
+                    <>
+                      <div>
+                        connect your ETH wallet and
+                      </div>
+                      <div>
+                        enable all premium features
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        you can renew your subscription
+                      </div>
+                      <div>
+                        up to 7 days before month&apos;s end
+                      </div>
+                    </>
+                  )}
                 </div>
               }
               side="left"
@@ -202,26 +243,68 @@ export const SubscriptionSection = () => {
               clck={() => {
                 setOpen(true);
               }}
-              dsbl={!address}
+              dsbl={!address || !csub}
             />
 
             <SubscriptionDialog
               clos={() => {
                 setOpen(false);
               }}
+              crtr={crtr}
+              mnth={subMon(time, iren)}
               open={open}
               sbmt={(wal: WalletSearchResponse[]) => {
+                setOpen(false);
                 handleSubmit(wal);
               }}
-              crtr={crtr}
             />
           </>
         }
       />
 
-      <SubscriptionOverview />
+      <SubscriptionOverview
+        subs={subs}
+      />
     </>
   );
+};
+
+// canSub expresses whether a subscription can be created or not.
+const canSub = (sub: SubscriptionSearchResponse[], now: Spacetime, ren: boolean): boolean => {
+  // If no active subscription exists, then you can subscribe. Note that the
+  // subscription button must still be accessible in case the subscription
+  // process got interrupted intermittendly. So if the subscription object got
+  // created offchain, but the subscription got not yet paid for onchain, then
+  // the user must still be able to write to the contract. For that reason we
+  // append the third paratemer true below when calling exiSub.
+  if (!exiSub(sub, now.startOf("month").epoch, true)) return true;
+
+  // If the new subscription would in fact be a renewal, and the time of the
+  // renewal would be within the last 7 days of the current month, then you can
+  // subscribe again.
+  if (ren && lasDay(now, 7)) return true;
+
+  return false
+};
+
+const exiSub = (sub: SubscriptionSearchResponse[], uni: Number, act?: boolean): boolean => {
+  for (let i = 0; i < sub.length; i++) {
+    if (Number(sub[i].unix) * 1000 === uni) {
+      if (act === true) {
+        return sub[i].stts === "success"
+      } else {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+// lasDay expresses whether the given time is within the last N days of the
+// current month.
+const lasDay = (now: Spacetime, day: number): boolean => {
+  return now.isAfter(now.endOf("month").subtract(day, "day"));
 };
 
 // mrgAlo merges creator addresses and their respective allocations. Consider
@@ -242,32 +325,29 @@ const mrgAlo = (cre: string[], alo: number[]): any[] => {
   return mrg;
 };
 
-const pltFrm = (add: string[]): WalletSearchResponse[] => {
-  const wal: WalletSearchResponse[] = [];
+// renSub expresses whether a subscription is a renewal or not. If an active
+// subscription exists for the previous month, then the subscription for the
+// next month will be a renewal.
+const renSub = (sub: SubscriptionSearchResponse[], now: Spacetime): boolean => {
+  return exiSub(sub, now.last("month").startOf("month").epoch);
+};
 
-  for (let i = 0; i < add.length; i++) {
-    wal.push({
-      intern: {
-        addr: {
-          time: "",
-        },
-        crtd: "",
-        labl: {
-          time: "",
-        },
-        name: "Platform",
-        user: "1",
-        wllt: "",
-      },
-      public: {
-        addr: add[i],
-        kind: "",
-        labl: "",
-      },
-    });
-  }
+// subMon returns the formatted month for which a new subscription would be,
+// based on the current time and the distinction between first and consecutive
+// subscriptions. If a subscription is renewing an already active subscription,
+// then the new subscription is for the next month, because you renew it in
+// advance. Otherwise, the new subscription is created for the current month.
+const subMon = (now: Spacetime, ren: boolean): string => {
+  if (ren) now.next("month").format("month")
+  return now.format("month")
+};
 
-  return wal;
+// subUni returns the unix timestamp in seconds for the new subscription being
+// made, based on the current time and the distinction between first and
+// consecutive subscriptions.
+const subUni = (now: Spacetime, ren: boolean): string => {
+  if (ren) return String(Math.floor(now.next("month").epoch / 1000));
+  return String(Math.floor(now.startOf("month").epoch / 1000));
 };
 
 const walAdd = (wal: WalletSearchResponse[]): string[] => {

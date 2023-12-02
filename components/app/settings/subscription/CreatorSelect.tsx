@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import * as Checkbox from "@radix-ui/react-checkbox";
 
 import { MdOutlineOpenInNew } from "react-icons/md";
@@ -5,7 +7,8 @@ import { RiCheckLine } from "react-icons/ri";
 
 interface Props {
   chck: (che: boolean | "indeterminate") => void; // Radix onCheckedChange callback
-  name: string;                                   // user name of the creator to show
+  dflt: boolean;                                  // is default checked
+  user: string;                                   // user name of the creator to show
 }
 
 export const CreatorSelect = (props: Props) => {
@@ -15,10 +18,11 @@ export const CreatorSelect = (props: Props) => {
     >
       <label
         className="inline-flex w-full h-[32px] p-2 leading-none rounded-md text-gray-900 dark:text-gray-50 items-center select-none outline-none hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 cursor-pointer"
-        htmlFor={props.name}
+        htmlFor={props.user}
       >
         <Checkbox.Root
-          id={props.name}
+          id={props.user}
+          defaultChecked={props.dflt}
           onCheckedChange={props.chck}
           className="flex-none w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
         >
@@ -28,14 +32,24 @@ export const CreatorSelect = (props: Props) => {
         </Checkbox.Root>
 
         <span className="text-sm truncate max-w-[120px] sm:max-w-[155px]">
-          @{props.name}
-        </span>
-
-        <span className="inline-block items-center rounded ml-2 my-3 px-[3px] text-xs font-medium bg-sky-100 text-sky-600 dark:bg-sky-900 dark:text-sky-400 border border-sky-500 cursor-pointer group">
-          <MdOutlineOpenInNew />
+          @{props.user}
         </span>
 
       </label>
+
+      <Link
+        href={"/user/" + encodeURIComponent(props.user)}
+        target="_blank"
+        className={`
+          flex ml-2
+          items-center select-none outline-none
+          text-gray-400 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50
+          hover:underline hover:underline-offset-2
+          invisible group-hover:visible
+        `}
+      >
+        <MdOutlineOpenInNew className="w-5 h-5" />
+      </Link>
     </div>
   );
 };
