@@ -5,7 +5,7 @@ export interface WalletSearchResponse {
 
 export interface WalletSearchResponseIntern {
   // local
-  name: string; // TODO
+  name: string;
   // intern
   addr: WalletSearchResponseInternAddr;
   crtd: string;

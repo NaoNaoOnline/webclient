@@ -15,7 +15,7 @@ export const SubscriptionButtonSubscribe = (props: Props) => {
       disabled={props.dsbl}
       onClick={props.clck}
     >
-      Subscribe for <sup>$</sup>6 / month
+      Subscribe for <sup>$</sup>7 / month
     </button>
   );
 };
