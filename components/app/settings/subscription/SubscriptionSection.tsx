@@ -226,7 +226,7 @@ export const SubscriptionSection = () => {
                         you can renew your subscription
                       </div>
                       <div>
-                        up to 7 days before month's end
+                        up to 7 days before month&apos;s end
                       </div>
                     </>
                   )}
