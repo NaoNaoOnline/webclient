@@ -1,10 +1,13 @@
 import Image from "next/image";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { PremiumButton } from "@/components/app/button/PremiumButton";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { ListHeader } from "@/components/app/layout/ListHeader";
 
 export const UserSection = () => {
-  const { imag, name, uuid } = useAuth();
+  const { imag, uuid } = useAuth();
+  const { user } = useCache();
 
   return (
     <ListHeader
@@ -17,7 +20,12 @@ export const UserSection = () => {
           src={imag}
         />
       }
-      titl={name}
+      titl={
+        <PremiumButton
+          name={user.name}
+          prem={user.prem}
+        />
+      }
       bttn={
         <span className="text-sm font-mono whitespace-nowrap text-gray-500 dark:text-gray-500">
           {uuid}

@@ -9,7 +9,7 @@ interface Props {
   clck?: (eve: MouseEvent<HTMLAnchorElement>) => void;
   href: string;
   icon: ReactElement;
-  text: string;
+  text: ReactElement;
   trgt?: string;
 }
 

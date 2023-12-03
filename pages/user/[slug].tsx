@@ -1,27 +1,78 @@
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { UserIcon } from "@heroicons/react/24/outline";
 
+import { PremiumButton } from "@/components/app/button/PremiumButton";
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ListSeparator } from "@/components/app/layout/ListSeparator";
 import { PageHeader } from "@/components/app/layout/PageHeader";
-
-import { LastElement } from "@/modules/path/LastElement";
 import { RowGrid } from "@/components/app/layout/RowGrid";
 
+import { UserSearch } from "@/modules/api/user/search/Search";
+import { UserSearchResponse } from "@/modules/api/user/search/Response";
+import { LastElement } from "@/modules/path/LastElement";
+
 export default function Page() {
-  const path: string = usePathname();
-  const user: string = LastElement(path);
+  const [user, setUser] = useState<UserSearchResponse | null>(null);
+
+  const name: string = LastElement(usePathname());
+
+  const clld = useRef(false);
+
+  useEffect(() => {
+    if (clld.current) {
+      return;
+    }
+
+    {
+      clld.current = true;
+    }
+
+    const getData = async () => {
+      try {
+        const [use]: UserSearchResponse[] = await UserSearch([{ user: "", name: name, self: false }]);
+        setUser(use);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    {
+      getData();
+    }
+  }, []);
 
   return (
     <>
       <PageHeader titl="User Profile" />
 
-      <ListHeader
-        icon={<UserIcon />}
-        titl={user}
-      />
+      {user ? (
+        <ListHeader
+          icon={
+            <Image
+              alt="profile picture"
+              className="w-5 h-5 rounded-full"
+              height={20}
+              width={20}
+              src={user.imag}
+            />
+          }
+          titl={
+            <PremiumButton
+              name={user.name}
+              prem={user.prem}
+            />
+          }
+        />
+      ) : (
+        <ListHeader
+          icon={<UserIcon />}
+          titl={<>{name}</>}
+        />
+      )}
 
       <ListSeparator />
 
@@ -36,7 +87,7 @@ export default function Page() {
           list={true}
           subj={
             <Link
-              href={"/event/user/" + encodeURIComponent(user)}
+              href={"/event/user/" + encodeURIComponent(name)}
               className={`
                 text-sm font-mono
                 hover:underline hover:underline-offset-2
@@ -56,7 +107,7 @@ export default function Page() {
           list={true}
           subj={
             <Link
-              href={"/event/like/" + encodeURIComponent(user)}
+              href={"/event/like/" + encodeURIComponent(name)}
               className={`
                 text-sm font-mono
                 hover:underline hover:underline-offset-2
@@ -76,7 +127,7 @@ export default function Page() {
           list={true}
           subj={
             <Link
-              href={"/label/user/" + encodeURIComponent(user)}
+              href={"/label/user/" + encodeURIComponent(name)}
               className={`
                 text-sm font-mono
                 hover:underline hover:underline-offset-2
@@ -96,7 +147,7 @@ export default function Page() {
           list={true}
           subj={
             <Link
-              href={"/list/user/" + encodeURIComponent(user)}
+              href={"/list/user/" + encodeURIComponent(name)}
               className={`
                 text-sm font-mono
                 hover:underline hover:underline-offset-2

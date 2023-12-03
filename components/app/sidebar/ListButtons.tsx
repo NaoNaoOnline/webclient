@@ -16,8 +16,6 @@ export const ListButtons = () => {
   const { addInfo } = useToast();
   const { auth } = useAuth();
 
-  const home: string = user[0]?.home;
-
   const reqAuth = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
       if (!auth) {
@@ -31,8 +29,8 @@ export const ListButtons = () => {
     <ul>
       <li>
         <ActiveButton
-          href={!home || home === "" || home === "/" ? "/" : "/event/latest"}
-          text="NaoNao"
+          href={user?.home === "" || user?.home === "/" ? "/" : "/event/latest"}
+          text={<>NaoNao</>}
           icon={<NaoNaoIcon className="rounded-none" />}
         />
       </li>
@@ -40,10 +38,10 @@ export const ListButtons = () => {
       {list.map((x, i) => (
         <li key={x.list}>
           <ActiveButton
-            actv={x.list === home}
+            actv={x.list === user?.home}
             href={`/list/` + x.list}
-            text={x.desc}
-            icon={x.list === home ? <RiHome4Line /> : <RiListUnordered />}
+            text={<>{x.desc}</>}
+            icon={x.list === user?.home ? <RiHome4Line /> : <RiListUnordered />}
           />
         </li>
       ))}
@@ -51,7 +49,7 @@ export const ListButtons = () => {
       <li>
         <ActiveButton
           href="/event/create"
-          text="Add Event"
+          text={<>Add Event</>}
           icon={<CgAddR />}
           blue={true}
           clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}

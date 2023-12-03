@@ -19,7 +19,7 @@ export function NetworkSection() {
     <>
       <ListHeader
         icon={<LinkIcon />}
-        titl="Platform Networks"
+        titl={<>Platform Networks</>}
       />
 
       <ToggleGroup.Root

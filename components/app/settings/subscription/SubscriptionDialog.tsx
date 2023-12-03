@@ -128,7 +128,7 @@ export const SubscriptionDialog = (props: Props) => {
               onClick={() => props.sbmt(slct)}
               onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
             >
-              Subscribe with $6 until the end of {props.mnth}
+              Subscribe for <sup>$</sup>7 until the end of {props.mnth}
             </button>
 
             <Dialog.Close asChild>

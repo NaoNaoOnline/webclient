@@ -111,7 +111,7 @@ const PolicyCreateForm = memo(() => {
     <>
       <ListHeader
         icon={<RiAddLine />}
-        titl="Add Policy"
+        titl={<>Add Policy</>}
         bttn={
           <>
             <Tooltip

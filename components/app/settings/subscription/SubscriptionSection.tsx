@@ -24,8 +24,9 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { SubscriptionABI } from "@/modules/abi/SubscriptionABI";
 import { SubscriptionContract } from "@/modules/config/config";
-import { SubscriptionSearch } from "@/modules/api/subscription/search/Search";
 import { SubscriptionCreate } from "@/modules/api/subscription/create/Create";
+import { SubscriptionSearch } from "@/modules/api/subscription/search/Search";
+import { SubscriptionUpdate } from "@/modules/api/subscription/update/Update";
 import { SubscriptionSearchResponse } from "@/modules/api/subscription/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
@@ -36,9 +37,10 @@ export const SubscriptionSection = () => {
 
   const { atkn, uuid } = useAuth();
 
-  const [open, setOpen] = useState<boolean>(false);
-  const [subs, setSubs] = useState<SubscriptionSearchResponse[]>([]);
   const [crtr, setCrtr] = useState<WalletSearchResponse[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [pntr, setPntr] = useState<string>("");
+  const [subs, setSubs] = useState<SubscriptionSearchResponse[]>([]);
 
   const { addErro, addInfo, addPgrs, addScss } = useToast();
 
@@ -57,8 +59,6 @@ export const SubscriptionSection = () => {
     if (!address) return;
 
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Adding New Subscription");
-    const scss: SuccessPropsObject = new SuccessPropsObject("Enjoy your premium features, you magnificant beast!");
-    const info: InfoPropsObject = new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!");
 
     // rcvr is the user ID of the user receiving the premium subscription.
     // This can be the current user ID "uuid", or the ID of another user, if
@@ -79,7 +79,7 @@ export const SubscriptionSection = () => {
       });
 
       if (bal.value === BigInt(0)) {
-        addInfo(info);
+        addInfo(new InfoPropsObject("Got 0 ETH in that wallet. Can't fucking do it mate!"));
         return;
       }
     } catch (err) {
@@ -126,6 +126,13 @@ export const SubscriptionSection = () => {
       const tnx = await waitForTransaction({
         hash: hash,
       })
+    } catch (err) {
+      addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+    }
+
+    try {
+      pgrs.setCmpl(75);
+      await updateSubscriptions();
 
       const newSubs = {
         // intern
@@ -141,7 +148,6 @@ export const SubscriptionSection = () => {
         unix: unix,
       };
 
-      addScss(scss);
       pgrs.setDone(() => {
         setSubs((old: SubscriptionSearchResponse[]) => [...old, newSubs]);
       });
@@ -149,6 +155,47 @@ export const SubscriptionSection = () => {
       addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
     }
   };
+
+  const updateSubscriptions = async () => {
+    addInfo(new InfoPropsObject("Syncing state captain, this may take a moment!"));
+
+    try {
+      const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
+      setPntr(upd.pntr);
+    } catch (err) {
+      addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+    }
+  };
+
+  useEffect(() => {
+    if (pntr === "") return;
+
+    let timr: NodeJS.Timeout;
+
+    const poll = async () => {
+      try {
+        const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: pntr, sync: "default" }]);
+
+        const dsrd: string = upd.pntr;
+
+        if (dsrd !== pntr) {
+          const sub = await SubscriptionSearch([{ atkn: atkn, subs: "", user: "", payr: "", rcvr: uuid }]);
+          setSubs(sub);
+          clearInterval(timr);
+          setPntr("");
+          addScss(new SuccessPropsObject("Enjoy your premium features, you magnificant beast!"));
+        }
+      } catch (err) {
+        addErro(new ErrorPropsObject("An error occurred during polling!", err as Error));
+      }
+    };
+
+    timr = setInterval(poll, 5000); // 5 seconds
+
+    return () => {
+      clearInterval(timr);
+    };
+  }, [pntr, atkn, addErro, addScss]);
 
   // Fetch the list of creator wallets and augment them with the respective user
   // names.
@@ -205,7 +252,7 @@ export const SubscriptionSection = () => {
     <>
       <ListHeader
         icon={<BsCurrencyDollar />}
-        titl="My Subscriptions"
+        titl={<>My Subscriptions</>}
         bttn={
           <>
             <Tooltip
@@ -263,7 +310,9 @@ export const SubscriptionSection = () => {
       />
 
       <SubscriptionOverview
+        pntr={pntr}
         subs={subs}
+        updt={updateSubscriptions}
       />
     </>
   );

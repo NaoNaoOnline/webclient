@@ -1,8 +1,9 @@
-import { MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { PremiumButton } from "@/components/app/button/PremiumButton";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { DescriptionCreateForm } from "@/components/app/description/create/DescriptionCreateForm";
 import Description from "@/components/app/description/Description";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
@@ -32,8 +33,9 @@ interface Props {
 }
 
 export function EventBody(props: Props) {
-  const { addErro, addInfo, addPgrs, addScss } = useToast();
   const { auth, atkn, imag, name, uuid } = useAuth();
+  const { user } = useCache();
+  const { addErro, addInfo, addPgrs, addScss } = useToast();
 
   const info: InfoPropsObject = new InfoPropsObject("Please login to add your reaction, or the beavers will build a dam.");
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Removing Description");
@@ -188,13 +190,16 @@ export function EventBody(props: Props) {
               <Link
                 href={"/user/" + encodeURIComponent(name)}
                 className={`
-              flex-1
-              text-gray-900 dark:text-gray-50
-              text-sm font-medium whitespace-nowrap
-              hover:underline hover:underline-offset-2
-            `}
+                  flex-1
+                  text-gray-900 dark:text-gray-50
+                  text-sm font-medium whitespace-nowrap
+                  hover:underline hover:underline-offset-2
+                `}
               >
-                {name}
+                <PremiumButton
+                  name={user.name}
+                  prem={user.prem}
+                />
               </Link>
               {uuid === props.evnt.user() && (
                 <Tooltip
@@ -220,7 +225,3 @@ export function EventBody(props: Props) {
     </div>
   );
 };
-
-function onLinkClick(evn: MouseEvent<HTMLAnchorElement>) {
-  evn.stopPropagation();
-}

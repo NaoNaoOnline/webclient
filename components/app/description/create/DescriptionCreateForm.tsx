@@ -1,6 +1,7 @@
 import { useEffect, useRef, FormEvent, KeyboardEvent } from "react";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
@@ -17,8 +18,9 @@ interface Props {
 }
 
 export function DescriptionCreateForm(props: Props) {
+  const { atkn, imag, name, uuid } = useAuth();
+  const { prem } = useCache();
   const { addErro, addPgrs, addScss } = useToast();
-  const { atkn, imag, name, prem, uuid } = useAuth();
 
   const inpt = useRef<HTMLInputElement | null>(null);
 

@@ -93,7 +93,7 @@ export const LabelOverview = (props: Props) => {
         <>
           <ListHeader
             icon={<MdLabelOutline />}
-            titl="Labels"
+            titl={<>Labels</>}
           />
 
           <ListSeparator />
@@ -113,7 +113,7 @@ export const LabelOverview = (props: Props) => {
         <>
           <ListHeader
             icon={<MdLabelOutline />}
-            titl="Category Labels"
+            titl={<>Category Labels</>}
           />
 
           <ListSeparator />
@@ -140,7 +140,7 @@ export const LabelOverview = (props: Props) => {
         <>
           <ListHeader
             icon={<MdLabelOutline />}
-            titl="Host Labels"
+            titl={<>Host Labels</>}
           />
 
           <ListSeparator />

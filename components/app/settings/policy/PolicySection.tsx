@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { RiLock2Line } from "react-icons/ri";
 import { RiLoopRightLine } from "react-icons/ri";
@@ -27,9 +27,7 @@ export const PolicySection = () => {
   // TODO move this where it can be reused and hook it up with the create and
   // delete forms.
   const updatePolicies = async () => {
-    const info: InfoPropsObject = new InfoPropsObject("Syncing state captain, this may take a moment!");
-
-    addInfo(info);
+    addInfo(new InfoPropsObject("Syncing state captain, this may take a moment!"));
 
     try {
       const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
@@ -73,10 +71,10 @@ export const PolicySection = () => {
     <>
       <ListHeader
         icon={<RiLock2Line />}
-        titl="Platform Policies"
+        titl={<>Platform Policies</>}
         bttn={
           <button
-            onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               updatePolicies();
             }}
             className="outline-none group"

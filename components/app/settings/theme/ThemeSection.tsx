@@ -11,7 +11,7 @@ export const ThemeSection = () => {
   return (
     <ListHeader
       icon={<MdContrast />}
-      titl="System Theme"
+      titl={<>System Theme</>}
       bttn={
         <Switch.Root
           className="w-[39px] h-[22px] rounded-full relative shadow-[0_0_0_2px] shadow-gray-900 dark:shadow-gray-50 data-[state=checked]:bg-gray-900 dark:data-[state=checked]:bg-gray-50 outline-none"

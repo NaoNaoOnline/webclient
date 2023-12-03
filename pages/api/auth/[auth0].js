@@ -13,11 +13,10 @@ const afterCallback = async (req, res, session, state) => {
   const name = session.user.nickname || session.user.given_name || session.user.name;
 
   try {
-    const usr = await UserCreate([{ atkn: atkn, imag: imag, name: name }])
+    const [uob] = await UserCreate([{ atkn: atkn, imag: imag, name: name }])
 
     session.user.intern = {
-      prem: usr[0].prem,
-      uuid: usr[0].user,
+      uuid: uob.user,
     }
 
     session.user.public = {
