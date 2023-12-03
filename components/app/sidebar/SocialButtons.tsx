@@ -12,7 +12,7 @@ export function SocialButtons() {
         <ActiveButton
           href="https://discord.gg/J2MnbQvwqg"
           trgt="_blank"
-          text="Discord"
+          text={<>Discord</>}
           icon={<DiscordLogoIcon />}
         />
       </li>
@@ -21,7 +21,7 @@ export function SocialButtons() {
         <ActiveButton
           href="https://github.com/NaoNaoOnline"
           trgt="_blank"
-          text="Github"
+          text={<>Github</>}
           icon={<GitHubLogoIcon />}
         />
       </li>
@@ -30,7 +30,7 @@ export function SocialButtons() {
         <ActiveButton
           href="https://twitter.com/NaoNao_Online"
           trgt="_blank"
-          text="Twitter"
+          text={<>Twitter</>}
           icon={<TwitterLogoIcon />}
         />
       </li>

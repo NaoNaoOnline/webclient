@@ -16,7 +16,7 @@ export const CopyButton = (props: Props) => {
   const [time, setTime] = useState<NodeJS.Timeout[]>([]);
 
   const shwChck = () => {
-    time.forEach((timeout) => clearTimeout(timeout));
+    time.forEach((x: NodeJS.Timeout) => clearTimeout(x));
 
     const tref = setTimeout(() => {
       setChck(false);

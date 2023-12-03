@@ -6,6 +6,7 @@ import Link from "next/link";
 import spacetime, { Spacetime } from "spacetime";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { PremiumButton } from "@/components/app/button/PremiumButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { DescriptionUpdateForm } from "@/components/app/description/update/DescriptionUpdateForm";
 import { DescriptionMenu } from "@/components/app/description/DescriptionMenu";
@@ -53,10 +54,7 @@ export default function Description(props: Props) {
           >
             <Image
               alt="profile picture"
-              className={`
-                w-7 h-7
-                ${props.desc.prem() ? "rounded-lg border-2 border-sky-300" : "rounded-full"}
-              `}
+              className="w-7 h-7 rounded-full"
               height={28}
               width={28}
               src={props.desc.imag()}
@@ -71,7 +69,10 @@ export default function Description(props: Props) {
               hover:underline hover:underline-offset-2
             `}
           >
-            {props.desc.name()}
+            <PremiumButton
+              bool={props.desc.prem()}
+              name={props.desc.name()}
+            />
           </Link>
           {props.desc.user() === props.evnt.user() && (
             <Tooltip

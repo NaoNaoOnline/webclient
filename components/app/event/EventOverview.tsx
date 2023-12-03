@@ -2,8 +2,8 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { hasPrm, useAuth } from "@/components/app/auth/AuthProvider";
-import { useCache } from "@/components/app/cache/CacheProvider";
+import { useAuth } from "@/components/app/auth/AuthProvider";
+import { useCache, hasPrm } from "@/components/app/cache/CacheProvider";
 import { PageHeader } from "@/components/app/layout/PageHeader";
 import { EventContainer } from "@/components/app/event/EventContainer";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
@@ -33,8 +33,8 @@ interface Props {
 
 export const EventOverview = (props: Props) => {
   const { labl } = useCache();
-  const { addErro } = useToast();
   const { atkn } = useAuth();
+  const { addErro } = useToast();
 
   const qury: string = newQury(props);
 

@@ -32,9 +32,9 @@ interface Props {
 
 export function EventFooter(props: Props) {
   const nxtrtr = useRouter();
+
   const { atkn, uuid } = useAuth();
   const { hasAcce } = useCache();
-
   const { addErro, addPgrs, addScss } = useToast();
 
   const now: Spacetime = spacetime.now();
@@ -77,59 +77,63 @@ export function EventFooter(props: Props) {
 
   return (
     <div className="flex flex-row w-full mb-4 shadow-gray-400 dark:shadow-black shadow-[0px_-1px_2px_-1px]">
-      {props.evnt.cate(props.labl).map((x, i) => (
-        <Link
-          key={i}
-          href={`/event/label/cate/${encodeURIComponent(x.name)}`}
-          className={`
-            flex-1 ml-3 py-3
-            text-sm font-medium whitespace-nowrap text-sky-500
-            hover:underline hover:underline-offset-2
-          `}
-        >
-          #{x.name}
-        </Link>
-      ))}
-
-      <Link
-        href={"/event/" + props.evnt.evnt()}
-        className="w-full"
-      />
-
-      {lin !== 0 && (
-        <div
-          className="flex flex-row w-fit items-center"
-        >
-          <span className="flex-1 w-fit text-xs whitespace-nowrap text-gray-500 dark:text-gray-500">
-            {FormatNumber(lin)}
-          </span>
-          <span
-            className="flex-1 p-3"
+      <div className="flex w-full overflow-hidden">
+        {props.evnt.cate(props.labl).map((x, i) => (
+          <Link
+            key={i}
+            href={`/event/label/cate/${encodeURIComponent(x.name)}`}
+            className={`
+              flex-1 ml-3 py-3
+              text-sm font-medium whitespace-nowrap text-sky-500
+              hover:underline hover:underline-offset-2
+            `}
           >
-            <Tooltip
-              desc={
-                <div>
-                  <div>the number of clicks</div>
-                  <div>on the event link   </div>
-                </div>
-              }
-              side="left"
-            >
-              <BiBarChart
-                className="w-5 h-5 text-gray-500 dark:text-gray-500"
-              />
-            </Tooltip>
-          </span>
-        </div>
-      )}
+            #{x.name}
+          </Link>
+        ))}
 
-      <EventMenu
-        cadd={!dmax && !hpnd}
-        crem={mdrt || (ownr && !hpnd)}
-        dadd={props.dadd}
-        erem={() => eventDelete(props.evnt)}
-        evnt={props.evnt}
-      />
-    </div >
+        <Link
+          href={"/event/" + props.evnt.evnt()}
+          className="w-full"
+        />
+      </div>
+
+      <div className="flex bg-gray-50 dark:bg-gray-700 rounded-lg">
+        {lin !== 0 && (
+          <div
+            className="flex flex-row w-fit items-center"
+          >
+            <span className="flex-1 w-fit text-xs whitespace-nowrap text-gray-500 dark:text-gray-500">
+              {FormatNumber(lin)}
+            </span>
+            <span
+              className="flex-1 pl-3"
+            >
+              <Tooltip
+                desc={
+                  <div>
+                    <div>the number of clicks</div>
+                    <div>on the event link   </div>
+                  </div>
+                }
+                side="left"
+              >
+                <BiBarChart
+                  className="w-5 h-5 text-gray-500 dark:text-gray-500"
+                />
+              </Tooltip>
+            </span>
+          </div>
+        )}
+
+        <EventMenu
+          cadd={!dmax && !hpnd}
+          crem={mdrt || (ownr && !hpnd)}
+          dadd={props.dadd}
+          erem={() => eventDelete(props.evnt)}
+          evnt={props.evnt}
+        />
+      </div>
+    </div>
   );
 };

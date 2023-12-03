@@ -19,7 +19,8 @@ const defaultContextValue: {
   labl: LabelSearchResponse[];
   list: ListSearchResponse[];
   plcy: PolicySearchResponse[];
-  user: UserSearchResponse[];
+  prem: boolean;
+  user: UserSearchResponse;
   wllt: WalletSearchResponse[];
 
   addLabl: (lab: LabelSearchResponse) => void;
@@ -45,7 +46,8 @@ const defaultContextValue: {
   labl: [],
   list: [],
   plcy: [],
-  user: [],
+  prem: false,
+  user: { crtd: "", prem: "", user: "", home: "", imag: "", name: "" },
   wllt: [],
 
   addLabl: (lab: LabelSearchResponse) => { },
@@ -321,7 +323,8 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         labl: labl,
         list: srtList(list),
         plcy: srtPlcy(plcy),
-        user: user,
+        prem: hasPrm(user[0]?.prem, Date.now() / 1000),
+        user: user[0],
         wllt: srtWllt(wllt),
 
         addLabl: addLabl,
@@ -335,7 +338,6 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
         remPlcy: remPlcy,
         remUser: remUser,
         remWllt: remWllt,
-
 
         updList: updList,
         updPlcy: updPlcy,
@@ -361,6 +363,17 @@ export const hasLabl = (wal: WalletSearchResponse, lab: string): boolean => {
   }
 
   return false;
+};
+
+// hasPrm expresses whether a user has an active premium subscription based on
+// its Object.Prem unix timestamp, relative to the current time. Note that now
+// must be formatted to unix seconds. Otherwise every user will always and
+// forever have premium in the frontend.
+//
+//     hasPrm(user.prem, Date.now() / 1000)
+//
+export const hasPrm = (prm: string, now: number): boolean => {
+  return prm !== "" && now < Number(prm);
 };
 
 const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {

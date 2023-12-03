@@ -34,7 +34,6 @@ const defaultContextValue = {
   auth: false,
   imag: "",
   name: "",
-  prem: false,
   uuid: "",
 };
 
@@ -57,7 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           auth: false,
           imag: "",
           name: "",
-          prem: false,
           uuid: "",
         }}>
           {children}
@@ -69,7 +67,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           auth: true,
           imag: uctx.user.picture || "",
           name: uctx.user.public?.name || "",
-          prem: hasPrm(uctx.user.intern?.prem || "", Date.now() / 1000),
           uuid: uctx.user.intern?.uuid || "",
         }}>
           {children}
@@ -81,15 +78,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   return useContext(AuthContext);
-};
-
-// hasPrm expresses whether a user has an active premium subscription based on
-// its Object.Prem unix timestamp, relative to the current time. Note that now
-// must be formatted to unix seconds. Otherwise every user will always and
-// forever have premium in the frontend.
-//
-//     hasPrm(user.prem, Date.now() / 1000)
-//
-export const hasPrm = (prm: string, now: number): boolean => {
-  return prm !== "" && now < Number(prm);
 };

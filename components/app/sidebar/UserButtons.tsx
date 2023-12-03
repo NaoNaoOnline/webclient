@@ -2,7 +2,6 @@ import { MouseEvent, useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { RiNotification2Line } from "react-icons/ri";
 import { FiLogIn } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -10,6 +9,8 @@ import { TbMoon } from "react-icons/tb";
 import { TbSunHigh } from "react-icons/tb";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { PremiumButton } from "@/components/app/button/PremiumButton";
+import { useCache } from "@/components/app/cache/CacheProvider";
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 import { useManual } from "@/components/app/theme/ManualThemeProvider";
 import { useSystem } from "@/components/app/theme/SystemThemeProvider";
@@ -17,8 +18,9 @@ import { InfoPropsObject } from "@/components/app/toast/InfoToast";
 import { useToast } from "@/components/app/toast/ToastProvider";
 
 export function UserButtons() {
-  const { addInfo } = useToast();
   const { auth, imag, name } = useAuth();
+  const { user } = useCache();
+  const { addInfo } = useToast();
 
   const [manu, setManu] = useManual();
   const [rndr, setRndr] = useState(false);
@@ -55,7 +57,12 @@ export function UserButtons() {
         {auth && (
           <ActiveButton
             href={"/user/" + name}
-            text={name}
+            text={
+              <PremiumButton
+                name={user?.name}
+                prem={user?.prem}
+              />
+            }
             icon={
               <Image
                 alt="profile picture"
@@ -104,7 +111,7 @@ export function UserButtons() {
           <li>
             <ActiveButton
               href="/settings"
-              text="Settings"
+              text={<>Settings</>}
               icon={<IoSettingsOutline />}
             />
           </li>
@@ -114,7 +121,7 @@ export function UserButtons() {
           <li>
             <ActiveButton
               href="/api/auth/logout"
-              text="Logout"
+              text={<>Logout</>}
               icon={<FiLogOut />}
             />
           </li>
@@ -123,7 +130,7 @@ export function UserButtons() {
           <li>
             <ActiveButton
               href="/api/auth/login"
-              text="Login"
+              text={<>Login</>}
               icon={<FiLogIn />}
             />
           </li>

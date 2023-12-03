@@ -33,9 +33,9 @@ interface Props {
 }
 
 export const ListOverview = (props: Props) => {
+  const { atkn, uuid } = useAuth();
   const { list, remList, updList, user, updUser } = useCache();
   const { addErro, addInfo, addPgrs, addScss } = useToast();
-  const { atkn, uuid } = useAuth();
 
   const [data, setData] = useState<ListSearchResponse[] | null>(null); // "data" due to naming conflict
   const [form, setForm] = useState<string>("");
@@ -60,7 +60,7 @@ export const ListOverview = (props: Props) => {
       const [upd] = await UserUpdate([{ atkn: atkn, home: hom, name: "", user: uuid }]);
 
       pgrs.setDone(() => {
-        updUser(user[0], { ...user[0], home: hom });
+        updUser(user, { ...user, home: hom });
       });
 
       addScss(scss);
@@ -142,7 +142,7 @@ export const ListOverview = (props: Props) => {
     <>
       <ListHeader
         icon={<RiListUnordered />}
-        titl="Lists"
+        titl={<>Lists</>}
       />
 
       <ListSeparator />
@@ -178,7 +178,7 @@ export const ListOverview = (props: Props) => {
                   </div>
                 }
                 side="left"
-                vsbl={ownr && x.list === user[0].home}
+                vsbl={ownr && x.list === user.home}
               >
                 <BiInfoCircle
                   className="w-5 h-5 text-gray-500 dark:text-gray-500"
@@ -252,7 +252,7 @@ export const ListOverview = (props: Props) => {
                     className="ml-3 outline-none invisible group-hover/RowGrid:visible"
                     type="button"
                     onClick={() => {
-                      updateHome(x.list === user[0].home ? "/" : x.list);
+                      updateHome(x.list === user.home ? "/" : x.list);
                     }}
                   >
                     <RiHome4Line

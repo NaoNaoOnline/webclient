@@ -86,7 +86,7 @@ export function ListSelect(props: Props) {
         onSelect={onSelect}
       >
         <Checkbox.Root
-          className="w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
+          className="flex-none w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
           checked={chck}
           onCheckedChange={onCheckedChange}
           onClick={onClick}
@@ -96,12 +96,12 @@ export function ListSelect(props: Props) {
             <RiCheckLine className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
-        <label
+
+        <span
           className="text-sm truncate max-w-[175px]"
-          htmlFor={salt + ":" + i}
         >
           {x.desc}
-        </label>
+        </span>
       </Command.Item >
     );
   });

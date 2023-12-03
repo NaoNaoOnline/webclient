@@ -6,7 +6,7 @@ interface Props {
   bttn?: ReactElement;
   icon?: ReactElement;
   link?: ReactElement;
-  titl: string;
+  titl: ReactElement;
 }
 
 export const ListHeader = (props: Props) => {
@@ -14,11 +14,7 @@ export const ListHeader = (props: Props) => {
     <RowGrid
       icon={props.icon}
       link={props.link}
-      subj={
-        <>
-          {props.titl}
-        </>
-      }
+      subj={props.titl}
       rigt={props.bttn}
     />
   );

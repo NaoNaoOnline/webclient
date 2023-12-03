@@ -26,7 +26,7 @@ export const WalletSection = () => {
     <>
       <ListHeader
         icon={<FaEthereum />}
-        titl="My Wallets"
+        titl={<>My Wallets</>}
         bttn={
           <>
             <Tooltip

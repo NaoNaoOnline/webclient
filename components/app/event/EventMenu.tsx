@@ -24,7 +24,7 @@ export const EventMenu = (props: Props) => {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
-            className="flex-1 py-3 pr-3 outline-none group"
+            className="flex-1 p-3 outline-none group"
             type="button"
           >
             <EllipsisHorizontalIcon className="w-5 h-5 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50" />

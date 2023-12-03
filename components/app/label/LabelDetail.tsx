@@ -78,7 +78,7 @@ const LabelDetail = memo((props: Props) => {
       {labl && (
         <>
           <ListHeader
-            titl="Name"
+            titl={<>Name</>}
           />
 
           <RowGrid
@@ -96,7 +96,7 @@ const LabelDetail = memo((props: Props) => {
       {labl && (
         <>
           <ListHeader
-            titl="Kind"
+            titl={<>Kind</>}
           />
 
           <RowGrid
@@ -113,7 +113,7 @@ const LabelDetail = memo((props: Props) => {
       )}
 
       <ListHeader
-        titl="Profiles"
+        titl={<>Profiles</>}
         bttn={ownr ? (
           <>
             {!crea ? (
@@ -194,7 +194,7 @@ const LabelDetail = memo((props: Props) => {
       {user && (
         <>
           <ListHeader
-            titl="Owner"
+            titl={<>Owner</>}
           />
 
           <RowGrid
@@ -217,7 +217,7 @@ const LabelDetail = memo((props: Props) => {
       {labl && (
         <>
           <ListHeader
-            titl="ID"
+            titl={<>ID</>}
           />
 
           <RowGrid

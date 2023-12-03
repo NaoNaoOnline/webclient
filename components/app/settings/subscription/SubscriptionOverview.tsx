@@ -2,14 +2,19 @@ import { ReactNode } from "react";
 
 import spacetime from "spacetime";
 
-import { useAuth } from "@/components/app/auth/AuthProvider";
+import { RiCheckLine } from "react-icons/ri";
+import { RiLoopRightLine } from "react-icons/ri";
+
 import { RowGrid } from "@/components/app/layout/RowGrid";
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { SubscriptionSearchResponse } from "@/modules/api/subscription/search/Response";
+import { SubscriptionButtonUpdate } from "./button/SubscriptionButtonUpdate";
 
 interface Props {
+  pntr: string;
   subs: SubscriptionSearchResponse[];
+  updt: () => void;
 }
 
 export const SubscriptionOverview = (props: Props) => {
@@ -46,6 +51,14 @@ export const SubscriptionOverview = (props: Props) => {
             <div >
               0.003 ETH
             </div>
+          }
+          rigt={
+            <SubscriptionButtonUpdate
+              bttn={x.stts === "created"}
+              clck={props.updt}
+              dsbl={props.pntr !== ""}
+              spin={props.pntr !== ""}
+            />
           }
         />
       ))}

@@ -42,7 +42,6 @@ export const RuleSelect = (props: Props) => {
             EC
           </span>
         )}
-
       </label>
 
       <CopyButton
