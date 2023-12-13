@@ -236,6 +236,7 @@ const srtUser = (evn: EventSearchObject, des: DescriptionSearchObject[]): UserSe
         home: "",
         imag: "",
         name: x.name(),
+        prfl: {},
       });
     }
   }

@@ -1,4 +1,4 @@
-import { MouseEvent, MutableRefObject, useEffect, useRef, useState } from "react";
+import { MouseEvent, MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 
 import spacetime from "spacetime";
 
@@ -27,7 +27,7 @@ export const ListButtons = () => {
 
   const clld: MutableRefObject<boolean> = useRef(false);
 
-  const getData = async function (): Promise<void> {
+  const getData = useCallback(async function (): Promise<void> {
     try {
       const now: string = Math.floor(spacetime.now().epoch / 1000).toString();
 
@@ -82,7 +82,7 @@ export const ListButtons = () => {
       clld.current = false;
       addErro(new ErrorPropsObject("It's down only from here, run!", err as Error));
     }
-  };
+  }, [atkn, list, addErro]);
 
   const reqAuth = (str: string) => {
     return (evn: MouseEvent<HTMLAnchorElement>) => {
@@ -105,7 +105,7 @@ export const ListButtons = () => {
       clld.current = true;
       getData();
     }
-  }, [auth, list]);
+  }, [auth, list, getData]);
 
   // Check for list notifications every once in a while so that the user
   // receives updates for their lists while remaining on the site.

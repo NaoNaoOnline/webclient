@@ -24,6 +24,7 @@ export async function UserSearch(req: UserSearchRequest[]): Promise<UserSearchRe
       home: x.public?.home || "",
       imag: x.public?.imag || "",
       name: x.public?.name || "",
+      prfl: x.public?.prfl || {},
     }));
   } catch (err) {
     return Promise.reject(err);

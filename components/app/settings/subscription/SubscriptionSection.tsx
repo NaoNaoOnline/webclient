@@ -100,14 +100,14 @@ export const SubscriptionSection = () => {
     // Create the onchain subscription refernce second.
     try {
       let fnc: string = "";
-      if (wal.length === 1) fnc = "subOne";
-      if (wal.length === 2) fnc = "subTwo";
-      if (wal.length === 3) fnc = "subThr";
+      if (addr.length === 1) fnc = "subOne";
+      if (addr.length === 2) fnc = "subTwo";
+      if (addr.length === 3) fnc = "subThr";
 
       let arg: any = [];
-      if (wal.length === 1) arg = [rcvr, wal[0].public.addr, unix];
-      if (wal.length === 2) arg = [rcvr, ...mrgAlo(addr, [50, 50]), unix];
-      if (wal.length === 3) arg = [rcvr, ...mrgAlo(addr, [33, 33, 34]), unix];
+      if (addr.length === 1) arg = [rcvr, addr[0], unix];
+      if (addr.length === 2) arg = [rcvr, addr[0], 50, addr[1], 50, unix];
+      if (addr.length === 3) arg = [rcvr, addr[0], 33, addr[1], 33, addr[2], 34, unix];
 
       pgrs.setCmpl(30);
       const pre = await prepareWriteContract({
@@ -354,24 +354,6 @@ const exiSub = (sub: SubscriptionSearchResponse[], uni: Number, act?: boolean): 
 // current month.
 const lasDay = (now: Spacetime, day: number): boolean => {
   return now.isAfter(now.endOf("month").subtract(day, "day"));
-};
-
-// mrgAlo merges creator addresses and their respective allocations. Consider
-// two lists, ["foo", "bar", "baz"] and [20, 50, 30]. The result should be the
-// following.
-//
-//     ["foo", 20, "bar", 50, "baz", 30]
-//
-const mrgAlo = (cre: string[], alo: number[]): any[] => {
-  if (cre.length !== alo.length) return [];
-
-  const mrg: any[] = [];
-
-  for (let i = 0; i < cre.length; i++) {
-    mrg.push(cre[i], alo[i]);
-  }
-
-  return mrg;
 };
 
 // renSub expresses whether a subscription is a renewal or not. If an active
