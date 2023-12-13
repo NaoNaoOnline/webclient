@@ -13,6 +13,11 @@ export async function ListSearch(req: ListSearchRequest[]): Promise<ListSearchRe
           public: {},
         })),
       },
+      {
+        meta: {
+          authorization: req[0].atkn ? "Bearer " + req[0].atkn : "",
+        },
+      },
     );
 
     return call.response.object.map((x) => ({
@@ -22,6 +27,7 @@ export async function ListSearch(req: ListSearchRequest[]): Promise<ListSearchRe
       user: x.intern?.user || "",
       // public
       desc: x.public?.desc || "",
+      feed: x.public?.feed || "",
     }));
   } catch (err) {
     return Promise.reject(err);

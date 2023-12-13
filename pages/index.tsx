@@ -13,15 +13,19 @@ export default function Page() {
 
   return (
     <>
-      {auth && user.home !== "" && user.home !== "/" ? (
+      {auth && user?.home !== "" && user?.home !== "/" ? (
         <EventOverview
-          list={user.home}
+          list={user?.home}
+          kind="page"
+          strt="0"
+          stop="-1"
         />
       ) : (
         <EventOverview
+          kind="unix"
           strt={strt}
           stop={stop}
-          time="page"
+          time="dflt"
         />
       )}
     </>

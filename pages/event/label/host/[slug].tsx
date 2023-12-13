@@ -11,6 +11,9 @@ export default function Page() {
   return (
     <EventOverview
       host={[host]}
+      kind="page"
+      strt="0"
+      stop="-1"
     />
   )
 };

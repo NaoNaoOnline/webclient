@@ -5,4 +5,5 @@ export interface ListSearchResponse {
   user: string;
   // public
   desc: string;
+  feed: string;
 }

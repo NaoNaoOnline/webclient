@@ -2,9 +2,13 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 
+import spacetime from "spacetime";
+
 import { RiDeleteBinLine } from "react-icons/ri";
 import { RiHome4Line } from "react-icons/ri";
 import { BiInfoCircle } from "react-icons/bi";
+import { MdNotificationsOff } from "react-icons/md";
+import { MdOutlineNotificationAdd } from "react-icons/md";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { RiListUnordered } from "react-icons/ri";
 
@@ -24,6 +28,7 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { ListDelete } from "@/modules/api/list/delete/Delete";
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
+import { ListUpdate } from "@/modules/api/list/update/Update";
 import { UserUpdate } from "@/modules/api/user/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { ListSearch } from "@/modules/api/list/search/Search";
@@ -44,6 +49,39 @@ export const ListOverview = (props: Props) => {
   const [ownr, setOwnr] = useState<boolean>(false);
 
   const clld: MutableRefObject<boolean> = useRef(false);
+
+  const updateFeed = async (lis: ListSearchResponse) => {
+    const fee: string = tglFee(lis);
+
+    let pgrs: ProgressPropsObject = new ProgressPropsObject("Enabling List Notifications");
+    let scss: SuccessPropsObject = new SuccessPropsObject("Oh yeah, you gonna get notified big time!");
+
+    if (fee === "") {
+      pgrs = new ProgressPropsObject("Disabling List Notifications");
+      scss = new SuccessPropsObject("You'll not see them notification around here anymore I can bet you that!");
+    }
+
+    addPgrs(pgrs);
+
+    try {
+      pgrs.setCmpl(25);
+      await new Promise(r => setTimeout(r, 200));
+      pgrs.setCmpl(50);
+      await new Promise(r => setTimeout(r, 200));
+
+      const [upd] = await ListUpdate([{ atkn: atkn, desc: "", feed: empZer(fee), list: lis.list }]);
+
+      pgrs.setDone(() => {
+        updList(lis, { ...lis, feed: fee });
+      });
+
+      addScss(scss);
+      await new Promise(r => setTimeout(r, 200));
+
+    } catch (err) {
+      addErro(new ErrorPropsObject("This shite again, Immabout to quit!", err as Error));
+    }
+  };
 
   const updateHome = async (hom: string) => {
     const pgrs: ProgressPropsObject = new ProgressPropsObject("Updating Home Page");
@@ -108,7 +146,7 @@ export const ListOverview = (props: Props) => {
           return;
         }
 
-        const lis = await ListSearch([{ user: use.user }]);
+        const lis = await ListSearch([{ atkn: atkn, user: use.user }]);
 
         if (lis.length === 0) {
           setData([]);
@@ -128,7 +166,7 @@ export const ListOverview = (props: Props) => {
       clld.current = true;
       getData();
     }
-  }, [props, uuid, addErro]);
+  }, [props, atkn, uuid, addErro]);
 
   useEffect(() => {
     if (ownr) {
@@ -237,6 +275,30 @@ export const ListOverview = (props: Props) => {
                     className="ml-3 outline-none invisible group-hover/RowGrid:visible"
                     type="button"
                     onClick={() => {
+                      updateFeed(x);
+                    }}
+                  >
+                    {!x.feed || x.feed === "" ? (
+                      <MdOutlineNotificationAdd
+                        className={`
+                           w-5 h-5 text-gray-500 dark:text-gray-500
+                           hover:text-gray-900 dark:hover:text-gray-50
+                        `}
+                      />
+                    ) : (
+                      <MdNotificationsOff
+                        className={`
+                           w-5 h-5 text-gray-500 dark:text-gray-500
+                           hover:text-gray-900 dark:hover:text-gray-50
+                        `}
+                      />
+                    )}
+                  </button>
+
+                  <button
+                    className="ml-3 outline-none invisible group-hover/RowGrid:visible"
+                    type="button"
+                    onClick={() => {
                       setForm(x.list);
                     }}
                   >
@@ -305,4 +367,25 @@ const srtList = (lis: ListSearchResponse[]): ListSearchResponse[] => {
   });
 
   return lis;
+};
+
+const empZer = (str: string): string => {
+  if (str === "") return "0";
+  return str
+};
+
+// tglFee receives a list object and returns the toggled state for a list update
+// request that intents to modify the list's feed timestamp. The purpose of the
+// update process is to either enable or disable notifications. If the given
+// list object has a feed timestamp set already, then we want to disable
+// notifications for the given list, and return the zero value. If the given
+// list object does not have a feed timestamp set already, then we want to
+// enable notifications for the given list, and return the current unix
+// timestamp in seconds.
+const tglFee = (lis: ListSearchResponse): string => {
+  if (lis.feed && lis.feed !== "") return "";
+
+  const now: string = Math.floor(spacetime.now().epoch / 1000).toString();
+
+  return now;
 };

@@ -5,4 +5,5 @@ export interface ListUpdateRequest {
   list: string;
   // public
   desc: string;
+  feed: string;
 }

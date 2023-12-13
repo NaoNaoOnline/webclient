@@ -109,7 +109,7 @@ export function ListSelect(props: Props) {
   const onCreate = (val: string) => {
     props.clis(val);
     setList((old: ListSearchResponse[]) => {
-      return [...old, { crtd: "", list: "", user: "", desc: val, }];
+      return [...old, { crtd: "", list: "", user: "", desc: val, feed: "" }];
     });
     setSrch("");
   };

@@ -17,13 +17,17 @@ export default function Page() {
     <>
       {trmSLsh(evnt) === "latest" ? (
         <EventOverview
+          kind="unix"
           strt={strt}
           stop={stop}
-          time="page"
+          time="dflt"
         />
       ) : (
         <EventOverview
           evnt={[evnt]}
+          kind="page"
+          strt="0"
+          stop="0"
           titl="Event Page"
         />
       )}

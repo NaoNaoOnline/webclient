@@ -49,7 +49,7 @@ export const ErrorToast = (props: { obj: ErrorPropsObject }) => {
   }
 
   {
-    console.error(desc);
+    console.log("error", props)
   }
 
   return (

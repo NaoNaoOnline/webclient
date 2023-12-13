@@ -36,13 +36,14 @@ export function ListCreateForm(props: Props) {
 
       const [lis] = await ListCreate([{ atkn: atkn, desc: des }]);
 
-      const newList = {
+      const newList: ListSearchResponse = {
         // intern
         crtd: lis.crtd,
         list: lis.list,
         user: uuid,
         // public
         desc: des,
+        feed: "",
       };
 
       pgrs.setDone(() => {
@@ -53,7 +54,7 @@ export function ListCreateForm(props: Props) {
       await new Promise(r => setTimeout(r, 200));
 
     } catch (err) {
-      props.fail({ crtd: "", list: "", user: "", desc: des });
+      props.fail({ crtd: "", list: "", user: "", desc: des, feed: "" });
       addErro(new ErrorPropsObject("Don't know what to tell ya, shit's not right around here!", err as Error));
     }
   };

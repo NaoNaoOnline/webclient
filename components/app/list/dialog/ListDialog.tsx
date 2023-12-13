@@ -35,7 +35,6 @@ export function ListDialog(props: Props) {
   const [evnt, setEvnt] = useState<EventSearchObject[]>([]);
   const [host, setHost] = useState<LabelSearchResponse[]>([]);
   const [incl, setIncl] = useState<boolean>(true);
-  const [like, setLike] = useState<UserSearchResponse[]>([]);
   const [salt, setSalt] = useState<string>(newSlt());
   const [sbmt, setSbmt] = useState<boolean>(false);
   const [slct, setSlct] = useState<ListSearchResponse[]>([]);
@@ -129,23 +128,6 @@ export function ListDialog(props: Props) {
                   />
                 ))}
 
-                <h5 className="py-2 text-gray-900 dark:text-gray-50 text-sm font-medium">Liked By</h5>
-
-                {srtUser(props.evnt, props.desc).map((x, i) => (
-                  <RuleSelect
-                    key={salt + ":like:" + x.user}
-                    crtr={props.evnt.user() === x.user}
-                    chck={(che: boolean | "indeterminate") => {
-                      if (che === true) setLike((old: UserSearchResponse[]) => [...old, x]);
-                      if (che === false) setLike((old: UserSearchResponse[]) => old.filter((y) => y.user !== x.user));
-                    }}
-                    name="like"
-                    rsrc={x.user}
-                    salt={salt}
-                    text={x.name}
-                  />
-                ))}
-
               </div>
 
               <Separator.Root
@@ -174,7 +156,6 @@ export function ListDialog(props: Props) {
                   cate.length === 0 &&
                   evnt.length === 0 &&
                   host.length === 0 &&
-                  like.length === 0 &&
                   user.length === 0
                 )
               }
@@ -200,7 +181,6 @@ export function ListDialog(props: Props) {
                 setCate([]);
                 setEvnt([]);
                 setHost([]);
-                setLike([]);
                 setSbmt(false)
                 setSlct([]);
                 setUser([]);
@@ -214,14 +194,12 @@ export function ListDialog(props: Props) {
                 setCate([]);
                 setEvnt([]);
                 setHost([]);
-                setLike([]);
                 setSbmt(false)
                 setSlct([]);
                 setUser([]);
               }}
               incl={incl}
               host={host}
-              like={like}
               list={slct}
               sbmt={sbmt}
               user={user}

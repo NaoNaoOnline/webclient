@@ -21,7 +21,6 @@ interface Props {
   fail: () => void;
   host: LabelSearchResponse[];
   incl: boolean;
-  like: UserSearchResponse[];
   list: ListSearchResponse[];
   sbmt: boolean;
   user: UserSearchResponse[];
@@ -100,18 +99,6 @@ export function RuleCreateForm(props: Props) {
           excl: !props.incl ? list : "",
           incl: props.incl ? list : "",
           kind: "host",
-          list: x.list,
-        });
-      }
-
-      if (props.like.length !== 0) {
-        const list: string = props.like.map((y: UserSearchResponse) => y.user).join(',');
-
-        rul.push({
-          atkn: atkn,
-          excl: !props.incl ? list : "",
-          incl: props.incl ? list : "",
-          kind: "like",
           list: x.list,
         });
       }

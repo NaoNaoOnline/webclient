@@ -126,7 +126,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
     const getData = async () => {
       try {
-        const lis: ListSearchResponse[] = await ListSearch([{ user: uuid }]);
+        const lis: ListSearchResponse[] = await ListSearch([{ atkn: atkn, user: uuid }]);
 
         if (lis.length !== 0) {
           setList(lis);
@@ -139,7 +139,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
     {
       getData();
     }
-  }, [auth, uuid]);
+  }, [atkn, auth, uuid]);
 
   useEffect(() => {
     if (polc.current || !auth) {
@@ -152,7 +152,7 @@ export const CacheProvider = ({ children }: { children: ReactNode }) => {
 
     const getData = async () => {
       try {
-        const pol: PolicySearchResponse[] = await PolicySearch([{ atkn: atkn, ltst: "default" }]);
+        const pol: PolicySearchResponse[] = await PolicySearch([{ atkn: atkn, ltst: "dflt" }]);
 
         if (pol.length !== 0) {
           setPlcy(pol);
