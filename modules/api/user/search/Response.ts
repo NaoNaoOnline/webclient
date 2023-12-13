@@ -7,4 +7,5 @@ export interface UserSearchResponse {
   home: string;
   imag: string;
   name: string;
+  prfl: Record<string, string>;
 }
