@@ -23,7 +23,7 @@ export function NewEventCreateRequest(frm: FormData, atk: string, cat: string[],
     dura: newDura(sta, end),
     host: hos.join(','),
     link: newLink(lin),
-    time: newTime(dat, sta),
+    time: newTime(sta),
   };
 }
 
@@ -40,9 +40,9 @@ function newLink(lin: string): string {
   return "https://" + lin;
 }
 
-// newTime takes the start date and the start time of an event as spacetime
-// "iso" formatted strings according to the local Date time. The event duration
-// is returned as string of unix seconds.
-function newTime(dat: string, sta: string): string {
+// newTime takes the start time of an event as spacetime "iso" formatted string
+// according to the local Date time. The event start time is then returned as
+// string of unix seconds.
+function newTime(sta: string): string {
   return (spacetime(sta).epoch / 1000).toString();
 }

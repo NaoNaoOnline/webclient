@@ -11,6 +11,9 @@ export default function Page() {
   return (
     <EventOverview
       cate={[cate]}
+      kind="page"
+      strt="0"
+      stop="-1"
     />
   )
 };

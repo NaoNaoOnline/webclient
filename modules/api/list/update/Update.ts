@@ -10,7 +10,7 @@ export async function ListUpdate(req: ListUpdateRequest[]): Promise<ListUpdateRe
           intern: {
             list: x.list,
           },
-          update: (x.desc ? [{ frm: "", ope: "replace", pat: "/desc/data", val: x.desc }] : []),
+          update: (x.desc || x.feed ? [{ frm: "", ope: "replace", pat: newPat(x), val: newVal(x) }] : []),
         })),
       },
       {
@@ -28,3 +28,15 @@ export async function ListUpdate(req: ListUpdateRequest[]): Promise<ListUpdateRe
     return Promise.reject(err);
   }
 }
+
+const newPat = (req: ListUpdateRequest): string => {
+  if (req.desc) return "/desc/data";
+  if (req.feed) return "/feed/data";
+  return "";
+};
+
+const newVal = (req: ListUpdateRequest): string => {
+  if (req.desc) return req.desc;
+  if (req.feed) return req.feed;
+  return "";
+};

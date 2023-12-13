@@ -47,7 +47,7 @@ export function ListUpdateForm(props: Props) {
       pgrs.setCmpl(50);
       await new Promise(r => setTimeout(r, 200));
 
-      const [upd] = await ListUpdate([{ atkn: atkn, desc: des, list: props.list.list }]);
+      const [upd] = await ListUpdate([{ atkn: atkn, desc: des, feed: "", list: props.list.list }]);
 
       setDesc(des);
 

@@ -30,7 +30,7 @@ export const PolicySection = () => {
     addInfo(new InfoPropsObject("Syncing state captain, this may take a moment!"));
 
     try {
-      const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
+      const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: "", sync: "dflt" }]);
       setPntr(upd.pntr);
     } catch (err) {
       addErro(new ErrorPropsObject("Oh they did it again, I mean, come on!!!", err as Error));
@@ -44,12 +44,12 @@ export const PolicySection = () => {
 
     const poll = async () => {
       try {
-        const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: pntr, sync: "default" }]);
+        const [upd] = await PolicyUpdate([{ atkn: atkn, pntr: pntr, sync: "dflt" }]);
 
         const dsrd: string = upd.pntr;
 
         if (dsrd !== pntr) {
-          const pol = await PolicySearch([{ atkn: atkn, ltst: "default" }]);
+          const pol = await PolicySearch([{ atkn: atkn, ltst: "dflt" }]);
           updPlcy(pol);
           clearInterval(timr);
           setPntr("");

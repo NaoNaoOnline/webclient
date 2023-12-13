@@ -8,6 +8,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
       {
         filter: {
           paging: {
+            kind: req[0].kind,
             strt: req[0].strt,
             stop: req[0].stop,
           },
@@ -28,7 +29,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
 
     return cal.response.object.map((x) => ({
       // extern
-      extern: x.extern.map((y) => ({
+      extern: x.extern?.map((y) => ({
         amnt: y.amnt,
         kind: y.kind,
         user: y.user,
@@ -36,6 +37,7 @@ export async function EventSearch(req: EventSearchRequest[]): Promise<EventSearc
       // intern
       crtd: x.intern?.crtd || "",
       evnt: x.intern?.evnt || "",
+      list: x.intern?.list || "",
       user: x.intern?.user || "",
       // public
       cate: x.public?.cate || "",

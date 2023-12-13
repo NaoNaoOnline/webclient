@@ -91,14 +91,14 @@ export const SubscriptionDialog = (props: Props) => {
 
                 <ul className="mb-2 pl-2 list-disc list-inside">
                   <li key={1}>
-                    You get custom lists
+                    You get more than 1 custom list
                   </li>
                   <li key={2}>
-                    You get your own home feed
+                    You get your personal home feed
                   </li>
-                  {/* <li key={3}>
-                    You get opt-in notifications
-                  </li> */}
+                  <li key={3}>
+                    You get opt-in list notifications
+                  </li>
                   <li key={4}>
                     You get longer event retention
                   </li>

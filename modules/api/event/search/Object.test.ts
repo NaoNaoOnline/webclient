@@ -9,6 +9,7 @@ describe("DateObject", () => {
       // intern
       crtd: uni("2023-09-11T00:00:00.000Z"),
       evnt: "0",
+      list: "",
       user: "0",
       // public
       cate: "0,1,2",
@@ -230,6 +231,7 @@ describe("DateObject", () => {
       // intern
       crtd: uni("2023-09-11T00:00:00.000Z"),
       evnt: "0",
+      list: "",
       user: "0",
       // public
       cate: "0,1,2",

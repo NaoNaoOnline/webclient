@@ -55,30 +55,34 @@ export function UserButtons() {
       <ul className="pt-4 mt-4 border-t border-gray-50 dark:border-gray-700">
 
         {auth && (
-          <ActiveButton
-            href={"/user/" + name}
-            text={
-              <PremiumButton
-                name={user?.name}
-                prem={user?.prem}
-              />
-            }
-            icon={
-              <Image
-                alt="profile picture"
-                height={20}
-                width={20}
-                src={imag}
-              />
-            }
-            clck={reqAuth("Oh, this door is locked! Try logging in first.")}
-          />
+          <li
+            className="relative flex"
+          >
+            <ActiveButton
+              href={"/user/" + name}
+              text={
+                <PremiumButton
+                  name={user?.name}
+                  prem={user?.prem}
+                />
+              }
+              icon={
+                <Image
+                  alt="profile picture"
+                  height={20}
+                  width={20}
+                  src={imag}
+                />
+              }
+              clck={reqAuth("Oh, this door is locked! Try logging in first.")}
+            />
+          </li>
         )}
 
         {rndr && (
-          <div
+          <li
             onClick={onClick}
-            className="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group"
+            className="relative flex mx-4 items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group"
           >
             {manu === "dark" && (
               <>
@@ -104,11 +108,13 @@ export function UserButtons() {
                 </span>
               </>
             )}
-          </div>
+          </li>
         )}
 
         {auth && (
-          <li>
+          <li
+            className="relative flex"
+          >
             <ActiveButton
               href="/settings"
               text={<>Settings</>}
@@ -118,7 +124,9 @@ export function UserButtons() {
         )}
 
         {auth && (
-          <li>
+          <li
+            className="relative flex"
+          >
             <ActiveButton
               href="/api/auth/logout"
               text={<>Logout</>}
@@ -127,7 +135,9 @@ export function UserButtons() {
           </li>
         )}
         {!auth && (
-          <li>
+          <li
+            className="relative flex"
+          >
             <ActiveButton
               href="/api/auth/login"
               text={<>Login</>}

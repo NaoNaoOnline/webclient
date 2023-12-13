@@ -16,7 +16,9 @@ import { EventSearch } from "@/modules/api/event/search/Search";
 import EventSearchObject from "@/modules/api/event/search/Object";
 import { EventSearchRequest } from "@/modules/api/event/search/Request";
 import { LabelSearchResponse } from "@/modules/api/label/search/Response";
+import { ListUpdate } from "@/modules/api/list/update/Update";
 import { UserSearch } from "@/modules/api/user/search/Search";
+import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
 interface Props {
   cate?: string[];
@@ -24,16 +26,17 @@ interface Props {
   host?: string[];
   like?: string;
   list?: string;
-  strt?: string;
-  stop?: string;
+  kind: string;
+  strt: string;
+  stop: string;
   time?: string;
   titl?: string;
   user?: string;
 }
 
 export const EventOverview = (props: Props) => {
-  const { labl } = useCache();
-  const { atkn } = useAuth();
+  const { labl, list, updList } = useCache();
+  const { atkn, auth } = useAuth();
   const { addErro } = useToast();
 
   const qury: string = newQury(props);
@@ -44,6 +47,7 @@ export const EventOverview = (props: Props) => {
   const [salt, setSalt] = useState<string>(qury);
 
   const clld: MutableRefObject<boolean> = useRef(false);
+  const updt: MutableRefObject<boolean> = useRef(false);
 
   const addDesc = (des: DescriptionSearchObject) => {
     setDesc((old: DescriptionSearchObject[] | null) => {
@@ -100,8 +104,9 @@ export const EventOverview = (props: Props) => {
             host: getLabl(labl, props.host),
             like: "",
             list: "",
-            strt: "",
-            stop: "",
+            kind: props.kind,
+            strt: props.strt,
+            stop: props.stop,
             time: "",
             user: "",
           }];
@@ -115,8 +120,9 @@ export const EventOverview = (props: Props) => {
             host: "",
             like: "",
             list: "",
-            strt: "",
-            stop: "",
+            kind: props.kind,
+            strt: props.strt,
+            stop: props.stop,
             time: "",
             user: "",
           }));
@@ -130,14 +136,15 @@ export const EventOverview = (props: Props) => {
             host: "",
             like: "",
             list: props.list,
-            strt: "",
-            stop: "",
+            kind: props.kind,
+            strt: props.strt,
+            stop: props.stop,
             time: "",
             user: "",
           }];
         }
 
-        if (props.strt && props.stop && props.like) {
+        if (props.like) {
           const [use] = await UserSearch([{ user: "", name: props.like, self: false }]);
           req = [{
             atkn: atkn,
@@ -146,6 +153,7 @@ export const EventOverview = (props: Props) => {
             host: "",
             like: use.user,
             list: "",
+            kind: props.kind,
             strt: props.strt,
             stop: props.stop,
             time: "",
@@ -153,7 +161,7 @@ export const EventOverview = (props: Props) => {
           }];
         }
 
-        if (props.strt && props.stop && props.time) {
+        if (props.time) {
           req = [{
             atkn: atkn,
             cate: "",
@@ -161,6 +169,7 @@ export const EventOverview = (props: Props) => {
             host: "",
             like: "",
             list: "",
+            kind: props.kind,
             strt: props.strt,
             stop: props.stop,
             time: props.time,
@@ -177,8 +186,9 @@ export const EventOverview = (props: Props) => {
             host: "",
             like: "",
             list: "",
-            strt: "",
-            stop: "",
+            kind: props.kind,
+            strt: props.strt,
+            stop: props.stop,
             time: "",
             user: use.user,
           }];
@@ -249,6 +259,38 @@ export const EventOverview = (props: Props) => {
       setSalt(qury);
     }
   }, [qury, salt]);
+
+  // Below we try to invalidate list notifications as soon as possible, by
+  // updating the feed timestamp with the current time at which the user
+  // consumes their list again. If the list notification badge is visible and
+  // the user visits the list, then this list's feed timestamp should be set to
+  // the current time. Updating the list will then re-render the whole app
+  // including the sidebar, where the updated list contains the updated feed
+  // timestamp, causing the notification badge to disappear. If there is a
+  // better way of doing this, and doing this more efficiently, please provide a
+  // pull request.
+  useEffect(() => {
+    if (!auth || ldng) return;
+
+    const lob: ListSearchResponse | undefined = list.find((x: ListSearchResponse) => (x.list === props.list && x.feed && x.feed !== ""));
+
+    if (!lob) return;
+
+    const updateFeed = async () => {
+      try {
+        const now: string = Math.floor(spacetime.now().epoch / 1000).toString();
+        await ListUpdate([{ atkn: atkn, desc: "", feed: now, list: lob.list }]);
+        updList(lob, { ...lob, feed: now });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (!updt.current) {
+      updt.current = true;
+      updateFeed();
+    }
+  }, [props.list, auth, ldng]);
 
   // We are trying to prevent multiple re-renderings here. Without the checks
   // below we will see the "There are no events." screen while the actual

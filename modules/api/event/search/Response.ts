@@ -4,6 +4,7 @@ export interface EventSearchResponse {
   // intern
   crtd: string;
   evnt: string;
+  list: string;
   user: string;
   // public
   cate: string;

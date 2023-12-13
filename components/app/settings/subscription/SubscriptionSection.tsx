@@ -160,7 +160,7 @@ export const SubscriptionSection = () => {
     addInfo(new InfoPropsObject("Syncing state captain, this may take a moment!"));
 
     try {
-      const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: "", sync: "default" }]);
+      const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: "", sync: "dflt" }]);
       setPntr(upd.pntr);
     } catch (err) {
       addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
@@ -174,7 +174,7 @@ export const SubscriptionSection = () => {
 
     const poll = async () => {
       try {
-        const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: pntr, sync: "default" }]);
+        const [upd] = await SubscriptionUpdate([{ atkn: atkn, pntr: pntr, sync: "dflt" }]);
 
         const dsrd: string = upd.pntr;
 
@@ -195,7 +195,7 @@ export const SubscriptionSection = () => {
     return () => {
       clearInterval(timr);
     };
-  }, [pntr, atkn, addErro, addScss]);
+  }, [pntr, atkn, uuid, addErro, addScss]);
 
   // Fetch the list of creator wallets and augment them with the respective user
   // names.
@@ -206,7 +206,7 @@ export const SubscriptionSection = () => {
 
         setSubs(sub);
 
-        const wob = await WalletSearch([{ atkn: atkn, crtr: "default", kind: "", wllt: "" }]);
+        const wob = await WalletSearch([{ atkn: atkn, crtr: "dflt", kind: "", wllt: "" }]);
 
         // Especially in the beginning it may happen that there is no content
         // creator to pay. As a default we use our own platform feee address.
@@ -246,7 +246,7 @@ export const SubscriptionSection = () => {
       clld.current = true;
       getData();
     }
-  }, []);
+  });
 
   return (
     <>

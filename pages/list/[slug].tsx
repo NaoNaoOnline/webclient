@@ -8,6 +8,9 @@ export default function Page() {
   return (
     <EventOverview
       list={lasEle(patnam)}
+      kind="page"
+      strt="0"
+      stop="-1"
     />
   );
 };

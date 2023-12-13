@@ -37,7 +37,7 @@ export const Sidebar = () => {
       `}
     >
       <div
-        className="flex-none w-64 h-full px-4 py-4 bg-gray-200 dark:bg-gray-800 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto"
+        className="flex-none w-64 py-4 h-full bg-gray-200 dark:bg-gray-800 shadow-gray-400 dark:shadow-black shadow-[0_0_2px] overflow-y-auto"
       >
 
         <ListButtons />

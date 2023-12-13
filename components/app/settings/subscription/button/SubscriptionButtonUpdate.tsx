@@ -25,7 +25,7 @@ export const SubscriptionButtonUpdate = (props: Props) => {
 
     setChck(true);
     setTime([tref]);
-  }, [props.bttn]);
+  }, [props.bttn, time]);
 
   return (
     <>

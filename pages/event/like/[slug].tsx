@@ -11,8 +11,9 @@ export default function Page() {
   return (
     <EventOverview
       like={user}
-      strt={"0"}
-      stop={"-1"}
+      kind="page"
+      strt="0"
+      stop="-1"
     />
   )
 };
