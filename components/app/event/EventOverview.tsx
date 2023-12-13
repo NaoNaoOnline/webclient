@@ -290,7 +290,7 @@ export const EventOverview = (props: Props) => {
       updt.current = true;
       updateFeed();
     }
-  }, [props.list, auth, ldng]);
+  }, [props.list, atkn, auth, ldng, list, updList]);
 
   // We are trying to prevent multiple re-renderings here. Without the checks
   // below we will see the "There are no events." screen while the actual

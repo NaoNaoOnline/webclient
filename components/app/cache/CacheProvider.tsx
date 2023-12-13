@@ -47,7 +47,7 @@ const defaultContextValue: {
   list: [],
   plcy: [],
   prem: false,
-  user: { crtd: "", prem: "", user: "", home: "", imag: "", name: "" },
+  user: { crtd: "", prem: "", user: "", home: "", imag: "", name: "", prfl: {} },
   wllt: [],
 
   addLabl: (lab: LabelSearchResponse) => { },
