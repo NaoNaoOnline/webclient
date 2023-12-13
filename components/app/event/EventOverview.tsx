@@ -260,6 +260,15 @@ export const EventOverview = (props: Props) => {
     }
   }, [qury, salt]);
 
+  // Below we try to invalidate list notifications as soon as possible, by
+  // updating the feed timestamp with the current time at which the user
+  // consumes their list again. If the list notification badge is visible and
+  // the user visits the list, then this list's feed timestamp should be set to
+  // the current time. Updating the list will then re-render the whole app
+  // including the sidebar, where the updated list contains the updated feed
+  // timestamp, causing the notification badge to disappear. If there is a
+  // better way of doing this, and doing this more efficiently, please provide a
+  // pull request.
   useEffect(() => {
     if (!auth || ldng) return;
 

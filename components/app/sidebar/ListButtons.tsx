@@ -44,7 +44,14 @@ export const ListButtons = () => {
             like: "",
             list: x.list,
             kind: "unix",
+            // The paging range does always define inclusive boundaries. The
+            // start of this range was the end of the last range. So in order to
+            // receive the feed delta that the user did not see yet, the lower
+            // boundary of the paging range here has to be incremented by 1
+            // second.
             strt: String(Number(x.feed) + 1),
+            // The upper boundary of the paging range is just the current time
+            // in unix seconds.
             stop: now,
             time: "",
             user: "",
@@ -86,6 +93,11 @@ export const ListButtons = () => {
     };
   };
 
+  // As soon as the user's lists change, check for notification changes. This
+  // hook will fire e.g. if notifications get invalidated after a user viewed a
+  // list that showed notifications in the first place. The update here will
+  // then reset the feed delta, because the user caught up with the missed
+  // events.
   useEffect(() => {
     if (!auth) return;
 
@@ -95,6 +107,8 @@ export const ListButtons = () => {
     }
   }, [auth, list]);
 
+  // Check for list notifications every once in a while so that the user
+  // receives updates for their lists while remaining on the site.
   useEffect(() => {
     if (!auth) return;
 
@@ -148,7 +162,10 @@ export const ListButtons = () => {
 };
 
 // feeBdg expresses whether the respective list's feed notification badge should
-// be shown.
+// be shown. If there is no feed timestamp, then notifications are disabled, so
+// the notification badge should not show. If there is no feed delta for a list,
+// then there are no updates to show, meaning the user has not missed anything.
+// Then the notification badge should not show either.
 const feeBdg = (lob: ListSearchResponse, dic: Record<string, string[]>): boolean => {
   if (!lob.feed || lob.feed === "") return false;
   if (!dic[lob.list] || dic[lob.list].length === 0) return false;
