@@ -157,7 +157,9 @@ export function EventContainer(props: Props) {
           cncl={tglForm}
           desc={props.desc}
           dadd={(des: DescriptionSearchObject) => {
-            if (props.desc?.length === 1 && !xpnd) tglXpnd()
+            if (props.desc?.length === 1 && !xpnd) {
+              tglXpnd()
+            }
             props.dadd(des);
           }}
           drem={props.drem}
@@ -175,7 +177,9 @@ export function EventContainer(props: Props) {
               type="button"
               onClick={(evn: MouseEvent<HTMLButtonElement>) => {
                 evn.stopPropagation();
-                if (xpnd && form) tglForm();
+                if (xpnd && form) {
+                  tglForm();
+                }
                 tglXpnd();
               }}
             >

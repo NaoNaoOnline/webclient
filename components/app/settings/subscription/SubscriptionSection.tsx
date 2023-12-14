@@ -31,6 +31,7 @@ import { SubscriptionSearchResponse } from "@/modules/api/subscription/search/Re
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
+import { ExistsSubs } from "@/modules/subscription/ExistsSubs";
 
 export const SubscriptionSection = () => {
   const { address } = useAccount();
@@ -38,6 +39,7 @@ export const SubscriptionSection = () => {
   const { atkn, uuid } = useAuth();
 
   const [crtr, setCrtr] = useState<WalletSearchResponse[]>([]);
+  const [ldng, setLdng] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
   const [pntr, setPntr] = useState<string>("");
   const [subs, setSubs] = useState<SubscriptionSearchResponse[]>([]);
@@ -49,11 +51,15 @@ export const SubscriptionSection = () => {
   const chid: number = getChain(netw)[0].id;
 
   const clld: MutableRefObject<boolean> = useRef(false);
+  const updt: MutableRefObject<boolean> = useRef(false);
 
   const time: Spacetime = spacetime.now().goto("GMT");
 
+  const ifir: boolean = firSub(subs, ldng);       // is first
   const iren: boolean = renSub(subs, time);       // is renewal
   const csub: boolean = canSub(subs, time, iren); // can subscribe
+
+  const unix: string = subUni(time, ifir, iren);
 
   const handleSubmit = async (wal: WalletSearchResponse[]) => {
     if (!address) return;
@@ -66,8 +72,6 @@ export const SubscriptionSection = () => {
     const rcvr: string = uuid; // TODO allow people to gift subscriptions
 
     const addr: string[] = walAdd(wal)
-
-    const unix: string = subUni(time, iren);
 
     // Ensure the wallet is not empty.
     try {
@@ -84,6 +88,7 @@ export const SubscriptionSection = () => {
       }
     } catch (err) {
       addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+      return;
     }
 
     // Create the offchain subscription refernce first.
@@ -95,6 +100,7 @@ export const SubscriptionSection = () => {
       suid = sub.subs
     } catch (err) {
       addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+      return;
     }
 
     // Create the onchain subscription refernce second.
@@ -128,6 +134,7 @@ export const SubscriptionSection = () => {
       })
     } catch (err) {
       addErro(new ErrorPropsObject("Ass down, ass down. Shit just hit the fan!", err as Error));
+      return;
     }
 
     try {
@@ -167,8 +174,15 @@ export const SubscriptionSection = () => {
     }
   };
 
+  // Periodically fetch the subscription status of the subscription that is
+  // currently being processed, if any. If the update pointer is empty, we do
+  // nothing. If the update pointer is not empty, we use it to fetch the update
+  // status again periodically, until the update process is complete.
   useEffect(() => {
     if (pntr === "") return;
+    if (updt.current) return;
+
+    updt.current = true;
 
     let timr: NodeJS.Timeout;
 
@@ -183,7 +197,14 @@ export const SubscriptionSection = () => {
           setSubs(sub);
           clearInterval(timr);
           setPntr("");
-          addScss(new SuccessPropsObject("Enjoy your premium features, you magnificant beast!"));
+
+          if (ExistsSubs(sub, "success", Number(unix))) {
+            addScss(new SuccessPropsObject("Enjoy your premium features, you magnificant beast!"));
+          } else {
+            addErro(new ErrorPropsObject("Your subscription got stuck. You need to talk to Jesus now!"));
+          }
+
+          updt.current = false;
         }
       } catch (err) {
         addErro(new ErrorPropsObject("An error occurred during polling!", err as Error));
@@ -204,17 +225,18 @@ export const SubscriptionSection = () => {
       try {
         const sub = await SubscriptionSearch([{ atkn: atkn, subs: "", user: "", payr: "", rcvr: uuid }]);
 
+        // The ldng state is used to identify whether we have searched for the
+        // existing user subscriptions already. The alternative would be to use
+        // a null based type for the list of subscription responses that we work
+        // with, but this is a whole different can of worms.
         setSubs(sub);
+        setLdng(false);
 
         const wob = await WalletSearch([{ atkn: atkn, crtr: "dflt", kind: "", wllt: "" }]);
 
         // Especially in the beginning it may happen that there is no content
-        // creator to pay. As a default we use our own platform feee address.
-        // This will also help during testing. Once the flywheel spins there
-        // should be content creators users can pay directly and the platform
-        // fee address should become irrelevant as a main beneficiary.
+        // creator to pay.
         if (wob.length === 0) {
-          clld.current = false;
           return;
         }
 
@@ -236,7 +258,6 @@ export const SubscriptionSection = () => {
         });
 
         setCrtr(aug);
-        clld.current = false;
       } catch (err) {
         console.error(err);
       }
@@ -298,7 +319,8 @@ export const SubscriptionSection = () => {
                 setOpen(false);
               }}
               crtr={crtr}
-              mnth={subMon(time, iren)}
+              frst={ifir}
+              mnth={subMon(time, ifir, iren)}
               open={open}
               sbmt={(wal: WalletSearchResponse[]) => {
                 setOpen(false);
@@ -320,13 +342,17 @@ export const SubscriptionSection = () => {
 
 // canSub expresses whether a subscription can be created or not.
 const canSub = (sub: SubscriptionSearchResponse[], now: Spacetime, ren: boolean): boolean => {
-  // If no active subscription exists, then you can subscribe. Note that the
-  // subscription button must still be accessible in case the subscription
-  // process got interrupted intermittendly. So if the subscription object got
-  // created offchain, but the subscription got not yet paid for onchain, then
-  // the user must still be able to write to the contract. For that reason we
-  // append the third paratemer true below when calling exiSub.
-  if (!exiSub(sub, now.startOf("month").epoch, true)) return true;
+  const ths: boolean = ExistsSubs(sub, "success", now.startOf("month").epoch / 1000);
+  const nxt: boolean = ExistsSubs(sub, "success", now.next("month").startOf("month").epoch / 1000);
+
+  // If no active subscription exists for this, nor next month, then you can
+  // subscribe. Note that the subscription button must still be accessible in
+  // case the subscription process got interrupted intermittendly. So if the
+  // subscription object got created offchain, but the subscription got not yet
+  // paid for onchain, then the user must still be able to write to the
+  // contract. For that reason we append the third status paratemer below when
+  // calling ExistsSubs.
+  if (!ths && !nxt) return true;
 
   // If the new subscription would in fact be a renewal, and the time of the
   // renewal would be within the last 7 days of the current month, then you can
@@ -336,18 +362,9 @@ const canSub = (sub: SubscriptionSearchResponse[], now: Spacetime, ren: boolean)
   return false
 };
 
-const exiSub = (sub: SubscriptionSearchResponse[], uni: Number, act?: boolean): boolean => {
-  for (let i = 0; i < sub.length; i++) {
-    if (Number(sub[i].unix) * 1000 === uni) {
-      if (act === true) {
-        return sub[i].stts === "success"
-      } else {
-        return true;
-      }
-    }
-  }
-
-  return false;
+// firSub expresses whether the current user subscribes the very first time.
+const firSub = (sub: SubscriptionSearchResponse[], ldn: boolean): boolean => {
+  return !ldn && sub.length === 0;
 };
 
 // lasDay expresses whether the given time is within the last N days of the
@@ -360,7 +377,7 @@ const lasDay = (now: Spacetime, day: number): boolean => {
 // subscription exists for the previous month, then the subscription for the
 // next month will be a renewal.
 const renSub = (sub: SubscriptionSearchResponse[], now: Spacetime): boolean => {
-  return exiSub(sub, now.last("month").startOf("month").epoch);
+  return ExistsSubs(sub, "success", now.last("month").startOf("month").epoch / 1000);
 };
 
 // subMon returns the formatted month for which a new subscription would be,
@@ -368,16 +385,16 @@ const renSub = (sub: SubscriptionSearchResponse[], now: Spacetime): boolean => {
 // subscriptions. If a subscription is renewing an already active subscription,
 // then the new subscription is for the next month, because you renew it in
 // advance. Otherwise, the new subscription is created for the current month.
-const subMon = (now: Spacetime, ren: boolean): string => {
-  if (ren) now.next("month").format("month")
+const subMon = (now: Spacetime, fir: boolean, ren: boolean): string => {
+  if (fir || (ren && lasDay(now, 7))) return now.next("month").format("month");
   return now.format("month")
 };
 
 // subUni returns the unix timestamp in seconds for the new subscription being
 // made, based on the current time and the distinction between first and
 // consecutive subscriptions.
-const subUni = (now: Spacetime, ren: boolean): string => {
-  if (ren) return String(Math.floor(now.next("month").epoch / 1000));
+const subUni = (now: Spacetime, fir: boolean, ren: boolean): string => {
+  if (fir || (ren && lasDay(now, 7))) return String(Math.floor(now.next("month").epoch / 1000));
   return String(Math.floor(now.startOf("month").epoch / 1000));
 };
 

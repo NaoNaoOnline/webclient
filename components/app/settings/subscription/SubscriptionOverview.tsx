@@ -2,9 +2,6 @@ import { ReactNode } from "react";
 
 import spacetime from "spacetime";
 
-import { RiCheckLine } from "react-icons/ri";
-import { RiLoopRightLine } from "react-icons/ri";
-
 import { RowGrid } from "@/components/app/layout/RowGrid";
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
@@ -20,7 +17,7 @@ interface Props {
 export const SubscriptionOverview = (props: Props) => {
   return (
     <>
-      {props.subs?.map((x, i) => (
+      {srtSubs(props.subs)?.map((x, i) => (
         <RowGrid
           key={i}
           list={true}
@@ -39,7 +36,10 @@ export const SubscriptionOverview = (props: Props) => {
                   side="right"
                 >
                   <label
-                    className="hover:underline hover:decoration-dashed cursor-pointer"
+                    className={`
+                      text-sm font-mono underline-offset-2 cursor-pointer
+                      ${x.stts === "failure" ? "underline decoration-dashed" : "hover:underline hover:decoration-dashed"}
+                    `}
                   >
                     {x.stts}
                   </label>
@@ -48,7 +48,7 @@ export const SubscriptionOverview = (props: Props) => {
             </div>
           }
           midl={
-            <div >
+            <div>
               0.003 ETH
             </div>
           }
@@ -64,6 +64,18 @@ export const SubscriptionOverview = (props: Props) => {
       ))}
     </>
   )
+};
+
+const srtSubs = (lis: SubscriptionSearchResponse[]): SubscriptionSearchResponse[] => {
+  lis.sort((x: SubscriptionSearchResponse, y: SubscriptionSearchResponse) => {
+    // Sort subscriptions by unix seconds in descending order with first
+    // priority.
+    if (Number(x.unix) > Number(y.unix)) return -1;
+    if (Number(x.unix) < Number(y.unix)) return +1;
+    return 0;
+  });
+
+  return lis;
 };
 
 const tipDes = (sub: SubscriptionSearchResponse): ReactNode => {

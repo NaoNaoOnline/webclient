@@ -15,7 +15,7 @@ export const SubscriptionButtonUpdate = (props: Props) => {
   const [time, setTime] = useState<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
-    if (props.bttn) return;
+    if (props.bttn || chck) return;
 
     time.forEach((x: NodeJS.Timeout) => clearTimeout(x));
 

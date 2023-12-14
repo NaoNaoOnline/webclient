@@ -6,13 +6,13 @@ import * as Separator from "@radix-ui/react-separator";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { CreatorSelect } from "@/components/app/settings/subscription/CreatorSelect";
-import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 
 interface Props {
   clos: () => void;
   crtr: WalletSearchResponse[];
+  frst: boolean;
   mnth: string;
   open: boolean;
   sbmt: (wal: WalletSearchResponse[]) => void;
@@ -43,6 +43,14 @@ export const SubscriptionDialog = (props: Props) => {
 
             <Dialog.Title className="flex flex-row mb-4 text-gray-900 dark:text-gray-50 text-md font-medium">
               Your NaoNao Premium Subscription
+
+              {props.frst && (
+                <span
+                  className="ml-1 text-xs text-sky-500"
+                >
+                  First month is free!
+                </span>
+              )}
             </Dialog.Title>
 
 
@@ -56,9 +64,9 @@ export const SubscriptionDialog = (props: Props) => {
                     </div>
                     <div className="flex text-sm justify-center">
                       <span className="text-gray-500 dark:text-gray-500">
-                        There are no creators. Nobody created events on the
-                        platform so far, or you have not been visiting any of
-                        the events on the platform yet.
+                        There are no content creators to pay right now. Nobody
+                        created events on the platform so far, or you have not
+                        been visiting any of the events on the platform yet.
                       </span>
                     </div>
                   </>
