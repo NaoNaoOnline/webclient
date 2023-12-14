@@ -37,7 +37,7 @@ export const SubscriptionOverview = (props: Props) => {
                 >
                   <label
                     className={`
-                       text-sm font-mono underline-offset-2 cursor-pointer
+                      text-sm font-mono underline-offset-2 cursor-pointer
                       ${x.stts === "failure" ? "underline decoration-dashed" : "hover:underline hover:decoration-dashed"}
                     `}
                   >
