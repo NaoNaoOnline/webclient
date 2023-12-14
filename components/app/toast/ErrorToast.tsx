@@ -3,11 +3,13 @@ import * as Toast from "@radix-ui/react-toast";
 import type { RpcError } from "@protobuf-ts/runtime-rpc";
 
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { use } from "react";
+import { UserRejectedRequestError } from "viem";
 
 export interface ErrorProps {
   // tech is an engineering specific error instance intended to inform technical
   // support about symptoms and/or root causes of application malfunction.
-  tech: Error | null;
+  tech: Error | null | undefined;
   // user is a UI/UX specific error message intended to address the user when an
   // intended action failed to execute. This error message is user friendly.
   user: string;
@@ -16,7 +18,7 @@ export interface ErrorProps {
 export class ErrorPropsObject {
   private props: ErrorProps;
 
-  constructor(user: string, tech: Error | null) {
+  constructor(user: string, tech?: Error | null) {
     this.props = {
       tech: tech,
       user: user,
@@ -27,7 +29,7 @@ export class ErrorPropsObject {
   // getter
   //
 
-  getTech(): Error | null {
+  getTech(): Error | null | undefined {
     return this.props.tech;
   }
 
@@ -37,15 +39,24 @@ export class ErrorPropsObject {
 }
 
 export const ErrorToast = (props: { obj: ErrorPropsObject }) => {
-  const rpce: RpcError = props.obj.getTech() as RpcError;
+  const tech: Error | null | undefined = props.obj.getTech();
+  const user: string = props.obj.getUser();
+  const rpce: RpcError = tech as RpcError;
 
-  let desc: string = props.obj.getUser();
+  if (tech instanceof UserRejectedRequestError) {
+    return;
+  }
+
+  let desc: string = "";
+
   if (rpce && rpce.meta?.desc) {
     desc = rpce.meta.desc.toString();
   } else if (rpce && rpce.message !== "Failed to fetch") {
     desc = rpce.message
-  } else if (!rpce) {
-    desc = props.obj.getTech()?.message || "";
+  } else if (!rpce && tech) {
+    desc = tech?.message || "";
+  } else {
+    desc = user;
   }
 
   {
