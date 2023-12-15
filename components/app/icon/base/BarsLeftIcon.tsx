@@ -11,7 +11,7 @@ export const BarsLeftIcon = (props: Props) => {
       strokeWidth="2"
     >
       <g>
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
       </g>
     </BaseIcon>
   );

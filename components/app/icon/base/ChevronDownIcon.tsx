@@ -11,7 +11,7 @@ export const ChevronDownIcon = (props: Props) => {
       strokeWidth="2"
     >
       <g>
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
       </g>
     </BaseIcon>
   );
