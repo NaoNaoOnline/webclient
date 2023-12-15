@@ -11,9 +11,9 @@ export const LogInIcon = (props: Props) => {
       strokeWidth="2"
     >
       <g>
-        <path stroke="currentColor" stroke-linecap="round" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-        <polyline stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" points="10 17 15 12 10 7" />
-        <line stroke="currentColor" stroke-linecap="round" x1="15" y1="12" x2="3" y2="12" />
+        <path stroke="currentColor" strokeLinecap="round" d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+        <polyline stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" points="10 17 15 12 10 7" />
+        <line stroke="currentColor" strokeLinecap="round" x1="15" y1="12" x2="3" y2="12" />
       </g>
     </BaseIcon>
   );
