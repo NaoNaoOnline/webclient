@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Select from "@radix-ui/react-select";
 
-import { BiInfoCircle } from "react-icons/bi";
+import { InfoCircleIcon } from "@/components/app/icon/base/InfoCircleIcon";
 
 import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
@@ -68,7 +68,7 @@ export function DialogTitle(props: Props) {
           }
           side="right"
         >
-          <BiInfoCircle
+          <InfoCircleIcon
             className="w-5 h-5 text-gray-500 dark:text-gray-500"
           />
         </Tooltip>

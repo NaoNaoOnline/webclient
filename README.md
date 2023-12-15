@@ -30,6 +30,26 @@ Run it locally together with the [apiserver] and you are good to go.
 npm run dev
 ```
 
+
+
+```
+AUTH0_SECRET="[REDACTED]"
+AUTH0_BASE_URL="http://localhost:3000"
+AUTH0_ISSUER_BASE_URL="https://[REDACTED].auth0.com"
+AUTH0_CLIENT_ID="[REDACTED]"
+AUTH0_CLIENT_SECRET="[REDACTED]"
+AUTH0_AUDIENCE="https://apiserver"
+AUTH0_SCOPE="openid profile offline_access read:shows"
+
+NEXT_PUBLIC_ALCHEMY_API_KEY="[REDACTED]"
+NEXT_PUBLIC_BLOCKCHAIN_NETWORKS="arbitrum,base,hardhat,optimism"
+NEXT_PUBLIC_POLICY_CONTRACT="0x5FbDB2315678afecb367f032d93F642f64180aa3"
+NEXT_PUBLIC_SUBSCRIPTION_CONTRACT="0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID="[REDACTED]"
+```
+
+
+
 The communication between `webclient` and [apiserver] is managed using the auto
 generated [apitscode] library.
 

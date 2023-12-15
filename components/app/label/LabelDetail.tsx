@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 
 import Link from "next/link";
 
-import { BiInfoCircle } from "react-icons/bi";
+import { InfoCircleIcon } from "@/components/app/icon/base/InfoCircleIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { LabelButtonAdd } from "@/components/app/label/button/LabelButtonAdd";
@@ -127,7 +127,7 @@ const LabelDetail = memo((props: Props) => {
                   }
                   side="left"
                 >
-                  <BiInfoCircle
+                  <InfoCircleIcon
                     className="w-5 h-5 text-gray-500 dark:text-gray-500"
                   />
                 </Tooltip>

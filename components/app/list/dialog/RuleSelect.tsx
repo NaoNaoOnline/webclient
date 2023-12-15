@@ -1,6 +1,6 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { RiCheckLine } from "react-icons/ri";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
 import { RiFileCopyLine } from "react-icons/ri";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
@@ -30,7 +30,7 @@ export const RuleSelect = (props: Props) => {
           className="flex-none w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
         >
           <Checkbox.Indicator>
-            <RiCheckLine className="text-gray-50 dark:text-gray-900" />
+            <CheckLineIcon className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
 

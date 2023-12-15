@@ -5,9 +5,22 @@ import { TwitterLogoIcon } from "@radix-ui/react-icons";
 
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 
+import { ListUnorderedIcon } from "@/components/app/icon/base/ListUnorderedIcon";
+
 export function SocialButtons() {
   return (
     <ul className="pt-4 mt-4 border-t border-gray-50 dark:border-gray-700">
+
+      <li
+        className="relative flex"
+      >
+        <ActiveButton
+          href="https://docs.naonao.online"
+          trgt="_blank"
+          text={<>Test ICon</>}
+          icon={<ListUnorderedIcon />}
+        />
+      </li>
 
       <li
         className="relative flex"
