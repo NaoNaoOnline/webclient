@@ -2,7 +2,7 @@ import { ReactElement, cloneElement, useState } from "react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { RiCheckLine } from "react-icons/ri";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
 
 interface Props {
   className?: string;
@@ -34,7 +34,7 @@ export const CopyButton = (props: Props) => {
           {props.icon && !chck && cloneElement(props.icon)}
           {props.icon && chck && (
             <span className="text-green-400">
-              <RiCheckLine className="w-5 h-5" />
+              <CheckLineIcon className="w-5 h-5" />
             </span>
           )}
         </button>
@@ -42,7 +42,7 @@ export const CopyButton = (props: Props) => {
 
       {props.text && chck && (
         <span className="flex-1 ml-1 text-green-400">
-          <RiCheckLine className="w-5 h-5" />
+          <CheckLineIcon className="w-5 h-5" />
         </span>
       )}
     </div >

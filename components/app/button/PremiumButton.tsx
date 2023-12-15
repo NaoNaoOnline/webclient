@@ -1,4 +1,4 @@
-import { GiSevenPointedStar } from "react-icons/gi";
+import { SevenPointedStarIcon } from "@/components/app/icon/base/SevenPointedStarIcon";
 
 import { hasPrm } from "@/components/app/cache/CacheProvider";
 
@@ -13,7 +13,7 @@ export const PremiumButton = (props: Props) => {
     <div className="flex">
       {props.name}
       {(props.bool === true || hasPrm(props.prem || "", Date.now() / 1000)) && (
-        <GiSevenPointedStar className="flex w-3 h-3 ml-1 text-sky-500 font-medium" />
+        <SevenPointedStarIcon className="flex w-3 h-3 ml-1 text-sky-500 font-medium" />
       )}
     </div>
   );

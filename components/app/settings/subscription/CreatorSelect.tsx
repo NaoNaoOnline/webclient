@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { MdOutlineOpenInNew } from "react-icons/md";
-import { RiCheckLine } from "react-icons/ri";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
+import { OpenInNewIcon } from "@/components/app/icon/base/OpenInNewIcon";
 
 interface Props {
   chck: (che: boolean | "indeterminate") => void; // Radix onCheckedChange callback
@@ -27,7 +27,7 @@ export const CreatorSelect = (props: Props) => {
           className="flex-none w-4 h-4 bg-gray-700 mr-2 dark:bg-gray-50 items-center justify-center rounded-sm outline-none"
         >
           <Checkbox.Indicator>
-            <RiCheckLine className="text-gray-50 dark:text-gray-900" />
+            <CheckLineIcon className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
 
@@ -48,7 +48,7 @@ export const CreatorSelect = (props: Props) => {
           invisible group-hover:visible
         `}
       >
-        <MdOutlineOpenInNew className="w-5 h-5" />
+        <OpenInNewIcon className="w-5 h-5" />
       </Link>
     </div>
   );

@@ -4,7 +4,7 @@ import { Command } from "cmdk";
 
 import * as Checkbox from "@radix-ui/react-checkbox";
 
-import { RiCheckLine } from "react-icons/ri";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
 
 import { ListSearchResponse } from "@/modules/api/list/search/Response";
 
@@ -93,7 +93,7 @@ export function ListSelect(props: Props) {
           id={salt + ":" + i}
         >
           <Checkbox.Indicator>
-            <RiCheckLine className="text-gray-50 dark:text-gray-900" />
+            <CheckLineIcon className="text-gray-50 dark:text-gray-900" />
           </Checkbox.Indicator>
         </Checkbox.Root>
 

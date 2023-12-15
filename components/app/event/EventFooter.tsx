@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { BiBarChart } from "react-icons/bi";
+import { BarChartIcon } from "@/components/app/icon/base/BarChartIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
@@ -118,7 +118,7 @@ export function EventFooter(props: Props) {
                 }
                 side="left"
               >
-                <BiBarChart
+                <BarChartIcon
                   className="w-5 h-5 text-gray-500 dark:text-gray-500"
                 />
               </Tooltip>

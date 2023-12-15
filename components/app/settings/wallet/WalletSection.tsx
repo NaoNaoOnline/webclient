@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { useAccount } from "wagmi";
 
-import { BiInfoCircle } from "react-icons/bi";
-import { FaEthereum } from "react-icons/fa";
+import { EthereumIcon } from "@/components/app/icon/base/EthereumIcon";
+import { InfoCircleIcon } from "@/components/app/icon/base/InfoCircleIcon";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { WalletButtonConnect } from "@/components/app/settings/wallet/button/WalletButtonConnect";
@@ -25,7 +25,7 @@ export const WalletSection = () => {
   return (
     <>
       <ListHeader
-        icon={<FaEthereum />}
+        icon={<EthereumIcon />}
         titl={<>My Wallets</>}
         bttn={
           <>
@@ -37,7 +37,7 @@ export const WalletSection = () => {
               }
               side="left"
             >
-              <BiInfoCircle
+              <InfoCircleIcon
                 className="w-5 h-5 text-gray-500 dark:text-gray-500"
               />
             </Tooltip>

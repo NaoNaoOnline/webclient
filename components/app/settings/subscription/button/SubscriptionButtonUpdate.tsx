@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { RiCheckLine } from "react-icons/ri";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
 import { RiLoopRightLine } from "react-icons/ri";
 
 interface Props {
@@ -46,7 +46,7 @@ export const SubscriptionButtonUpdate = (props: Props) => {
         </button>
       )}
       {!props.bttn && chck && (
-        <RiCheckLine className="w-5 h-5 text-green-400" />
+        <CheckLineIcon className="w-5 h-5 text-green-400" />
       )}
     </>
   );

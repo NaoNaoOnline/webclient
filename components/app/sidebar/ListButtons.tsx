@@ -2,12 +2,12 @@ import { MouseEvent, MutableRefObject, useCallback, useEffect, useRef, useState 
 
 import spacetime from "spacetime";
 
-import { CgAddR } from "react-icons/cg";
-import { RiHome4Line } from "react-icons/ri";
-import { RiListUnordered } from "react-icons/ri";
+import { AddSquareIcon } from "@/components/app/icon/base/AddSquareIcon";
+import { HomeLineIcon } from "@/components/app/icon/base/HomeLineIcon";
+import { ListUnorderedIcon } from "@/components/app/icon/base/ListUnorderedIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
-import { NaoNaoIcon } from "@/components/app/icon/NaoNaoIcon";
+import { NaoNaoIcon } from "@/components/app/icon/base/NaoNaoIcon";
 import { useCache } from "@/components/app/cache/CacheProvider";
 import { ActiveButton } from "@/components/app/sidebar/ActiveButton";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
@@ -141,7 +141,7 @@ export const ListButtons = () => {
             feed={feeBdg(x, evnt)}
             href={`/list/` + x.list}
             text={<>{x.desc}</>}
-            icon={x.list === user?.home ? <RiHome4Line /> : <RiListUnordered />}
+            icon={x.list === user?.home ? <HomeLineIcon /> : <ListUnorderedIcon />}
           />
         </li>
       ))}
@@ -152,7 +152,7 @@ export const ListButtons = () => {
         <ActiveButton
           href="/event/create"
           text={<>Add Event</>}
-          icon={<CgAddR />}
+          icon={<AddSquareIcon />}
           blue={true}
           clck={reqAuth("Join the beavers and login if you want to add a new event. Or else!")}
         />

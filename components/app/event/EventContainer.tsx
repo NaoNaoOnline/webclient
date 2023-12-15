@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 
 import spacetime, { Spacetime } from "spacetime";
 
-import { RiMenuAddLine } from "react-icons/ri";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { MenuAddLineIcon } from "@/components/app/icon/base/MenuAddLineIcon";
+import { ChevronDownIcon } from "@/components/app/icon/base/ChevronDownIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
@@ -113,7 +113,7 @@ export function EventContainer(props: Props) {
             className="relative h-full px-3 my-auto outline-none group"
             type="button"
           >
-            <RiMenuAddLine
+            <MenuAddLineIcon
               className={`
                 w-5 h-5 text-gray-400 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-50
               `}

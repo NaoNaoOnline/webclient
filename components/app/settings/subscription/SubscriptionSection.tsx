@@ -6,8 +6,8 @@ import { Address, useAccount } from "wagmi";
 import { fetchBalance, prepareWriteContract, writeContract, waitForTransaction } from "@wagmi/core";
 import { parseEther } from "viem";
 
-import { BiInfoCircle } from "react-icons/bi";
-import { BsCurrencyDollar } from "react-icons/bs";
+import { CurrencyDollarIcon } from "@/components/app/icon/base/CurrencyDollarIcon";
+import { InfoCircleIcon } from "@/components/app/icon/base/InfoCircleIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
@@ -272,7 +272,7 @@ export const SubscriptionSection = () => {
   return (
     <>
       <ListHeader
-        icon={<BsCurrencyDollar />}
+        icon={<CurrencyDollarIcon />}
         titl={<>My Subscriptions</>}
         bttn={
           <>
@@ -302,7 +302,7 @@ export const SubscriptionSection = () => {
               }
               side="left"
             >
-              <BiInfoCircle
+              <InfoCircleIcon
                 className="w-5 h-5 text-gray-500 dark:text-gray-500"
               />
             </Tooltip>
