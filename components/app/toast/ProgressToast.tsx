@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 export interface ProgressProps {
   cmpl: number;

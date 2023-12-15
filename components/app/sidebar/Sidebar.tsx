@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline'
+import { BarsLeftIcon } from "@/components/app/icon/base/BarsLeftIcon";
 
 import { ListButtons } from "@/components/app/sidebar/ListButtons";
 import { SocialButtons } from "@/components/app/sidebar/SocialButtons";
@@ -52,7 +52,7 @@ export const Sidebar = () => {
           onClick={tglShow}
           type="button"
         >
-          <Bars3BottomLeftIcon className="w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
+          <BarsLeftIcon className="w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50" />
         </button>
       </div>
 

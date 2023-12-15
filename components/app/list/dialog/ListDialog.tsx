@@ -5,10 +5,9 @@ import * as Separator from "@radix-ui/react-separator";
 
 import spacetime from "spacetime";
 
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 import { useCache } from "@/components/app/cache/CacheProvider";
-
 import { ListCreateForm } from "@/components/app/list/dialog/create/ListCreateForm";
 import { RuleCreateForm } from "@/components/app/list/dialog/create/RuleCreateForm";
 import { RuleSelect } from "@/components/app/list/dialog/RuleSelect";

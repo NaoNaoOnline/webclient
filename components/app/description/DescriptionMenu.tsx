@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import { EllipsisHorizontalIcon } from "@/components/app/icon/base/EllipsisHorizontalIcon";
 
 import { DeleteButton } from "@/components/app/button/DeleteButton";
 

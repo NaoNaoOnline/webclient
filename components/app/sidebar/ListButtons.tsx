@@ -127,7 +127,7 @@ export const ListButtons = () => {
         <ActiveButton
           href={user?.home === "" || user?.home === "/" ? "/" : "/event/latest"}
           text={<>NaoNao</>}
-          icon={<NaoNaoIcon className="rounded-none" />}
+          icon={<NaoNaoIcon />}
         />
       </li>
 

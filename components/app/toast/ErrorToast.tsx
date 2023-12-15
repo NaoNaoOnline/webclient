@@ -1,10 +1,8 @@
 import * as Toast from "@radix-ui/react-toast";
-
 import type { RpcError } from "@protobuf-ts/runtime-rpc";
-
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { use } from "react";
 import { UserRejectedRequestError } from "viem";
+
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 export interface ErrorProps {
   // tech is an engineering specific error instance intended to inform technical

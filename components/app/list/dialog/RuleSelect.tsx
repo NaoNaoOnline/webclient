@@ -1,7 +1,7 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 
 import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
-import { RiFileCopyLine } from "react-icons/ri";
+import { CopyLineIcon } from "@/components/app/icon/base/CopyLineIcon";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 
@@ -47,7 +47,7 @@ export const RuleSelect = (props: Props) => {
       <CopyButton
         className="rounded-md ml-2 text-gray-400 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 items-center select-none outline-none invisible group-hover:visible"
         copy={props.text}
-        icon={<RiFileCopyLine className="w-5 h-5" />}
+        icon={<CopyLineIcon className="w-5 h-5" />}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { RiLock2Line } from "react-icons/ri";
-import { RiLoopRightLine } from "react-icons/ri";
+import { LockLineIcon } from "@/components/app/icon/base/LockLineIcon";
+import { LoopLineIcon } from "@/components/app/icon/base/LoopLineIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { useCache } from "@/components/app/cache/CacheProvider";
@@ -70,7 +70,7 @@ export const PolicySection = () => {
   return (
     <>
       <ListHeader
-        icon={<RiLock2Line />}
+        icon={<LockLineIcon />}
         titl={<>Platform Policies</>}
         bttn={
           <button
@@ -80,7 +80,7 @@ export const PolicySection = () => {
             className="outline-none group"
             type="button"
           >
-            <RiLoopRightLine
+            <LoopLineIcon
               className={`
                 w-5 h-5 text-gray-500 dark:text-gray-500
                 group-hover:text-gray-900 dark:group-hover:text-gray-50

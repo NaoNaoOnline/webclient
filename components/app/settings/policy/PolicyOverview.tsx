@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-import { GoDotFill } from "react-icons/go";
+import { DotFullFillIcon } from "@/components/app/icon/base/DotFullFillIcon";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { useCache } from "@/components/app/cache/CacheProvider";
@@ -68,7 +68,7 @@ export const PolicyOverview = () => {
               side="left"
               vsbl={hasMemb(x.memb)}
             >
-              <GoDotFill
+              <DotFullFillIcon
                 className="fill-rose-600"
               />
             </Tooltip>

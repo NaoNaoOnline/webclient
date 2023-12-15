@@ -3,7 +3,7 @@ import { MouseEvent, ReactElement, cloneElement } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
-import { BiSolidCircleHalf } from "react-icons/bi";
+import { DotHalfFillIcon } from "@/components/app/icon/base/DotHalfFillIcon";
 
 interface Props {
   actv?: boolean;
@@ -26,7 +26,7 @@ export function ActiveButton(props: Props) {
       <div
         className="absolute h-full flex"
       >
-        <BiSolidCircleHalf
+        <DotHalfFillIcon
           className={`
             w-6 h-6 ml-[-12px] my-auto
             ${!props.feed ? "invisible" : ""}
@@ -43,7 +43,7 @@ export function ActiveButton(props: Props) {
       >
         {props.icon && cloneElement(props.icon, {
           className: `
-            w-5 h-5 rounded-full ${props.icon.props.className || ""}
+            w-5 h-5 ${props.icon.props.className || ""}
             ${props.blue && !actv ? "text-sky-400 font-medium" : ""}
             ${!props.blue && !actv ? "text-gray-500 dark:text-gray-500" : ""}
             ${actv ? "text-gray-900 dark:text-gray-50 font-medium" : ""}

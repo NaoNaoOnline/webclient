@@ -2,11 +2,11 @@ import { MouseEvent, useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import { FiLogIn } from "react-icons/fi";
-import { FiLogOut } from "react-icons/fi";
-import { IoSettingsOutline } from "react-icons/io5";
-import { TbMoon } from "react-icons/tb";
-import { TbSunHigh } from "react-icons/tb";
+import { LogInIcon } from "@/components/app/icon/base/LogInIcon";
+import { LogOutIcon } from "@/components/app/icon/base/LogOutIcon";
+import { MoonLineIcon } from "@/components/app/icon/base/MoonLineIcon";
+import { SettingsLineIcon } from "@/components/app/icon/base/SettingsLineIcon";
+import { SunLineIcon } from "@/components/app/icon/base/SunLineIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { PremiumButton } from "@/components/app/button/PremiumButton";
@@ -68,6 +68,7 @@ export function UserButtons() {
               }
               icon={
                 <Image
+                  className="rounded-full "
                   alt="profile picture"
                   height={20}
                   width={20}
@@ -86,7 +87,7 @@ export function UserButtons() {
           >
             {manu === "dark" && (
               <>
-                <TbSunHigh
+                <SunLineIcon
                   className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 />
                 <span
@@ -98,7 +99,7 @@ export function UserButtons() {
             )}
             {manu === "light" && (
               <>
-                <TbMoon
+                <MoonLineIcon
                   className="flex-shrink-0 w-5 h-5 text-gray-500 dark:text-gray-500 group-hover:text-gray-900 dark:group-hover:text-gray-50"
                 />
                 <span
@@ -118,7 +119,7 @@ export function UserButtons() {
             <ActiveButton
               href="/settings"
               text={<>Settings</>}
-              icon={<IoSettingsOutline />}
+              icon={<SettingsLineIcon />}
             />
           </li>
         )}
@@ -130,7 +131,7 @@ export function UserButtons() {
             <ActiveButton
               href="/api/auth/logout"
               text={<>Logout</>}
-              icon={<FiLogOut />}
+              icon={<LogOutIcon />}
             />
           </li>
         )}
@@ -141,7 +142,7 @@ export function UserButtons() {
             <ActiveButton
               href="/api/auth/login"
               text={<>Login</>}
-              icon={<FiLogIn />}
+              icon={<LogInIcon />}
             />
           </li>
         )}

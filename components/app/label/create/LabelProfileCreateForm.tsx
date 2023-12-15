@@ -1,9 +1,7 @@
 import { FormEvent, KeyboardEvent, memo, useEffect, useRef, useState } from "react";
 
-import Link from "next/link";
-
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { RowGrid } from "@/components/app/layout/RowGrid";
@@ -14,7 +12,6 @@ import { useToast } from "@/components/app/toast/ToastProvider";
 
 import { LabelUpdate } from "@/modules/api/label/update/Update";
 import { LabelUpdateRequest } from "@/modules/api/label/update/Request";
-import { ProfileURL } from "@/modules/profile/ProfileURL";
 
 interface Props {
   cncl: () => void;
@@ -156,7 +153,7 @@ const LabelProfileCreateForm = memo((props: Props) => {
               disabled={pgrs.getCmpl() !== 0}
               onKeyDownCapture={(e: KeyboardEvent<HTMLButtonElement>) => e.stopPropagation()} // prevent LastPass bullshit
             >
-              <CheckIcon
+              <CheckLineIcon
                 className={`
                    w-5 h-5 text-gray-500 dark:text-gray-500
                    hover:text-gray-900 dark:hover:text-gray-50

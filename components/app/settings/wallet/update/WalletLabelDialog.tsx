@@ -2,8 +2,9 @@ import { KeyboardEvent, memo, useEffect, useState } from "react";
 
 import * as Dialog from "@radix-ui/react-dialog";
 
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
+import { RadioOffIcon } from "@/components/app/icon/base/RadioOffIcon";
+import { RadioOnIcon } from "@/components/app/icon/base/RadioOnIcon";
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 import { CopyButton } from "@/components/app/button/CopyButton";
 import { hasLabl } from "@/components/app/cache/CacheProvider";
@@ -13,7 +14,9 @@ import { Tooltip } from "@/components/app/tooltip/Tooltip";
 
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { truncateEthAddress } from "@/modules/wallet/Address";
-import { WalletLabelAccounting, WalletLabelModeration, WalletLabelUnassigned } from "@/modules/wallet/Label";
+import { WalletLabelAccounting } from "@/modules/wallet/Label";
+import { WalletLabelModeration } from "@/modules/wallet/Label";
+import { WalletLabelUnassigned } from "@/modules/wallet/Label";
 
 interface Props {
   clos: () => void;
@@ -34,11 +37,11 @@ const WalletLabelDialog = memo((props: Props) => {
     const cslo: boolean = lab === slct;                  // currently selected label option
     const loia: boolean = lab === WalletLabelAccounting; // label option is accounting
 
-    if (cslo) return <RadiobuttonIcon />;
-    if (!acc && loia && props.hacc) return <CircleIcon />;
+    if (cslo) return <RadioOnIcon />;
+    if (!acc && loia && props.hacc) return <RadioOffIcon />;
 
     return (
-      <CircleIcon
+      <RadioOffIcon
         className="cursor-pointer"
         onClick={() => {
           setSlct(lab);

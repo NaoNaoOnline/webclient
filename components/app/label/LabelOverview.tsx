@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 
-import { MdLabelOutline } from "react-icons/md";
+import { LabelLineIcon } from "@/components/app/icon/base/LabelLineIcon";
 
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { ListSeparator } from "@/components/app/layout/ListSeparator";
@@ -92,7 +92,7 @@ export const LabelOverview = (props: Props) => {
       {(!cate || cate.length === 0) && (!host || host.length === 0) && (
         <>
           <ListHeader
-            icon={<MdLabelOutline />}
+            icon={<LabelLineIcon />}
             titl={<>Labels</>}
           />
 
@@ -112,7 +112,7 @@ export const LabelOverview = (props: Props) => {
       {(cate && cate.length !== 0) && (
         <>
           <ListHeader
-            icon={<MdLabelOutline />}
+            icon={<LabelLineIcon />}
             titl={<>Category Labels</>}
           />
 
@@ -139,7 +139,7 @@ export const LabelOverview = (props: Props) => {
       {(host && host.length !== 0) && (
         <>
           <ListHeader
-            icon={<MdLabelOutline />}
+            icon={<LabelLineIcon />}
             titl={<>Host Labels</>}
           />
 
