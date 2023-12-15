@@ -3,7 +3,7 @@ import { KeyboardEvent, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Separator from "@radix-ui/react-separator";
 
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@/components/app/icon/base/XMarkIcon";
 
 import { CreatorSelect } from "@/components/app/settings/subscription/CreatorSelect";
 

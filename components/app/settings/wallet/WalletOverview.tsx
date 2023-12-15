@@ -3,8 +3,8 @@ import { useState } from "react";
 import spacetime from "spacetime";
 import { useAccount, useDisconnect } from "wagmi";
 
-import { GoDotFill } from "react-icons/go";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { DeleteLineIcon } from "@/components/app/icon/base/DeleteLineIcon";
+import { DotFullFillIcon } from "@/components/app/icon/base/DotFullFillIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
 import { CopyButton } from "@/components/app/button/CopyButton";
@@ -77,7 +77,7 @@ export const WalletOverview = () => {
               side="left"
               vsbl={x.public.addr === String(address)}
             >
-              <GoDotFill
+              <DotFullFillIcon
                 className="fill-green-400"
               />
             </Tooltip>
@@ -128,7 +128,7 @@ export const WalletOverview = () => {
                   setOpen(x.intern.wllt);
                 }}
               >
-                <RiDeleteBinLine
+                <DeleteLineIcon
                   className={`
                    w-5 h-5 text-gray-500 dark:text-gray-500
                    hover:text-gray-900 dark:hover:text-gray-50

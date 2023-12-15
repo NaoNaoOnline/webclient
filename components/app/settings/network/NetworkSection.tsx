@@ -3,8 +3,9 @@ import { ChainIcon } from "connectkit";
 
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 
-import { LinkIcon } from "@heroicons/react/24/outline";
-import { CircleIcon, RadiobuttonIcon } from "@radix-ui/react-icons";
+import { LinkChainIcon } from "@/components/app/icon/base/LinkChainIcon";
+import { RadioOffIcon } from "@/components/app/icon/base/RadioOffIcon";
+import { RadioOnIcon } from "@/components/app/icon/base/RadioOnIcon";
 
 import { getChain, useNetwork } from "@/components/app/network/NetworkProvider";
 import { ListHeader } from "@/components/app/layout/ListHeader";
@@ -18,7 +19,7 @@ export function NetworkSection() {
   return (
     <>
       <ListHeader
-        icon={<LinkIcon />}
+        icon={<LinkChainIcon />}
         titl={<>Platform Networks</>}
       />
 
@@ -50,10 +51,10 @@ export function NetworkSection() {
               <div className="flex-shrink-0 absolute right-0 mr-3">
                 <ToggleGroup.Item className="py-3 outline-none group" value={String(x.id)}>
                   {String(curr.id) === String(x.id) && (
-                    <RadiobuttonIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
+                    <RadioOnIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
                   )}
                   {String(curr.id) !== String(x.id) && (
-                    <CircleIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
+                    <RadioOffIcon className="w-5 h-5 mx-2 text-gray-400 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
                   )}
                 </ToggleGroup.Item>
               </div>

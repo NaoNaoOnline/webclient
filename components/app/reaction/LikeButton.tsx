@@ -1,5 +1,5 @@
-import { RiHeart3Fill } from "react-icons/ri";
-import { RiHeart3Line } from "react-icons/ri";
+import { HeartFillIcon } from "@/components/app/icon/base/HeartFillIcon";
+import { HeartLineIcon } from "@/components/app/icon/base/HeartLineIcon";
 
 import { FormatNumber } from "@/modules/number/Format";
 
@@ -35,7 +35,7 @@ export default function ReactionButton(props: ReactionButtonProps) {
         type="button"
       >
         {props.user && (
-          <RiHeart3Fill
+          <HeartFillIcon
             className={`
             w-5 h-5
             ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}
@@ -46,7 +46,7 @@ export default function ReactionButton(props: ReactionButtonProps) {
           />
         )}
         {!props.user && (
-          <RiHeart3Line
+          <HeartLineIcon
             className={`
             w-5 h-5
             ${props.cupd && props.user ? "  text-red-500  dark:text-red-500 " : ""}

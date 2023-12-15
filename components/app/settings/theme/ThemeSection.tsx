@@ -1,6 +1,6 @@
 import * as Switch from "@radix-ui/react-switch";
 
-import { MdContrast } from "react-icons/md";
+import { ContrastIcon } from "@/components/app/icon/base/ContrastIcon";
 
 import { ListHeader } from "@/components/app/layout/ListHeader";
 import { useSystem } from "@/components/app/theme/SystemThemeProvider";
@@ -10,7 +10,7 @@ export const ThemeSection = () => {
 
   return (
     <ListHeader
-      icon={<MdContrast />}
+      icon={<ContrastIcon />}
       titl={<>System Theme</>}
       bttn={
         <Switch.Root

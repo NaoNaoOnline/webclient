@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { CheckLineIcon } from "@/components/app/icon/base/CheckLineIcon";
-import { RiLoopRightLine } from "react-icons/ri";
+import { LoopLineIcon } from "@/components/app/icon/base/LoopLineIcon";
 
 interface Props {
   bttn: boolean;
@@ -36,7 +36,7 @@ export const SubscriptionButtonUpdate = (props: Props) => {
           className="outline-none group"
           type="button"
         >
-          <RiLoopRightLine
+          <LoopLineIcon
             className={`
               w-5 h-5 text-gray-500 dark:text-gray-500
               group-hover:text-gray-900 dark:group-hover:text-gray-50

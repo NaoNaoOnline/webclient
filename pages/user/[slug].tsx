@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserFullIcon } from "@/components/app/icon/base/UserFullIcon";
 
 import { PremiumButton } from "@/components/app/button/PremiumButton";
 import { ListHeader } from "@/components/app/layout/ListHeader";
@@ -69,7 +69,7 @@ export default function Page() {
         />
       ) : (
         <ListHeader
-          icon={<UserIcon />}
+          icon={<UserFullIcon />}
           titl={<>{name}</>}
         />
       )}
