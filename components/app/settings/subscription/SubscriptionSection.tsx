@@ -216,7 +216,7 @@ export const SubscriptionSection = () => {
     return () => {
       clearInterval(timr);
     };
-  }, [pntr, atkn, uuid, addErro, addScss]);
+  }, [pntr, atkn, unix, uuid, addErro, addScss]);
 
   // Fetch the list of creator wallets and augment them with the respective user
   // names.
@@ -234,7 +234,7 @@ export const SubscriptionSection = () => {
 
         const wob = await WalletSearch([{ atkn: atkn, crtr: "dflt", kind: "", wllt: "" }]);
 
-        // Especially in the beginning it may happen that there is no content
+        // Especially in the beginning it may happen that there is no event
         // creator to pay.
         if (wob.length === 0) {
           return;

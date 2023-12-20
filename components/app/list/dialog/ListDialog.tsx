@@ -49,7 +49,6 @@ export function ListDialog(props: Props) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 inset-0">
           <Dialog.Content
-            onInteractOutside={(e) => e.preventDefault()}
             onOpenAutoFocus={(e) => e.preventDefault()}
             className="relative w-full max-w-xl min-h-[400px] bg-gray-50 dark:bg-gray-700 mt-7 mx-auto p-4 rounded-md justify-items-center shadow-gray-400 dark:shadow-black shadow-[0_0_2px] focus:outline-none"
           >

@@ -31,7 +31,6 @@ export const SubscriptionDialog = (props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 inset-0">
           <Dialog.Content
-            onInteractOutside={(e) => e.preventDefault()}
             className={`
               relative w-full max-w-xl max-h-[400px] overflow-y-auto rounded-md justify-items-center
               bg-gray-50 dark:bg-gray-700
@@ -64,7 +63,7 @@ export const SubscriptionDialog = (props: Props) => {
                     </div>
                     <div className="flex text-sm justify-center">
                       <span className="text-gray-500 dark:text-gray-500">
-                        There are no content creators to pay right now. Nobody
+                        There are no event creators to pay right now. Nobody
                         created events on the platform so far, or you have not
                         been visiting any of the events on the platform yet.
                       </span>
@@ -113,7 +112,7 @@ export const SubscriptionDialog = (props: Props) => {
                 </ul>
 
                 <p className="mb-2">
-                  Select up to 3 content creators that you want to support
+                  Select up to 3 event creators that you want to support
                   directly. {/* Or, just make a&nbsp;
                   <span className="text-sky-500 cursor-pointer">
                     random selection.
