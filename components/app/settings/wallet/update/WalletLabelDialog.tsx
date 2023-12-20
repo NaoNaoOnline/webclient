@@ -115,7 +115,6 @@ const WalletLabelDialog = memo((props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed bg-gray-900/50 pt-10 inset-0">
           <Dialog.Content
-            onInteractOutside={(e) => e.preventDefault()}
             className={`
                 relative w-full max-w-xl max-h-[400px] overflow-y-auto rounded-md justify-items-center
                 bg-gray-50 dark:bg-gray-700

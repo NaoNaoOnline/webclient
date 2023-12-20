@@ -139,7 +139,7 @@ export const ListButtons = () => {
           <ActiveButton
             actv={x.list === user?.home}
             feed={feeBdg(x, evnt)}
-            href={`/list/` + x.list}
+            href={`/event/list/` + x.list}
             text={<>{x.desc}</>}
             icon={x.list === user?.home ? <HomeLineIcon /> : <ListUnorderedIcon />}
           />
