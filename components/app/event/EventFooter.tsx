@@ -103,7 +103,7 @@ export function EventFooter(props: Props) {
           <div
             className="flex flex-row w-fit items-center"
           >
-            <span className="flex-1 w-fit text-xs whitespace-nowrap text-gray-500 dark:text-gray-500">
+            <span className="flex-1 pl-3 w-fit text-xs whitespace-nowrap text-gray-500 dark:text-gray-500">
               {FormatNumber(lin)}
             </span>
             <span
