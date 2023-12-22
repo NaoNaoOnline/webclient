@@ -95,8 +95,8 @@ const LabelProfileCreateForm = memo((props: Props) => {
             name="create-profile-key-input"
             minLength={2}
             maxLength={40}
-            pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-            title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
+            pattern={`^([A-Za-z]+)$`}
+            title={`allowed are words`}
             className={`
                   flex w-full mr-3
                   bg-transparent
@@ -124,8 +124,8 @@ const LabelProfileCreateForm = memo((props: Props) => {
               name="create-profile-value-input"
               minLength={2}
               maxLength={40}
-              pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-              title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
+              pattern={`^([A-Za-z0-9._\\-]+)$`}
+              title={`allowed are words, numbers and: . _ -`}
               className={`
                   flex w-full
                   bg-transparent
