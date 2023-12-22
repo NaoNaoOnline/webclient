@@ -118,8 +118,8 @@ const LabelProfileUpdateForm = memo((props: Props) => {
               name="profile-value-input"
               minLength={2}
               maxLength={40}
-              pattern={`^([A-Za-z0-9\\s,.\\:\\-'"!$%&#]+(?:\s*,\s*[A-Za-z0-9\\s,.\\:\\-'"!$%&#]+)*)$`}
-              title={`allowed are words, numbers and: , . : - ' " ! $ % & #`}
+              pattern={`^([A-Za-z0-9._\\-]+)$`}
+              title={`allowed are words, numbers and: . _ -`}
               className={`
                   flex w-full
                   bg-transparent
