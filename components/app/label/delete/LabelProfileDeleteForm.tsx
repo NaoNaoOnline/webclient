@@ -1,8 +1,9 @@
-import { MouseEvent, memo } from "react";
+import { MouseEvent, memo, useState } from "react";
 
 import { DeleteLineIcon } from "@/components/app/icon/base/DeleteLineIcon";
 
 import { useAuth } from "@/components/app/auth/AuthProvider";
+import { DeleteButton } from "@/components/app/button/DeleteButton";
 import { ErrorPropsObject } from "@/components/app/toast/ErrorToast";
 import { ProgressPropsObject } from "@/components/app/toast/ProgressToast";
 import { SuccessPropsObject } from "@/components/app/toast/SuccessToast";
@@ -21,6 +22,8 @@ interface Props {
 const LabelProfileDeleteForm = memo((props: Props) => {
   const { addErro, addPgrs, addScss } = useToast();
   const { atkn } = useAuth();
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const pgrs: ProgressPropsObject = new ProgressPropsObject("Deleting Profile");
   const scss: SuccessPropsObject = new SuccessPropsObject("It's not much, but it's honest work!");
@@ -57,22 +60,32 @@ const LabelProfileDeleteForm = memo((props: Props) => {
   };
 
   return (
-    <button
-      className="ml-3 outline-none invisible group-hover/RowGrid:visible"
-      type="button"
-      onClick={(eve: MouseEvent<HTMLButtonElement>) => {
-        eve.preventDefault();
-        eve.stopPropagation();
-        deletePrfl();
-      }}
-    >
-      <DeleteLineIcon
-        className={`
-           w-5 h-5 text-gray-500 dark:text-gray-500
-           hover:text-gray-900 dark:hover:text-gray-50
-        `}
+    <>
+      <button
+        className="ml-3 outline-none invisible group-hover/RowGrid:visible"
+        type="button"
+        onClick={(eve: MouseEvent<HTMLButtonElement>) => {
+          eve.preventDefault();
+          eve.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        <DeleteLineIcon
+          className={`
+             w-5 h-5 text-gray-500 dark:text-gray-500
+             hover:text-gray-900 dark:hover:text-gray-50
+          `}
+        />
+      </button>
+
+      <DeleteButton
+        actn={() => deletePrfl()}
+        clse={() => setOpen(false)}
+        desc="This cannot be undone. We'll smash it the fuck to bits."
+        open={open}
+        titl={"Remove " + props.pkey + " Profile " + props.pval}
       />
-    </button>
+    </>
   );
 });
 
