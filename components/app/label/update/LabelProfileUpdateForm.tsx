@@ -104,9 +104,9 @@ const LabelProfileUpdateForm = memo((props: Props) => {
             href={ProfileURL(props.pkey) + "/" + pval}
             target="_blank"
             className={`
-            truncate max-w-[150px]
-            hover:underline hover:underline-offset-2
-          `}
+              truncate max-w-[150px]
+              hover:underline hover:underline-offset-2
+            `}
           >
             {pval}
           </Link>
@@ -121,14 +121,14 @@ const LabelProfileUpdateForm = memo((props: Props) => {
               pattern={`^([A-Za-z0-9._\\-]+)$`}
               title={`allowed are words, numbers and: . _ -`}
               className={`
-                  flex w-full
-                  bg-transparent
-                  text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500
-                  border-0 border-r-2 border-gray-300 dark:border-gray-600
-                  focus:border-blue-600 dark:focus:border-blue-500
-                  focus:outline-none focus:ring-0
-                  align-middle appearance-none peer
-                `}
+                flex w-full
+                bg-transparent
+                text-gray-900 dark:text-gray-50 placeholder-gray-400 dark:placeholder-gray-500
+                border-0 border-r-2 border-gray-300 dark:border-gray-600
+                focus:border-blue-600 dark:focus:border-blue-500
+                focus:outline-none focus:ring-0
+                align-middle appearance-none peer
+              `}
               defaultValue={pval}
               ref={inpt}
               required
