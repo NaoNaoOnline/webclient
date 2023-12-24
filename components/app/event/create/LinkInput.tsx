@@ -11,23 +11,27 @@ interface Props {
 
 const expr = /^(www\.)?[\w]+\.[a-z]{2,}(\.[a-z]{2,})*[\w\-._~:/?#\[\]@!$&'()*\+,;=.]*$/;
 
-export default function LinkInput(props: Props) {
+export const LinkInput = (props: Props) => {
   const [text, setText] = useState<string>("");
   const [stld, setStld] = useState<boolean>(false);
   const [fcsd, setFcsd] = useState<boolean>(false);
 
   const inpt = useRef<HTMLInputElement>(null);
 
-  const chng = (evn: ChangeEvent<HTMLInputElement>) => {
-    {
-      const text = evn.target.value.replace(/^(http:\/\/|https:\/\/)/, '');
-      setStld(text !== "");
-      setText(text);
-    }
+  const chng = (eve: ChangeEvent<HTMLInputElement>) => {
+    hndl(eve.target.value);
+  };
+
+  const hndl = (txt: string) => {
+    txt = txt.replace(/^(http:\/\/|https:\/\/)/, "");
+    txt = txt.replace(/^(www.)/, "");
+
+    setStld(txt !== "");
+    setText(txt);
 
     if (inpt.current) {
-      if (expr.test(evn.target.value)) {
-        inpt.current.setCustomValidity('');
+      if (expr.test(txt)) {
+        inpt.current.setCustomValidity("");
       } else {
         inpt.current.setCustomValidity(props.titl);
       }
